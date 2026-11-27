@@ -107,10 +107,10 @@ for name, space, sprite, sub, acts, spots in PEOPLE:
 
 # ── 사물 핫스팟 (배경 이미지 1200×1200 기준 좌표·크기 %) ─────────────────────
 PROPS = [
-    ("table",   "회의 테이블",  17.0, 41.5, 24.0, 18.0, "round"),
+    ("table",   "회의 테이블",  17.0, 43.0, 24.0, 17.5, "round"),
     ("command", "지휘실 책상",  29.5, 16.5, 42.0, 21.5, ""),
     ("sofa",    "라운지 소파",  58.0, 40.5, 25.0, 13.0, ""),
-    ("coffee",  "커피 테이블",  51.0, 47.0, 16.0, 11.0, ""),
+    ("coffee",  "커피 테이블",  52.5, 48.0, 15.0, 11.5, ""),
     ("shelf",   "책장",          4.5, 31.0, 21.5, 17.0, ""),
     ("window",  "창문",         74.0, 19.5, 14.5, 16.5, ""),
     ("desk",    "작업실 책상",  51.0, 65.0, 15.5, 13.5, ""),
@@ -398,6 +398,10 @@ JS_TEXT = """  (function(){
 
 CSS_TEXT = CSS_TEXT + """  /* 사물 핫스팟 — 배경 물건에 맞춘 클릭 영역 */
   .office-props{position:absolute; inset:0; z-index:0}
+  .office-actors{pointer-events:none}
+  .office-overlay{pointer-events:none}
+  .office-overlay .pin{pointer-events:auto}
+  .walker{pointer-events:auto}
   .prop{
     position:absolute; margin:0; padding:0; border:0; background:none; border-radius:14px; cursor:pointer;
     -webkit-tap-highlight-color:transparent;
