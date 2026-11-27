@@ -12,6 +12,7 @@
 - `build-tracker.py` — 트래커 탭 HTML/CSS 생성 (노션 기록 → 수치)
 - `build-walkers.py`, `build-clay.py`, `build-people.py` — 이전 2D/3D 실험용 생성기(지금 화면에는 미사용)
 - `assets/office-bg.jpg` — 캐릭터를 지운 빈 오피스 배경 (1254×1254)
+- `assets/office-fg.png` — 전경 가구(책상·노트북·원탁·모니터) 레이어 — 캐릭터 위에 겹쳐 책상·노트북을 뚫고 나오지 않게 함 (`build-fg.py` 로 재생성)
 - `assets/chars/*.png` — 11명 캐릭터 투명 스프라이트
 - `deploy.sh` — 커밋·푸시 후 Pages 반영 확인
 

@@ -833,6 +833,9 @@
   .o25-still .o25-stage{transition:none}
   .o25-bg{position:absolute; inset:0; width:100%; height:100%; display:block; user-select:none; -webkit-user-drag:none; -webkit-touch-callout:none}
   .o25-chars{position:absolute; inset:0; z-index:1}
+  /* 전경 가구(책상·노트북) — 캐릭터를 앞에서 가려 좌석에 앉은 것처럼 */
+  .o25-fg{position:absolute; inset:0; width:100%; height:100%; z-index:2; display:block;
+    pointer-events:none; user-select:none; -webkit-user-drag:none}
   .o25-chr{position:absolute; will-change:transform; cursor:pointer; -webkit-tap-highlight-color:transparent}
   .o25-body{display:block; width:100%; height:100%; transform-origin:50% 100%; will-change:transform}
   .o25-chr img{display:block; width:100%; height:100%; filter:drop-shadow(0 5px 6px rgba(92,62,42,.16)); transition:filter .22s ease}
@@ -978,6 +981,7 @@
             <div class="o25-stage" id="o25Stage">
               <img class="o25-bg" src="assets/office-bg.jpg" alt="비서실 오피스 — 크림톤 방, 피클즈 롱데스크, 원탁, 라운지" draggable="false">
               <div class="o25-chars" id="o25Chars"></div>
+              <img class="o25-fg" src="assets/office-fg.png" alt="" aria-hidden="true" draggable="false">
               <div class="o25-bubbles" id="o25Bubbles"></div>
             </div>
           </div>
@@ -2673,19 +2677,19 @@
 
   /* ── 캐릭터 배치 (좌표는 원본 1254px 사진 기준) ───────────── */
   var CHARS = [
-    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 700,  y: 436,  h: 132, clip: 10, ar: 0.7712, motion: 'm-type',
+    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 672,  y: 424,  h: 132, clip: 10, ar: 0.7712, motion: 'm-type',
       life: ['노래 흥얼거리는 중이에요', '기지개 켜는 중이에요', '잠깐 멍때리는 중이에요'] },
-    { k: 'norang',   name: '노랑',     tag: '',        x: 807,  y: 470,  h: 132, clip: 10, ar: 0.7769, motion: 'm-type',
+    { k: 'norang',   name: '노랑',     tag: '',        x: 778,  y: 467,  h: 132, clip: 10, ar: 0.7769, motion: 'm-type',
       life: ['커피 한 모금 마시는 중이에요', '어깨 푸는 중이에요', '하품하는 중이에요'] },
-    { k: 'maknae',   name: '막내',     tag: '',        x: 922,  y: 507,  h: 128, clip: 10, ar: 0.8135, motion: 'm-type',
+    { k: 'maknae',   name: '막내',     tag: '',        x: 884,  y: 510,  h: 128, clip: 10, ar: 0.8135, motion: 'm-type',
       life: ['볼펜 돌리는 중이에요', '창밖 보는 중이에요', '잠깐 쉬는 중이에요'] },
-    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 1015, y: 541,  h: 134, clip: 10, ar: 0.7731, motion: 'm-type',
+    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 978,  y: 548,  h: 134, clip: 10, ar: 0.7731, motion: 'm-type',
       life: ['스트레칭하는 중이에요', '따뜻한 차 마시는 중이에요', '눈 깜빡이는 중이에요'] },
     { k: 'muse',     name: '뮤즈',     tag: '',        x: 398,  y: 674,  h: 176, clip: 0,  ar: 0.7068, motion: 'm-sway',
       life: ['가만히 앉아 있는 중이에요', '생각 정리하는 중이에요', '꼬리 휘적이는 중이에요'] },
     { k: 'kyring',   name: '키링',     tag: '',        x: 702,  y: 694,  h: 150, clip: 0,  ar: 0.6955, motion: 'm-sway',
       life: ['낮잠 자는 중이에요', '눈 감고 쉬는 중이에요', '꼬리 흔드는 중이에요'] },
-    { k: 'q',        name: '큐',       tag: '',        x: 200,  y: 694,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
+    { k: 'q',        name: '큐',       tag: '',        x: 210,  y: 694,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
       life: ['음악 듣는 중이에요', '리듬 타는 중이에요', '헤드셋 끼고 쉬는 중이에요'] },
     { k: 'vooy',     name: '부이',     tag: '',        x: 1126, y: 850,  h: 150, clip: 8,  ar: 0.7432, motion: 'm-type',
       life: ['커피 타러 가는 중이에요', '팔짱 끼고 쉬는 중이에요', '기지개 켜는 중이에요'] },
