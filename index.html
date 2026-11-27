@@ -2986,7 +2986,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   // 아치형 나무 문 (왼쪽 벽 앞쪽)
   (function archDoor() {
     const g = new THREE.Group();
-    g.position.set(-R + 0.10, 0, 5.20); g.rotation.y = Math.PI / 2;
+    g.position.set(-R + 0.10, 0, 4.20); g.rotation.y = Math.PI / 2;
     const DW = 1.62, DH = 2.46, IW = DW - 0.34, IH = DH - 0.20;
     const shape = new THREE.Shape();
     shape.moveTo(-DW / 2, -DH / 2);
@@ -3043,7 +3043,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const c = document.createElement('canvas'); c.width = W; c.height = H;
     const x = c.getContext('2d');
     x.clearRect(0, 0, W, H);
-    const ax = W / 2, halfW = 322, topY = 520, botY = 866, rad = halfW;
+    const ax = W / 2, halfW = 388, topY = 430, botY = 884, rad = halfW;
 
     // 아치 테두리 (이중 네온)
     const arch = () => {
@@ -3055,17 +3055,17 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
       x.stroke();
     };
     x.lineCap = 'round';
-    x.strokeStyle = 'rgba(255,205,132,0.95)';
-    x.lineWidth = 12; x.shadowColor = 'rgba(255,196,112,1)'; x.shadowBlur = 46; arch();
-    x.shadowBlur = 20; x.strokeStyle = 'rgba(255,242,210,1)'; x.lineWidth = 6; arch();
+    x.strokeStyle = 'rgba(255,196,110,1)';
+    x.lineWidth = 14; x.shadowColor = 'rgba(255,176,80,1)'; x.shadowBlur = 52; arch();
+    x.shadowBlur = 24; x.strokeStyle = 'rgba(255,244,214,1)'; x.lineWidth = 7; arch();
     x.shadowBlur = 0;
 
-    // 로봇 얼굴 아이콘 (아치 안쪽 위)
+    // 로봇 얼굴 아이콘
     x.save();
-    x.translate(ax, 322);
-    x.shadowColor = 'rgba(255,204,128,1)'; x.shadowBlur = 26;
-    x.fillStyle = 'rgba(255,232,190,1)';
-    const rw = 96, rh = 74, rr = 24;
+    x.translate(ax, 236);
+    x.shadowColor = 'rgba(255,196,110,1)'; x.shadowBlur = 30;
+    x.fillStyle = 'rgba(255,234,194,1)';
+    const rw = 104, rh = 78, rr = 26;
     x.beginPath();
     x.moveTo(-rw + rr, -rh); x.lineTo(rw - rr, -rh); x.quadraticCurveTo(rw, -rh, rw, -rh + rr);
     x.lineTo(rw, rh - rr); x.quadraticCurveTo(rw, rh, rw - rr, rh);
@@ -3074,27 +3074,27 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     x.fill();
     x.shadowBlur = 0;
     x.fillStyle = 'rgba(255,247,232,1)';
-    x.fillRect(-5, -rh - 30, 10, 30);
-    x.beginPath(); x.arc(0, -rh - 36, 13, 0, Math.PI * 2); x.fill();
-    x.fillStyle = '#3B2E24';
-    x.beginPath(); x.arc(-30, 2, 13, 0, Math.PI * 2); x.fill();
-    x.beginPath(); x.arc(30, 2, 13, 0, Math.PI * 2); x.fill();
+    x.fillRect(-5, -rh - 32, 10, 32);
+    x.beginPath(); x.arc(0, -rh - 38, 14, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#3A2D23';
+    x.beginPath(); x.arc(-33, 2, 14, 0, Math.PI * 2); x.fill();
+    x.beginPath(); x.arc(33, 2, 14, 0, Math.PI * 2); x.fill();
     x.restore();
 
     // 사인 텍스트
     x.textAlign = 'center';
     x.textBaseline = 'middle';
-    x.font = '800 118px "Pretendard","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif';
-    x.shadowColor = 'rgba(255,198,116,1)'; x.shadowBlur = 38;
-    x.fillStyle = 'rgba(255,214,150,1)';
-    x.fillText('나은 비서실', ax, 600);
-    x.shadowBlur = 10;
-    x.fillStyle = 'rgba(255,248,232,1)';
-    x.fillText('나은 비서실', ax, 600);
+    x.font = '800 152px "Pretendard","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif';
+    x.shadowColor = 'rgba(255,180,88,1)'; x.shadowBlur = 44;
+    x.fillStyle = 'rgba(255,206,136,1)';
+    x.fillText('나은 비서실', ax, 512);
+    x.shadowBlur = 12;
+    x.fillStyle = 'rgba(255,252,242,1)';
+    x.fillText('나은 비서실', ax, 512);
     x.shadowBlur = 0;
-    x.font = '600 38px "Pretendard","Malgun Gothic",sans-serif';
-    x.fillStyle = 'rgba(255,235,198,0.92)';
-    x.fillText('AI  ASSISTANT  OFFICE', ax, 690);
+    x.font = '700 44px "Pretendard","Malgun Gothic",sans-serif';
+    x.fillStyle = 'rgba(255,238,206,0.95)';
+    x.fillText('AI  ASSISTANT  OFFICE', ax, 626);
 
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
@@ -3448,7 +3448,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   function armchair(g, x, z, ry, color) {
     const a = new THREE.Group();
     a.position.set(x, 0, z); a.rotation.y = ry || 0;
-    const mat = fabricMat(color || 0xF7ECD9, { bumpScale: 0.022 });
+    const mat = fabricMat(color || 0xEEDCC2, { bumpScale: 0.022 });
     add(a, clayBox(0.98, 0.36, 0.94, 3.0, 22), mat, 0, 0.42, 0);
     add(a, clayBox(0.86, 0.17, 0.82, 2.6, 18), mat, 0, 0.60, 0.03);
     add(a, clayBox(1.00, 0.80, 0.26, 2.6, 20), mat, 0, 0.74, -0.35);
@@ -3475,7 +3475,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   }
 
   /* ── 1. 피클즈 롱데스크 (뒤 벽) ─────────────────────────── */
-  const longDesk = group(2.90, -5.55);
+  const longDesk = group(2.90, -5.45);
   longDesk.userData.prop = 'command';
   add(longDesk, clayBox(5.90, 0.15, 1.35, 4.4, 26), M.woodLight, 0, 0.78, 0);
   add(longDesk, clayBox(6.90, 0.10, 0.22, 3.4, 16), M.wood, 0, 0.70, -0.56);
@@ -3497,7 +3497,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     mug(longDesk, lx - 0.52, 0.858, 0.10, [0xF9E3B8, 0xC9DBEA, 0xEBCBD8, 0xF7D9CE][i], 0.9);
     if (i % 2 === 0) penCup(longDesk, lx + 0.52, 0.858, 0.08, 0xEDE0C8);
     else postit(longDesk, lx + 0.50, 0.862, 0.06, 0.08, [0xFFE9A8, 0xCFE0C9][i % 2], 0.13);
-    officeChair(longDesk, lx, -0.74, 0, [0xEFE6D6, 0xF6E7DA, 0xE7EFE4, 0xF7E3E6][i]);
+    officeChair(longDesk, lx, -0.97, 0, [0xEFE6D6, 0xF6E7DA, 0xE7EFE4, 0xF7E3E6][i]);
   });
   plant(longDesk, -3.72, 0.02, 0.36).position.y = 0.88;
   plant(longDesk, 3.66, 0.02, 0.30).position.y = 0.88;
@@ -3540,8 +3540,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   book(roundTable, -0.60, 0.926, 0.52, 0.28, 0.045, 0.22, 0xE9AEB2);
   macaron(roundTable, 0.55, 0.878, -0.42, 0xF7C9D0);
   plate(roundTable, 0.55, 0.872, -0.42, 0.19);
-  armchair(room, -2.55, -1.35, Math.PI / 2, 0xF7ECD9);
-  armchair(room, 0.55, -1.35, -Math.PI / 2, 0xF7ECD9);
+  armchair(room, -2.55, -1.35, Math.PI / 2, 0xEFDCC0);
+  armchair(room, 0.55, -1.35, -Math.PI / 2, 0xEFDCC0);
 
   /* ── 4. 부이의 모니터 데스크 (오른쪽) ──────────────────── */
   const bDesk = group(5.30, -2.60);
@@ -3571,10 +3571,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 5. 앞쪽 라운지 (소파 → 안락의자 3 + 낮은 원탁) ─────── */
   add(room, cyl(3.05, 3.05, 0.05, 72), fabricMat(0xF3E7D4, { bumpScale: 0.026 }), 1.00, FLOOR_Y + 0.03, 3.60).castShadow = false;
   add(room, cyl(2.80, 2.80, 0.02, 72), fabricMat(0xFBF2E2), 1.00, FLOOR_Y + 0.062, 3.60).castShadow = false;
-  const sofaSeat = armchair(room, -1.15, 3.20, 1.00, 0xF7ECD9);
+  const sofaSeat = armchair(room, -1.15, 3.20, 1.00, 0xEFDCC0);
   sofaSeat.userData.prop = 'sofa';
-  armchair(room, 1.15, 2.40, -0.05, 0xF7ECD9);
-  armchair(room, 3.15, 3.35, -1.05, 0xF7ECD9);
+  armchair(room, 1.15, 2.40, -0.05, 0xEFDCC0);
+  armchair(room, 3.15, 3.35, -1.05, 0xEFDCC0);
 
   const lowTable = group(1.00, 4.55);
   lowTable.userData.prop = 'coffee';
@@ -3717,11 +3717,11 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
   /* ── 캐릭터 (나은님 실제 캐릭터 사진 기준 · 자리 배치) ───────── */
   const PEOPLE = [
-    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', seat: [1.15, -6.28], yaw: 0,           seatY: 0.52, stance: [1.15, -4.28], roam: false, acts: ['type', 'nod', 'type', 'talk', 'stretch'] },
-    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', seat: [2.40, -6.28], yaw: 0,           seatY: 0.52, stance: [2.40, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
-    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', seat: [3.65, -6.28], yaw: 0,           seatY: 0.52, stance: [3.65, -4.28], roam: false, acts: ['type', 'wave', 'nod', 'talk', 'stretch'], face: 'squeeze' },
-    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', seat: [4.90, -6.28], yaw: 0,           seatY: 0.52, stance: [4.90, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
-    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'command', seat: [-5.32, -1.15], yaw: Math.PI / 2, seatY: 0.30, stance: [-3.30, -1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'], headphones: true },
+    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', seat: [1.15, -6.42], yaw: 0,           seatY: 0.62, stance: [1.15, -4.28], roam: false, acts: ['type', 'nod', 'type', 'talk', 'stretch'] },
+    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', seat: [2.40, -6.42], yaw: 0,           seatY: 0.62, stance: [2.40, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
+    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', seat: [3.65, -6.42], yaw: 0,           seatY: 0.62, stance: [3.65, -4.28], roam: false, acts: ['type', 'wave', 'nod', 'talk', 'stretch'], face: 'squeeze' },
+    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', seat: [4.90, -6.42], yaw: 0,           seatY: 0.62, stance: [4.90, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
+    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'command', seat: [-5.42, -1.15], yaw: Math.PI / 2, seatY: 0.30, stance: [-3.30, -1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'], headphones: true },
     { name: '뮤즈',     kind: 'yeti',     color: 0xE9DBBE, zone: 'command', seat: [-2.50, -1.33], yaw: Math.PI / 2, seatY: 0.55, stance: [-3.35, -2.45], roam: true,  acts: ['talk', 'wave', 'nod', 'type', 'stretch'] },
     { name: '키링',     kind: 'cat',      color: 0xFAF1DE, zone: 'command', seat: [0.50, -1.33],  yaw: -Math.PI / 2, seatY: 0.55, stance: [1.70, -1.33], roam: true,  acts: ['talk', 'nod', 'type', 'wave', 'stretch'] },
     { name: '부이',     kind: 'tri',      color: 0xFF3E9E, zone: 'lounge',  seat: [4.45, -2.60],  yaw: Math.PI / 2, seatY: 0.30, stance: [3.30, -2.60], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'] },
@@ -3733,7 +3733,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 길찾기: 바닥 격자 A* (가구 회피) ───────────────────── */
   const ROOM_LIM = 6.50;
   const OB_B = [                        // 사각 장애물 (중심 x, z, 반폭, 반높이)
-    { x: 2.90, z: -5.55, hw: 2.98, hd: 1.06 },   // 피클즈 롱데스크 + 의자
+    { x: 2.90, z: -5.45, hw: 2.98, hd: 1.00 },   // 피클즈 롱데스크 + 의자
     { x: -4.70, z: -1.15, hw: 1.00, hd: 1.48 },  // 큐 책상 + 의자
     { x: 4.95, z: -2.60, hw: 1.18, hd: 1.48 },   // 부이 책상 + 파티션
     { x: -6.42, z: -4.00, hw: 0.64, hd: 1.98 },  // 책장
