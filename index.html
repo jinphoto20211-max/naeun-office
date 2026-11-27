@@ -2687,11 +2687,11 @@
       life: ['스트레칭하는 중이에요', '따뜻한 차 마시는 중이에요', '눈 깜빡이는 중이에요'] },
     { k: 'muse',     name: '뮤즈',     tag: '',        x: 398,  y: 674,  h: 176, clip: 0,  ar: 0.7068, motion: 'm-sway',
       life: ['가만히 앉아 있는 중이에요', '생각 정리하는 중이에요', '꼬리 휘적이는 중이에요'] },
-    { k: 'kyring',   name: '키링',     tag: '',        x: 702,  y: 694,  h: 150, clip: 0,  ar: 0.6955, motion: 'm-sway',
+    { k: 'kyring',   name: '키링',     tag: '',        x: 710,  y: 698,  h: 150, clip: 0,  ar: 0.6955, motion: 'm-sway',
       life: ['낮잠 자는 중이에요', '눈 감고 쉬는 중이에요', '꼬리 흔드는 중이에요'] },
-    { k: 'q',        name: '큐',       tag: '',        x: 210,  y: 694,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
+    { k: 'q',        name: '큐',       tag: '',        x: 198,  y: 712,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
       life: ['음악 듣는 중이에요', '리듬 타는 중이에요', '헤드셋 끼고 쉬는 중이에요'] },
-    { k: 'vooy',     name: '부이',     tag: '',        x: 1126, y: 850,  h: 150, clip: 8,  ar: 0.7432, motion: 'm-type',
+    { k: 'vooy',     name: '부이',     tag: '',        x: 1146, y: 848,  h: 150, clip: 8,  ar: 0.7432, motion: 'm-type',
       life: ['커피 타러 가는 중이에요', '팔짱 끼고 쉬는 중이에요', '기지개 켜는 중이에요'] },
     { k: 'hama',     name: '하마뮤즈', tag: '',        x: 438,  y: 1012, h: 176, clip: 0,  ar: 0.6114, motion: 'm-sip',
       life: ['커피 마시고 있어요', '따뜻한 차 마시고 있어요', '한 모금 홀짝이는 중이에요'] },
@@ -2701,6 +2701,7 @@
       life: ['책 읽는 중이에요', '안경 고쳐 쓰는 중이에요', '페이지 넘기는 중이에요'] }
   ];
 
+  var AGC_DEFAULT = { '초록': 1, '노랑': 1, '막내': 1, '진분홍': 1 };  // 피클즈 4인 = 단톡방 상주(기본 접속)
   var AGC_ON = { '초록': 1, '노랑': 1, '막내': 1, '진분홍': 1 };
   function statusDot(n) {
     return '<i class="o25-bub-dot' + (AGC_ON[n] ? ' on' : '') + '"></i>';
@@ -2876,8 +2877,11 @@
 
   /* ── 단톡방 실시간 연동 ─────────────────────────────────
      · 방 주인 비밀번호가 이 브라우저(localStorage)에 있을 때만 조용히 동작
-     · 최근 30분 안에 실제로 주고받은 메시지만 말풍선・접속 표시에 사용
-     · 토큰이 없거나 요청이 실패하면 기본 명단 그대로 (콘솔 오류 없이) */
+     · 접속(온라인) 판정 = ① 방 멤버 명단(/agents, enabled) ② 최근 30분 대화
+       — 예전에는 '최근 30분 대화'만 봐서, 방이 조용한 시간대엔 피클즈 4인이
+         전부 회색으로 죽어 보였다. 이제는 방에 입주해 있으면 컬러.
+     · 명단에 없는 캐릭터는 기본값(피클즈 4인 접속 중) 유지, 명단에서 꺼진(enabled=false) 멤버만 회색
+     · 토큰이 없거나 요청이 실패하면 기본값 그대로 (콘솔 오류 없이) */
   (function () {
     var TOKEN_KEY = 'naeun:agc-token:v1';
     var API = 'https://ai-group-chat.jinphoto20211.workers.dev';
@@ -2886,16 +2890,30 @@
     try { token = localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { token = ''; }
     if (!token) return;
 
-    function norm(s) { return String(s == null ? '' : s).replace(/[\s@()\[\]·._-]/g, ''); }
+    /* 발신자・멤버 이름 표기 흔들림 → 화면 캐릭터 */
+    var ALIAS = {
+      '피클서브': '노랑', '피클서브2': '노랑', '노랑이': '노랑', '노랑피클': '노랑', '서브피클': '노랑',
+      '메인': '초록', '메인피클': '초록', '초록이': '초록',
+      '막내피클': '막내', '막내이': '막내', '연분홍': '막내', '연분홍이': '막내',
+      '진분홍이': '진분홍', '분홍이': '진분홍',
+      '하마': '하마뮤즈', '하마보스': '하마뮤즈', '뮤즈이': '뮤즈',
+      '키링이': '키링', '큐브': '큐', '부이봇': '부이', '인스팅트ai': '인스팅트'
+    };
+    function norm(s) { return String(s == null ? '' : s).replace(/[\s@()\[\]·._,|\\/-]/g, '').toLowerCase(); }
     function matchChar(name) {
-      var n = norm(name);
+      var n = norm(name), i, cn, best = null, bestLen = 0;
       if (!n) return null;
-      for (var i = 0; i < CHARS.length; i++) {
-        var cn = norm(CHARS[i].name);
-        if (cn === n) return CHARS[i];
-        if (n.length >= 2 && n.indexOf(cn) === 0) return CHARS[i];
-        if (cn.indexOf(n) === 0 && n.length >= 2) return CHARS[i];
+      for (i = 0; i < CHARS.length; i++) {
+        cn = norm(CHARS[i].name);
+        if (cn && cn === n) return CHARS[i];
+        if (cn && cn.length >= 2 && n.indexOf(cn) === 0 && cn.length > bestLen) { best = CHARS[i]; bestLen = cn.length; }
       }
+      for (i = 0; i < CHARS.length && !best; i++) {
+        cn = norm(CHARS[i].name);
+        if (cn && cn.length >= 2 && n.indexOf(cn) >= 0 && cn.length > bestLen) { best = CHARS[i]; bestLen = cn.length; }
+      }
+      if (best) return best;
+      if (ALIAS[n] && byName[ALIAS[n]]) return byName[ALIAS[n]];
       return null;
     }
     function getJSON(path) {
@@ -2906,6 +2924,40 @@
       var s = String(t == null ? '' : t).replace(/\s+/g, ' ').trim();
       if (!s) return '';
       return s.length > 26 ? s.slice(0, 25) + '…' : s;
+    }
+
+    /* 접속 상태 반영 — 말풍선 점・아바타 바 컬러를 한 곳에서 같이 바꾼다 */
+    function applyPresence(agents, messages) {
+      var now = Date.now();
+      if (messages) {
+        messages.forEach(function (m) {
+          if (!m || !m.sender || m.sender.role === 'system') return;
+          var c = matchChar(m.sender.name);
+          if (!c) return;
+          var at = Date.parse(m.at) || 0, text = trimLine(m.text);
+          if (!at || !text) return;
+          if (!c.live || at >= c.live.at) c.live = { text: text, at: at };
+        });
+      }
+      var member = {}, found = 0;
+      if (agents) {
+        agents.forEach(function (a) {
+          var c = matchChar(a && a.name);
+          if (!c) return;
+          found++;
+          member[c.name] = !!member[c.name] || !!(a && a.enabled);
+        });
+      }
+      CHARS.forEach(function (c) {
+        if (c.live && now - c.live.at >= ACTIVE_MS) c.live = null;
+        var recent = !!(c.live && now - c.live.at < ACTIVE_MS);
+        var on;
+        if (found && member.hasOwnProperty(c.name)) on = member[c.name] || recent;
+        else on = !!AGC_DEFAULT[c.name] || recent;   // 명단에 없거나 못 읽었으면 기본값
+        window.o25SetChatStatus(c.name, on);
+      });
+      if (typeof refreshBubbles === 'function') refreshBubbles();
+      rotateBubbles();
     }
 
     var roomId = null, busy = false;
@@ -2921,25 +2973,15 @@
       });
       chain.then(function (id) {
         if (!id) return null;
-        return getJSON('/api/admin/rooms/' + encodeURIComponent(id) + '/messages?limit=60&since=0');
-      }).then(function (d) {
-        if (!d) return;
-        var now = Date.now();
-        var list = (d.messages || []).filter(function (m) { return m && m.sender && m.sender.role !== 'system'; });
-        list.forEach(function (m) {
-          var c = matchChar(m.sender.name);
-          if (!c) return;
-          var at = Date.parse(m.at) || 0, text = trimLine(m.text);
-          if (!at || !text) return;
-          if (!c.live || at >= c.live.at) c.live = { text: text, at: at };
-        });
-        CHARS.forEach(function (c) {
-          if (c.live && now - c.live.at >= ACTIVE_MS) c.live = null;
-          var on = !!(c.live && now - c.live.at < ACTIVE_MS);
-          window.o25SetChatStatus(c.name, on);
-        });
-        if (typeof refreshBubbles === 'function') refreshBubbles();
-        rotateBubbles();
+        var base = '/api/admin/rooms/' + encodeURIComponent(id);
+        var since = encodeURIComponent(new Date(Date.now() - ACTIVE_MS).toISOString());
+        return Promise.all([
+          getJSON(base + '/agents').catch(function () { return null; }),
+          getJSON(base + '/messages?limit=60&since=' + since).catch(function () { return null; })
+        ]);
+      }).then(function (res) {
+        if (!res) return;
+        applyPresence(res[0] && res[0].agents, res[1] && res[1].messages);
       }).catch(function () {}).then(function () { busy = false; });
     }
     sync();
