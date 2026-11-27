@@ -1,0 +1,15 @@
+# 개발 중 산출물 (배포 대상 아님)
+notes.md
+template.html
+index-masked.html
+*.bak
+check-*.png
+final-*.png
+preview-*.png
+real-*.png
+placement-*.png
+img_*.png
+lounge-*.png
+meeting-*.png
+v2-*.png
+test-render.png
