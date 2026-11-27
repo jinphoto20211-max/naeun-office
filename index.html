@@ -919,7 +919,11 @@
   .agc-token label{font-size:11.5px; font-weight:800; color:var(--ink-soft); width:100%}
   .agc-token input{flex:1 1 190px; min-width:140px; padding:9px 12px; border-radius:12px; border:1px solid var(--line-strong); background:#fff; font-size:13px}
   .agc-hint{flex:1 1 100%; font-size:11px; color:var(--muted-2); line-height:1.5}
-  .agc-frame-wrap{margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:#E9EEF3; height:min(72vh,640px)}
+  .agc-frame-wrap{margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:#E9EEF3; height:min(62vh,560px)}
+  .agc-map-hint{margin-top:8px; font-size:11.5px; color:var(--muted-2); line-height:1.55}
+  .o25-chip.off img{filter:grayscale(1) opacity(.55)}
+  .o25-chip.off{background:#F7F4EF; color:#9C8B7E}
+  .o25-chip.off::after{content:""; width:5px; height:5px; border-radius:50%; background:#C9BFB3}
   .agc-frame-wrap iframe{display:block; width:100%; height:100%; border:0}
   /* OFFICE25D-CSS:END */
 </style>
@@ -998,6 +1002,52 @@
           <span><i style="background:#93C9A6"></i>라운지</span>
         </span>
       </div>
+    </div>
+
+    <div class="card agc-card" id="agcMapCard" style="padding:20px 22px; margin-top:14px">
+      <div class="agc-head">
+        <div>
+          <div class="eyebrow" style="margin-bottom:6px">해피방 AI 단톡방</div>
+          <h3>피클 단톡방 <span class="agc-live">연결됨</span></h3>
+          <p>오피스를 보면서 바로 아래에서 대화를 확인하고 보낼 수 있어요.</p>
+        </div>
+        <div class="agc-actions">
+          <button class="btn btn-primary btn-sm" id="agcOpen" type="button">여기서 열기</button>
+          <a class="btn btn-ghost btn-sm" href="https://ai-group-chat.jinphoto20211.workers.dev/" target="_blank" rel="noopener noreferrer">새 창으로 열기 ↗</a>
+        </div>
+      </div>
+      <div class="agc-frame-wrap" id="agcWrap" hidden>
+        <iframe id="agcFrame" title="피클 단톡방" loading="lazy" referrerpolicy="no-referrer"></iframe>
+      </div>
+      <p class="agc-map-hint" id="agcMapHint">방 주인 비밀번호는 <b>회의실</b> 탭에서 한 번만 저장해 두면 돼요. 화면이 비어 있으면 [새 창으로 열기]를 눌러 주세요.</p>
+      <script>
+      (function(){
+        var URL_AGC = 'https://ai-group-chat.jinphoto20211.workers.dev/';
+        var wrap = document.getElementById('agcWrap');
+        var frame = document.getElementById('agcFrame');
+        var open = document.getElementById('agcOpen');
+        var hint = document.getElementById('agcMapHint');
+        if (!wrap || !frame) return;
+        function load(){
+          if (!frame.getAttribute('src')) frame.setAttribute('src', URL_AGC);
+          wrap.hidden = false;
+        }
+        if (open) open.addEventListener('click', function(){
+          load();
+          if (wrap.scrollIntoView) wrap.scrollIntoView({ behavior:'smooth', block:'center' });
+        });
+        // 화면에 들어오면 자동으로 한 번 불러온다 (탭이 보일 때만)
+        var io = null;
+        if (window.IntersectionObserver) {
+          io = new IntersectionObserver(function(es){
+            es.forEach(function(e){ if (e.isIntersecting) { load(); io.disconnect(); } });
+          }, { rootMargin: '200px' });
+          io.observe(wrap);
+        } else {
+          setTimeout(load, 1200);
+        }
+      })();
+      </script>
     </div>
 
     <div class="space-shell">
@@ -1302,10 +1352,10 @@
         <div>
           <div class="eyebrow" style="margin-bottom:6px">AI 단톡방</div>
           <h3>피클 단톡방 <span class="agc-live">연결됨</span></h3>
-          <p>비서들과 AI 초대를 한 화면에서 관리하는 방이에요. 여기서 바로 열거나 새 창으로 열 수 있어요.</p>
+          <p>단톡방 화면은 <b>오피스 맵</b> 캐릭터들 바로 아래에 있어요. 비밀번호만 여기서 저장해 두면 어디서든 바로 열립니다.</p>
         </div>
         <div class="agc-actions">
-          <button class="btn btn-primary btn-sm" id="agcOpen" type="button">여기서 열기</button>
+          <button class="btn btn-primary btn-sm" type="button" data-goto="map">오피스 맵에서 열기</button>
           <a class="btn btn-ghost btn-sm" href="https://ai-group-chat.jinphoto20211.workers.dev/" target="_blank" rel="noopener noreferrer">새 창으로 열기 ↗</a>
         </div>
       </div>
@@ -1317,22 +1367,16 @@
         <button class="btn btn-ghost btn-sm" id="agcForget" type="button">지우기</button>
         <span class="agc-hint" id="agcHint">비밀번호는 코드에 넣지 않고 이 브라우저에만 보관해요. 한 번 저장해 두면 [복사] 한 번으로 방 안 비밀번호 칸에 붙여넣어 열 수 있어요.</span>
       </div>
-      <div class="agc-frame-wrap" id="agcWrap" hidden>
-        <iframe id="agcFrame" title="피클 단톡방" loading="lazy" referrerpolicy="no-referrer"></iframe>
-      </div>
       <script>
       (function(){
         var URL_AGC = 'https://ai-group-chat.jinphoto20211.workers.dev/';
         var KEY = 'naeun:agc-token:v1';
         var inp = document.getElementById('agcToken');
         var hint = document.getElementById('agcHint');
-        var wrap = document.getElementById('agcWrap');
-        var frame = document.getElementById('agcFrame');
-        var bOpen = document.getElementById('agcOpen');
         var bSave = document.getElementById('agcSave');
         var bCopy = document.getElementById('agcCopy');
         var bForget = document.getElementById('agcForget');
-        if (!inp || !wrap || !frame) return;
+        if (!inp) return;
         function read(){ try { return localStorage.getItem(KEY) || ''; } catch(e){ return ''; } }
         function say(msg){ if (hint) hint.textContent = msg; }
         var saved = read();
@@ -1363,12 +1407,7 @@
             inp.type='password';
           }
         });
-        if (bOpen) bOpen.addEventListener('click', function(){
-          if (!frame.getAttribute('src')) frame.setAttribute('src', URL_AGC);
-          wrap.hidden = false;
-          if (wrap.scrollIntoView) wrap.scrollIntoView({ behavior:'smooth', block:'center' });
-          say('아래 화면에서 방 주인 비밀번호를 넣으면 돼요. 화면이 비어 있으면 [새 창으로 열기]를 눌러 주세요.');
-        });
+
       })();
       </script>
     </div>
@@ -2670,6 +2709,11 @@
   ];
 
   var AGC_ON = { '초록': 1, '노랑': 1, '막내': 1, '진분홍': 1 };
+  function statusLine(n) {
+    return AGC_ON[n]
+      ? '<i class="o25-bub-s on">● 단톡방 접속 중</i>'
+      : '<i class="o25-bub-s">○ 단톡방 미접속</i>';
+  }
   var byName = {};
   CHARS.forEach(function (c) { byName[c.name] = c; });
 
@@ -2738,7 +2782,7 @@
   function showBub(c, ms, force) {
     if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
     c.lineIdx = (c.lineIdx + 1) % c.lines.length;
-    c.bub.innerHTML = '<b class="o25-bub-t">' + c.lines[c.lineIdx] + '</b><i class="o25-bub-s' + (AGC_ON[c.name] ? ' on' : '') + '">' + (AGC_ON[c.name] ? '● 단톡방 접속 중' : '○ 단톡방 미접속') + '</i>';
+    c.bub.innerHTML = '<b class="o25-bub-t">' + c.lines[c.lineIdx] + '</b>' + statusLine(c.name);
     if (!bubPlace(c)) return false;
     if (shown.indexOf(c.name) < 0) shown.push(c.name);
     c.bub.classList.add('on');
@@ -2791,15 +2835,40 @@
     }
   }
   window.o25React = react;
+  window.o25SetChatStatus = function (name, online) {
+    var c = byName[name];
+    if (!c) return false;
+    AGC_ON[name] = online ? 1 : 0;
+    var chip = barEl.querySelector('[data-chip="' + name + '"]');
+    if (chip) {
+      chip.classList.toggle('off', !online);
+      var d = chip.querySelector('.o25-dot');
+      if (d) d.classList.toggle('on', !!online);
+      chip.setAttribute('aria-label', name + ' 부르기 (' + (online ? '단톡방 접속 중' : '단톡방 미접속') + ')');
+    }
+    if (c.bub && c.bub.classList.contains('on')) {
+      var sEl = c.bub.querySelector('.o25-bub-s');
+      if (sEl) { sEl.className = 'o25-bub-s' + (online ? ' on' : ''); sEl.textContent = online ? '● 단톡방 접속 중' : '○ 단톡방 미접속'; }
+    }
+    return true;
+  };
+  // 단톡방 화면이 열리면 '접속 중'으로 보정 (실제 메시지 연동 전 임시 기준)
+  window.addEventListener('message', function (e) {
+    var d = e.data;
+    if (d && d.type === 'agc-presence' && Array.isArray(d.online)) {
+      CHARS.forEach(function (c) { window.o25SetChatStatus(c.name, d.online.indexOf(c.name) >= 0); });
+    }
+  });
 
   /* ── 아바타 바 ─────────────────────────────────────────── */
   CHARS.forEach(function (c) {
     var chip = document.createElement('button');
     chip.type = 'button';
-    chip.className = 'o25-chip';
+    var on = !!AGC_ON[c.name];
+    chip.className = 'o25-chip' + (on ? '' : ' off');
     chip.setAttribute('data-chip', c.name);
-    chip.setAttribute('aria-label', c.name + ' 부르기');
-    chip.innerHTML = '<img src="assets/chars/' + c.k + '.png" alt=""><span>' + c.name + '</span>';
+    chip.setAttribute('aria-label', c.name + ' 부르기 (' + (on ? '단톡방 접속 중' : '단톡방 미접속') + ')');
+    chip.innerHTML = '<img src="assets/chars/' + c.k + '.png" alt=""><span>' + c.name + '</span><i class="o25-dot' + (on ? ' on' : '') + '" aria-hidden="true"></i>';
     chip.addEventListener('click', function () { react(c); });
     barEl.appendChild(chip);
   });
