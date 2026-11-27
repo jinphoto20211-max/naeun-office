@@ -493,9 +493,8 @@ JS_TEXT = JS_TEXT + """
                  body: function(){ return '개인 책상 네 자리 — 오늘 남은 큐 18건(리뷰·후기 4 · 미결 14).'; },
                  go:'작업실 열기', act: function(){ selectTab('work'); } }
     };
-    var curNode = null;
-    function place(node){
-      var r = node.getBoundingClientRect();
+    var curNode = null, curRect = null;
+    function placeRect(r){
       var w = card.offsetWidth || 320, h = card.offsetHeight || 96;
       var vw = window.innerWidth, vh = window.innerHeight;
       var left = r.left + r.width / 2 - w / 2;
@@ -506,6 +505,23 @@ JS_TEXT = JS_TEXT + """
       card.style.left = Math.round(left) + 'px';
       card.style.top = Math.round(top) + 'px';
     }
+    function place(node){
+      curRect = null;
+      placeRect(node.getBoundingClientRect());
+    }
+    function showRect(pid, rect){
+      var d = DEF[pid]; if (!d) return;
+      open = pid; goFn = d.act; curRect = rect; curNode = null;
+      elTitle.textContent = d.title;
+      elBody.textContent = (typeof d.body === 'function') ? d.body() : d.body;
+      if (d.go && d.act){ elGo.hidden = false; elGo.textContent = d.go; } else { elGo.hidden = true; }
+      card.hidden = false;
+      placeRect(rect);
+      requestAnimationFrame(function(){ placeRect(rect); card.classList.add('open'); });
+      $$('.prop', wrap).forEach(function(p){ p.classList.remove('on'); });
+    }
+    window.officePropOpen = showRect;
+    window.officePropClose = function(){ hide(); };
     function show(pid, node){
       var d = DEF[pid]; if (!d) return;
       open = pid; goFn = d.act; curNode = node;
@@ -517,10 +533,14 @@ JS_TEXT = JS_TEXT + """
       requestAnimationFrame(function(){ place(node); card.classList.add('open'); });
       $$('.prop', wrap).forEach(function(p){ p.classList.toggle('on', p === node); });
     }
-    window.addEventListener('scroll', function(){ if (curNode && open) place(curNode); }, { passive:true });
-    window.addEventListener('resize', function(){ if (curNode && open) place(curNode); });
+    window.addEventListener('scroll', function(){
+      if (!open) return;
+      if (curRect) { hide(); return; }
+      if (curNode) place(curNode);
+    }, { passive:true });
+    window.addEventListener('resize', function(){ if (open && curNode) place(curNode); });
     function hide(){
-      card.classList.remove('open'); card.hidden = true; open = null; goFn = null; curNode = null;
+      card.classList.remove('open'); card.hidden = true; open = null; goFn = null; curNode = null; curRect = null;
       $$('.prop', wrap).forEach(function(p){ p.classList.remove('on'); });
     }
     $$('.prop', wrap).forEach(function(p){
