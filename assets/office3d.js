@@ -165,6 +165,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 라운지: 소파·커피 테이블·러그 ──────────────────────── */
   const rug = add(room, box(4.6, 0.04, 3.6), mat(C.rug, 1), 3.7, 0.09, -1.0);
   rug.castShadow = false;
+  const rug2 = add(room, box(4.3, 0.03, 3.3), mat(0xE7CDAE, 1), -4.0, 0.08, -0.8);
+  rug2.castShadow = false;
+  add(room, cyl(2.05, 2.05, 0.02, 36), mat(0xF0DDC6, 1), -4.0, 0.1, -0.8, false);
   const sofa = group(4.9, -1.0, -Math.PI / 2);
   sofa.userData.prop = 'sofa';
   add(sofa, box(3.1, 0.34, 1.15), mat(C.sage), 0, 0.42, 0);
@@ -508,6 +511,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   });
   canvas.addEventListener('pointerleave', () => { pointers.clear(); dragging = false; hideTip(); });
   canvas.addEventListener('wheel', e => {
+    if (!e.ctrlKey) return;           // 휠은 페이지 스크롤, Ctrl+휠만 확대·축소
     e.preventDefault();
     cam.zoom = clamp(cam.zoom * (e.deltaY > 0 ? 0.92 : 1.08), 0.7, 2.4);
     applyCamera();

@@ -32,7 +32,7 @@ MARKUP = """          <!-- OFFICE3D:START -->
 
 CSS = """  /* OFFICE3D-CSS:START */
   .office-3d{position:absolute; inset:0; z-index:3}
-  .office-3d canvas{display:block; width:100%; height:100%; touch-action:none; cursor:grab}
+  .office-3d canvas{display:block; width:100%; height:100%; touch-action:pan-y; cursor:grab}
   .office-3d canvas:active{cursor:grabbing}
   .stage-3d .office-room,.stage-3d .office-props,.stage-3d .office-actors{display:none}
   .stage-3d .office-overlay{z-index:6}
