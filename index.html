@@ -2709,14 +2709,34 @@
     }
     return false;
   }
+  function bubPlace(c) {
+    var stageW = stageEl.clientWidth || 1, stageH = stageEl.clientHeight || 1;
+    var W = view.clientWidth || 1, H = view.clientHeight || 1;
+    var visL = (-tx) / z, visR = (W - tx) / z, visT = (-ty) / z, visB = (H - ty) / z;
+    var cx = c.x / BASE * stageW, cy = (c.y - c.h * 0.99) / BASE * stageH;
+    if (cx < visL - 10 || cx > visR + 10 || cy < visT - 8 || cy > visB + 8) return false;
+    var bw = c.bub.offsetWidth || 90;
+    var minX = visL + bw / 2 + 5, maxX = visR - bw / 2 - 5;
+    var lx = (minX > maxX) ? (visL + visR) / 2 : Math.max(minX, Math.min(maxX, cx));
+    c.bub.style.left = (lx / stageW * 100).toFixed(3) + '%';
+    c.bub.style.top = (cy / stageH * 100).toFixed(3) + '%';
+    return true;
+  }
   function showBub(c, ms, force) {
     if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
-    if (shown.indexOf(c.name) < 0) shown.push(c.name);
     c.lineIdx = (c.lineIdx + 1) % c.lines.length;
     c.bub.textContent = c.lines[c.lineIdx];
+    if (!bubPlace(c)) return false;
+    if (shown.indexOf(c.name) < 0) shown.push(c.name);
     c.bub.classList.add('on');
     c.visibleUntil = Date.now() + (ms || 5200);
     return true;
+  }
+  function refreshBubbles() {
+    shown.slice().forEach(function (n) {
+      var c = byName[n];
+      if (c) { if (!bubPlace(c)) { c.bub.classList.remove('on'); } else { c.bub.classList.add('on'); } }
+    });
   }
   function hideBub(c) {
     c.bub.classList.remove('on');
@@ -2784,6 +2804,7 @@
   function applyCam(anim) {
     stageRoot.classList.toggle('o25-still', !anim);
     stageEl.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + z.toFixed(3) + ')';
+    afterCam();
   }
   function focusOn(fx, fy, nz) {
     var W = view.clientWidth || 1, H = view.clientHeight || 1;
@@ -2793,6 +2814,7 @@
     clampPan();
     applyCam(true);
   }
+  function afterCam() { if (typeof refreshBubbles === 'function') refreshBubbles(); }
   function fit(preserve) {
     var W = view.clientWidth || 1;
     if (W < 560) {
