@@ -2643,15 +2643,15 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  renderer.toneMappingExposure = 0.94;
 
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 200);
 
   /* ── 팔레트 (레퍼런스: 크림 벽 + 허니 우드 + 세이지) ───────── */
   const C = {
-    wall: 0xEDDEC6, wallTrim: 0xDCC7A6, wallBase: 0xE3CFB0,
-    floor: 0xC89B68, floorDark: 0xB0854F, floorLight: 0xD6AE7C,
+    wall: 0xEBD9BE, wallTrim: 0xD8C19E, wallBase: 0xDFC9A8,
+    floor: 0xCE9F6C, floorDark: 0xB4864F, floorLight: 0xDCB27E,
     stone: 0xC2BAAC, stoneDark: 0xB0A89A,
     wood: 0xB9825A, woodDark: 0x94633F, woodLight: 0xD0A374,
     dark: 0x4B3A31, white: 0xFFF9F0, cream: 0xF8EEDE,
@@ -2911,8 +2911,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   }
 
   /* ── 조명: 따뜻한 스튜디오 바운스 ───────────────────────── */
-  scene.add(new THREE.HemisphereLight(0xFFF6E9, 0xD6BF9F, 0.92));
-  const sun = new THREE.DirectionalLight(0xFFE8CE, 1.45);
+  scene.add(new THREE.HemisphereLight(0xFFF6E7, 0xD2B894, 0.52));
+  const sun = new THREE.DirectionalLight(0xFFE6C6, 1.42);
   sun.position.set(-6.2, 11.5, 8.2);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -2924,10 +2924,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   sun.shadow.radius = 3.5;
   scene.add(sun);
 
-  const fill = new THREE.DirectionalLight(0xEAF1FF, 0.34);   // 차가운 반사광(톤 분리)
+  const fill = new THREE.DirectionalLight(0xEAF1FF, 0.26);   // 차가운 반사광(톤 분리)
   fill.position.set(8.5, 5.5, 7);
   scene.add(fill);
-  const rim = new THREE.DirectionalLight(0xFFE2BC, 0.5);      // 뒤쪽 림광
+  const rim = new THREE.DirectionalLight(0xFFE2BC, 0.38);     // 뒤쪽 림광
   rim.position.set(1.5, 6, -10);
   scene.add(rim);
   const lampLight = new THREE.PointLight(0xFFD9A0, 12, 11, 2);
@@ -3100,10 +3100,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 4;
     const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.38, 2.38),
+      new THREE.PlaneGeometry(2.74, 2.74),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false })
     );
-    plane.position.set(1.45, 2.30, -R + 0.115);
+    plane.position.set(1.45, 2.18, -R + 0.115);
     room.add(plane);
 
     // 사인 앞 은은한 확산광
@@ -3477,10 +3477,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 1. 피클즈 롱데스크 (뒤 벽) ─────────────────────────── */
   const longDesk = group(2.90, -5.55);
   longDesk.userData.prop = 'command';
-  add(longDesk, clayBox(7.00, 0.15, 1.35, 4.4, 26), M.woodLight, 0, 0.78, 0);
+  add(longDesk, clayBox(5.90, 0.15, 1.35, 4.4, 26), M.woodLight, 0, 0.78, 0);
   add(longDesk, clayBox(6.90, 0.10, 0.22, 3.4, 16), M.wood, 0, 0.70, -0.56);
-  add(longDesk, clayBox(0.20, 0.78, 1.18, 4.0, 18), M.wood, -3.42, 0.39, 0);
-  add(longDesk, clayBox(0.20, 0.78, 1.18, 4.0, 18), M.wood, 3.42, 0.39, 0);
+  add(longDesk, clayBox(0.20, 0.78, 1.18, 4.0, 18), M.wood, -2.87, 0.39, 0);
+  add(longDesk, clayBox(0.20, 0.78, 1.18, 4.0, 18), M.wood, 2.87, 0.39, 0);
   // 서랍장 3개 + 손잡이
   [-2.30, 0.15, 2.30].forEach((dx, i) => {
     add(longDesk, clayBox(0.92, 0.62, 1.00, 4.2, 18), M.cream, dx, 0.33, 0);
@@ -3684,6 +3684,21 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   plant(room, -0.10, -6.40, 0.70);
   plant(room, 2.05, -6.40, 0.62);
 
+  // 앞 오른쪽 코너 — 낮은 수납장 + 소품 (빈 바닥 채우기)
+  const nook = group(5.95, 4.25, -Math.PI / 2);
+  add(nook, clayBox(1.55, 0.66, 0.44, 4.2, 18), M.cream, 0, 0.33, 0);
+  add(nook, clayBox(1.66, 0.08, 0.52, 3.6, 14), M.woodLight, 0, 0.70, 0);
+  add(nook, clayBox(0.20, 0.05, 0.05, 3, 8), M.woodDark, -0.40, 0.42, 0.23, false);
+  add(nook, clayBox(0.20, 0.05, 0.05, 3, 8), M.woodDark, 0.40, 0.42, 0.23, false);
+  plant(nook, -0.52, 0.02, 0.44).position.y = 0.74;
+  book(nook, 0.15, 0.79, 0.02, 0.30, 0.05, 0.22, 0xE9AEB2);
+  book(nook, 0.16, 0.84, 0.02, 0.28, 0.045, 0.20, 0xCFE0C9);
+  budVase(nook, 0.56, 0.74, 0.02);
+  // 오른쪽 코너 액자는 벽이 없으므로 낮은 이젤에 기대어 세운다
+  add(room, clayBox(0.86, 0.70, 0.06, 3.4, 14), M.cream, 5.62, 1.05, 5.10).rotation.x = -0.10;
+  add(room, clayBox(0.70, 0.54, 0.03, 3.2, 12), clayMat(0xC9DBEA, { roughness: 0.9 }), 5.60, 1.05, 5.14, false).rotation.x = -0.10;
+  add(room, clayBox(0.10, 0.40, 0.10, 3, 8), M.woodLight, 5.88, 0.55, 5.16, false).rotation.z = 0.12;
+
   // 천장 펜던트 (롱데스크 위 · 라운지 위)
   function pendant(x, z, y, s) {
     add(room, cyl(0.012, 0.012, 1.2, 6), M.woodDark, x, y + 0.6, z, false);
@@ -3702,27 +3717,28 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
   /* ── 캐릭터 (나은님 실제 캐릭터 사진 기준 · 자리 배치) ───────── */
   const PEOPLE = [
-    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', seat: [1.15, -6.28], yaw: 0,           seatY: 0.25, stance: [1.15, -4.28], roam: false, acts: ['type', 'nod', 'type', 'talk', 'stretch'] },
-    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', seat: [2.40, -6.28], yaw: 0,           seatY: 0.25, stance: [2.40, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
-    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', seat: [3.65, -6.28], yaw: 0,           seatY: 0.25, stance: [3.65, -4.28], roam: false, acts: ['type', 'wave', 'nod', 'talk', 'stretch'], face: 'squeeze' },
-    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', seat: [4.90, -6.28], yaw: 0,           seatY: 0.25, stance: [4.90, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
-    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'command', seat: [-5.32, -1.15], yaw: Math.PI / 2, seatY: 0.15, stance: [-3.30, -1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'], headphones: true },
-    { name: '뮤즈',     kind: 'yeti',     color: 0xEDE0C8, zone: 'command', seat: [-2.50, -1.33], yaw: Math.PI / 2, seatY: 0.55, stance: [-3.35, -2.45], roam: true,  acts: ['talk', 'wave', 'nod', 'type', 'stretch'] },
-    { name: '키링',     kind: 'cat',      color: 0xFCF4E6, zone: 'command', seat: [0.50, -1.33],  yaw: -Math.PI / 2, seatY: 0.55, stance: [1.70, -1.33], roam: true,  acts: ['talk', 'nod', 'type', 'wave', 'stretch'] },
-    { name: '부이',     kind: 'tri',      color: 0xFF3E9E, zone: 'lounge',  seat: [4.45, -2.60],  yaw: Math.PI / 2, seatY: 0.15, stance: [3.30, -2.60], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'] },
+    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', seat: [1.15, -6.28], yaw: 0,           seatY: 0.52, stance: [1.15, -4.28], roam: false, acts: ['type', 'nod', 'type', 'talk', 'stretch'] },
+    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', seat: [2.40, -6.28], yaw: 0,           seatY: 0.52, stance: [2.40, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
+    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', seat: [3.65, -6.28], yaw: 0,           seatY: 0.52, stance: [3.65, -4.28], roam: false, acts: ['type', 'wave', 'nod', 'talk', 'stretch'], face: 'squeeze' },
+    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', seat: [4.90, -6.28], yaw: 0,           seatY: 0.52, stance: [4.90, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
+    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'command', seat: [-5.32, -1.15], yaw: Math.PI / 2, seatY: 0.30, stance: [-3.30, -1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'], headphones: true },
+    { name: '뮤즈',     kind: 'yeti',     color: 0xE9DBBE, zone: 'command', seat: [-2.50, -1.33], yaw: Math.PI / 2, seatY: 0.55, stance: [-3.35, -2.45], roam: true,  acts: ['talk', 'wave', 'nod', 'type', 'stretch'] },
+    { name: '키링',     kind: 'cat',      color: 0xFAF1DE, zone: 'command', seat: [0.50, -1.33],  yaw: -Math.PI / 2, seatY: 0.55, stance: [1.70, -1.33], roam: true,  acts: ['talk', 'nod', 'type', 'wave', 'stretch'] },
+    { name: '부이',     kind: 'tri',      color: 0xFF3E9E, zone: 'lounge',  seat: [4.45, -2.60],  yaw: Math.PI / 2, seatY: 0.30, stance: [3.30, -2.60], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'] },
     { name: '하마뮤즈', kind: 'hippo',    color: 0xB49BE0, zone: 'lounge',  seat: [-1.15, 3.20],  yaw: 1.00,        seatY: 0.50, stance: [-2.35, 2.45], roam: true,  acts: ['sip', 'talk', 'nod', 'wave', 'stretch'], glasses: true },
     { name: '하크',     kind: 'squircle', color: 0x242424, zone: 'lounge',  seat: [1.15, 2.40],   yaw: -0.05,       seatY: 0.22, stance: [1.15, 1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'] },
-    { name: '인스팅트', kind: 'disc',     color: 0xF4EBDC, zone: 'lounge',  seat: [3.15, 3.35],   yaw: -1.05,       seatY: 0.22, stance: [3.15, 4.60], roam: true,  acts: ['read', 'nod', 'talk', 'stretch'], glasses: true }
+    { name: '인스팅트', kind: 'disc',     color: 0xEFE3CE, zone: 'lounge',  seat: [3.15, 3.35],   yaw: -1.05,       seatY: 0.22, stance: [3.15, 4.60], roam: true,  acts: ['read', 'nod', 'talk', 'stretch'], glasses: true }
   ];
 
   /* ── 길찾기: 바닥 격자 A* (가구 회피) ───────────────────── */
   const ROOM_LIM = 6.50;
   const OB_B = [                        // 사각 장애물 (중심 x, z, 반폭, 반높이)
-    { x: 2.90, z: -5.55, hw: 3.58, hd: 1.06 },   // 피클즈 롱데스크 + 의자
+    { x: 2.90, z: -5.55, hw: 2.98, hd: 1.06 },   // 피클즈 롱데스크 + 의자
     { x: -4.70, z: -1.15, hw: 1.00, hd: 1.48 },  // 큐 책상 + 의자
     { x: 4.95, z: -2.60, hw: 1.18, hd: 1.48 },   // 부이 책상 + 파티션
     { x: -6.42, z: -4.00, hw: 0.64, hd: 1.98 },  // 책장
-    { x: -5.55, z: 2.55, hw: 0.62, hd: 1.62 }    // 커피바
+    { x: -5.55, z: 2.55, hw: 0.62, hd: 1.62 },   // 커피바
+    { x: 5.95, z: 4.25, hw: 0.55, hd: 0.90 }     // 코너 수납장
   ];
   const OB_C = [                        // 원형 장애물 (중심 x, z, 반지름)
     { x: -1.00, z: -1.40, r: 1.62 },    // 원탁 + 안락의자
@@ -3738,7 +3754,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     { x: 6.22, z: -1.10, r: 0.55 }, { x: 6.28, z: 1.60, r: 0.50 },
     { x: -6.18, z: 6.05, r: 0.55 }, { x: -3.20, z: 6.28, r: 0.42 },
     { x: 5.10, z: 5.40, r: 0.50 }, { x: -0.10, z: -6.42, r: 0.40 },
-    { x: 2.05, z: -6.42, r: 0.36 }
+    { x: 2.05, z: -6.42, r: 0.36 },
+    { x: 5.95, z: 4.25, r: 0.80 }
   ];
   function blockedAt(x, z, pad) {
     pad = pad || 0;
@@ -4209,7 +4226,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   scene.add(ring);
 
   /* ── 카메라 조작 ────────────────────────────────────────── */
-  const cam = { az: 0.74, pol: 1.00, dist: 34, target: new THREE.Vector3(0.25, 1.30, -0.55), size: 7.6, zoom: 1 };
+  const cam = { az: 0.74, pol: 1.00, dist: 34, target: new THREE.Vector3(0.15, 1.25, -0.30), size: 8.7, zoom: 1 };
   const camBase = { az: 0.74, pol: 1.0 };
   // 좁은 화면(모바일)은 방 안쪽이 화면을 가득 채우도록 더 당겨서 보여준다
   let camNarrow = null;
@@ -4218,7 +4235,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const isNarrow = w < 520;
     if (isNarrow === camNarrow) return;
     camNarrow = isNarrow;
-    cam.size = isNarrow ? 5.9 : 7.6;
+    cam.size = isNarrow ? 6.3 : 8.7;
+    cam.target.set(isNarrow ? 0.35 : 0.15, isNarrow ? 1.30 : 1.25, isNarrow ? -0.85 : -0.30);
     cam.zoom = 1;
   }
 
