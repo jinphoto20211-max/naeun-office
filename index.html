@@ -906,7 +906,7 @@
     <div class="section-head">
       <div>
         <h2>오피스 맵</h2>
-        <p>대회의실 · 지휘실 · 라운지, 세 공간을 열 명의 비서가 걸어 다닙니다. (막내 분신 오이는 텔레그램에서 중계)</p>
+        <p>대회의실 · 지휘실 · 라운지, 세 공간을 열한 명의 비서가 걸어 다닙니다. (막내 분신 오이는 텔레그램에서 중계)</p>
       </div>
       <button class="cmd-btn" id="openCmdMap" type="button">💬 지휘실에서 지시하기</button>
     </div>
@@ -1021,6 +1021,7 @@
             <div class="o3d-pills" id="office3dPills" aria-hidden="true"></div>
             <div class="o3d-bar" id="office3dBar" aria-label="비서 아바타"></div>
           </div>
+          
           <!-- OFFICE3D:END -->
         </div>
         <div class="prop-card" id="propCard" hidden>
@@ -3498,6 +3499,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   stage.classList.add('stage-3d');
   host.hidden = false;
   window.__office3dReady = true;
+  window.__o3d = { scene, camera, cam, walkers, applyCamera, ring, renderer, THREE };  // 개발용 핸들
   requestAnimationFrame(frame);
 })();
 </script>

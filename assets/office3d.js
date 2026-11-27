@@ -896,5 +896,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   stage.classList.add('stage-3d');
   host.hidden = false;
   window.__office3dReady = true;
+  window.__o3d = { scene, camera, cam, walkers, applyCamera, ring, renderer, THREE };  // 개발용 핸들
   requestAnimationFrame(frame);
 })();
