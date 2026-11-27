@@ -231,8 +231,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const a = [], b = [];
     for (let i = 0; i < n; i++) {
       const prev = P[(i - 1 + n) % n], cur = P[i], next = P[(i + 1) % n];
-      a.push(cur.clone().sub(prev).normalize().multiplyScalar(r).add(cur));
-      b.push(cur.clone().sub(next).normalize().multiplyScalar(r).add(cur));
+      a.push(prev.clone().sub(cur).normalize().multiplyScalar(r).add(cur));
+      b.push(next.clone().sub(cur).normalize().multiplyScalar(r).add(cur));
     }
     s.moveTo(b[0].x, b[0].y);
     for (let i = 1; i < n; i++) {
