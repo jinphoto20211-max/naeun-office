@@ -859,9 +859,9 @@
     box-shadow:0 7px 18px rgba(90,60,40,.20), 0 1px 2px rgba(90,60,40,.10);
   }
   .o25-bub.on{opacity:1; transform:translate(-50%,-100%) scale(1)}
-  .o25-bub-t{display:block; font-weight:800}
-  .o25-bub-s{display:block; margin-top:2px; font-style:normal; font-size:.84em; font-weight:700; letter-spacing:-.1px; color:#A2938A}
-  .o25-bub-s.on{color:#4E9A6B}
+  .o25-bub-t{display:flex; align-items:center; justify-content:center; gap:.42em; font-weight:800}
+  .o25-bub-dot{width:.52em; height:.52em; border-radius:50%; background:#C2B8AE; flex:0 0 auto; box-shadow:0 0 0 .16em rgba(194,184,174,.22)}
+  .o25-bub-dot.on{background:#22c55e; box-shadow:0 0 0 .16em rgba(34,197,94,.20)}
   .o25-bub::after{
     content:""; position:absolute; left:50%; bottom:-4.5px; width:9px; height:9px; background:inherit;
     border-right:1px solid rgba(255,255,255,.92); border-bottom:1px solid rgba(255,255,255,.92);
@@ -2710,10 +2710,8 @@
   ];
 
   var AGC_ON = { '초록': 1, '노랑': 1, '막내': 1, '진분홍': 1 };
-  function statusLine(n) {
-    return AGC_ON[n]
-      ? '<i class="o25-bub-s on">● 단톡방 접속 중</i>'
-      : '<i class="o25-bub-s">○ 단톡방 미접속</i>';
+  function statusDot(n) {
+    return '<i class="o25-bub-dot' + (AGC_ON[n] ? ' on' : '') + '"></i>';
   }
   var byName = {};
   CHARS.forEach(function (c) { byName[c.name] = c; });
@@ -2783,7 +2781,7 @@
   function showBub(c, ms, force) {
     if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
     c.lineIdx = (c.lineIdx + 1) % c.lines.length;
-    c.bub.innerHTML = '<b class="o25-bub-t">' + c.lines[c.lineIdx] + '</b>' + statusLine(c.name);
+    c.bub.innerHTML = '<b class="o25-bub-t">' + statusDot(c.name) + '<span>' + c.lines[c.lineIdx] + '</span></b>';
     if (!bubPlace(c)) return false;
     if (shown.indexOf(c.name) < 0) shown.push(c.name);
     c.bub.classList.add('on');
@@ -2847,9 +2845,9 @@
       if (d) d.classList.toggle('on', !!online);
       chip.setAttribute('aria-label', name + ' 부르기 (' + (online ? '단톡방 접속 중' : '단톡방 미접속') + ')');
     }
-    if (c.bub && c.bub.classList.contains('on')) {
-      var sEl = c.bub.querySelector('.o25-bub-s');
-      if (sEl) { sEl.className = 'o25-bub-s' + (online ? ' on' : ''); sEl.textContent = online ? '● 단톡방 접속 중' : '○ 단톡방 미접속'; }
+    if (c.bub) {
+      var dEl = c.bub.querySelector('.o25-bub-dot');
+      if (dEl) dEl.className = 'o25-bub-dot' + (online ? ' on' : '');
     }
     return true;
   };
