@@ -1165,6 +1165,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     tag.hidden = false;
     void tag.offsetWidth;
     tag.classList.add('on');
+    tip.hidden = true;
     clearTimeout(focusOn.t);
     focusOn.t = setTimeout(() => {
       ring.visible = false; chips.forEach(c => c.classList.remove('on')); focusTarget = null;
@@ -1174,7 +1175,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   }
   const ring = new THREE.Mesh(
     new THREE.RingGeometry(0.58, 0.82, 40),
-    new THREE.MeshBasicMaterial({ color: 0xE6A0AA, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ color: 0xE6A0AA, transparent: true, opacity: 0.68, side: THREE.DoubleSide })
   );
   ring.rotation.x = -Math.PI / 2;
   ring.visible = false;
@@ -1544,7 +1545,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
         ((tmpV.x * 0.5 + 0.5) * host.clientWidth).toFixed(1) + 'px,' +
         (((-tmpV.y * 0.5 + 0.5) * host.clientHeight) - 8).toFixed(1) + 'px)';
     }
-    if (ring.visible) ring.material.opacity = 0.35 + Math.sin(t * 3) * 0.18;
+    if (ring.visible) ring.material.opacity = 0.5 + Math.sin(t * 3) * 0.16;
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
   }
