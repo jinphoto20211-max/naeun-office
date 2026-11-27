@@ -352,7 +352,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     add(room, clayBox(capW - 0.06, 0.46, capD - 0.06, 4.4, 20), M.wallBase, x, 0.28, z);
   });
 
-  // 벽 액자 · 벽등 · 문
+  /* ── 벽면 연출: 액자 · 아치 문 · 네온 사인 · 이젤 · TV · 블라인드 ── */
   function wallFrame(x, y, z, w, h, ry, art) {
     const g = new THREE.Group();
     g.position.set(x, y, z); g.rotation.y = ry || 0;
@@ -361,58 +361,249 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     room.add(g);
     return g;
   }
-  wallFrame(-3.4, 2.25, -R + 0.05, 1.0, 0.78, 0, 0xBFD3D8);
-  wallFrame(-1.55, 2.5, -R + 0.05, 0.7, 0.9, 0, 0xE7C9A8);
-  wallFrame(-R + 0.05, 2.2, 2.1, 0.9, 0.72, Math.PI / 2, 0xD8C6A6);
+  // 왼쪽 벽 액자 (문과 책장 사이)
+  wallFrame(-R + 0.05, 2.30, -0.95, 0.94, 0.74, Math.PI / 2, 0xBFD3D8);
+  wallFrame(-R + 0.05, 2.46, 0.00, 0.60, 0.82, Math.PI / 2, 0xE2CBA8);
 
-  // 벽시계 · 벽걸이 달력 · 미니 액자
-  wallClock(room, 0.62, 2.78, -R + 0.07, 0.3);
-  wallCalendar(room, 1.62, 2.5, -R + 0.07, 0.5, 0.6);
-  wallFrame(2.4, 2.02, -R + 0.05, 0.42, 0.48, 0, 0xA9BFA6);
-
-  // 왼쪽 벽 미니 선반 + 소품
-  (function wallShelf() {
+  // 아치형 나무 문 (왼쪽 벽 앞쪽)
+  (function archDoor() {
     const g = new THREE.Group();
-    g.position.set(-R + 0.22, 2.12, -1.5); g.rotation.y = Math.PI / 2;
-    add(g, clayBox(1.1, 0.07, 0.28, 3.2, 14), M.woodLight, 0, 0, 0);
+    g.position.set(-R + 0.10, 0, 5.20); g.rotation.y = Math.PI / 2;
+    const DW = 1.62, DH = 2.46, IW = DW - 0.34, IH = DH - 0.20;
+    const shape = new THREE.Shape();
+    shape.moveTo(-DW / 2, -DH / 2);
+    shape.lineTo(-DW / 2, DH / 2 - DW / 2);
+    shape.absarc(0, DH / 2 - DW / 2, DW / 2, Math.PI, 0, true);
+    shape.lineTo(DW / 2, -DH / 2);
+    shape.closePath();
+    const hole = new THREE.Path();
+    hole.moveTo(-IW / 2, -DH / 2 + 0.10);
+    hole.lineTo(-IW / 2, DH / 2 - DW / 2);
+    hole.absarc(0, DH / 2 - DW / 2, IW / 2, Math.PI, 0, true);
+    hole.lineTo(IW / 2, -DH / 2 + 0.10);
+    hole.closePath();
+    shape.holes.push(hole);
+    const frame = add(g, claySlab(shape, 0.20, 0.035, 4, 30), M.wood, 0, 0, 0);
+    frame.position.y = DH / 2;
+    // 문짝
+    const leafShape = new THREE.Shape();
+    leafShape.moveTo(-IW / 2 + 0.04, -DH / 2 + 0.10);
+    leafShape.lineTo(-IW / 2 + 0.04, DH / 2 - DW / 2);
+    leafShape.absarc(0, DH / 2 - DW / 2, IW / 2 - 0.04, Math.PI, 0, true);
+    leafShape.lineTo(IW / 2 - 0.04, -DH / 2 + 0.10);
+    leafShape.closePath();
+    const leaf = add(g, claySlab(leafShape, 0.09, 0.03, 4, 26), M.woodLight, 0, 0, 0.06, false);
+    leaf.position.y = DH / 2;
+    // 판자 홈
+    [-0.34, 0, 0.34].forEach(dx => add(g, clayBox(0.035, DH - 0.7, 0.02, 3, 8), M.wood, dx, DH / 2 - 0.12, 0.115, false));
+    // 손잡이 + 로봇 명판
+    add(g, sph(0.075, 12), clayMat(0xE8CB84, { metalness: 0.3, roughness: 0.38 }), 0.48, 1.02, 0.14, false);
+    add(g, clayBox(0.34, 0.24, 0.03, 3.4, 12), M.cream, 0, 1.72, 0.13, false);
+    add(g, clayBox(0.20, 0.13, 0.03, 3.0, 10), clayMat(0xC9A279), 0, 1.72, 0.15, false);
+    [-0.05, 0.05].forEach(dx => add(g, sph(0.017, 8), M.dark, dx, 1.73, 0.17, false));
     room.add(g);
-    const wp = plant(g, -0.34, 0.06, 0.3); wp.position.y = 0.035;
-    book(g, 0.22, 0.11, 0, 0.055, 0.16, 0.2, 0xE9AEB2);
-    book(g, 0.29, 0.11, 0, 0.055, 0.14, 0.2, 0x9DC0DC);
-    add(g, sph(0.06, 12), clayMat(0xF9E3B8, { roughness: 0.85 }), 0.02, 0.09, 0, false);
   })();
 
-  // 벽 상단 가랜드 (파스텔 페넌트)
-  (function bunting() {
-    const n = 12;
-    for (let i = 0; i < n; i++) {
-      const t = i / (n - 1);
-      const x = -5.5 + t * 7.4;
-      const y = 3.26 - Math.sin(t * Math.PI) * 0.15;
-      const geo = claySlab(roundShape([[-0.082, 0], [0.082, 0], [0, -0.17]], 0.02), 0.016, 0.008, 4, 6);
-      const p = add(room, geo, clayMat([0xE9AEB2, 0xF9E3B8, 0xCFE0C9, 0xC9DBEA][i % 4], { roughness: 0.9 }), x, y, -R + 0.14, false);
-      p.rotation.z = (i % 2 ? 1 : -1) * 0.05;
-    }
-  })();
-
-  // 문 (왼쪽 벽)
-  (function door() {
-    const g = new THREE.Group();
-    g.position.set(-R + 0.06, 0, 4.3); g.rotation.y = Math.PI / 2;
-    add(g, clayBox(1.5, 2.5, 0.1, 4.6, 20), M.wallBase, 0, 1.25, 0);
-    add(g, clayBox(1.2, 2.2, 0.07, 4.6, 18), M.cream, 0, 1.18, 0.05, false);
-    add(g, sph(0.07, 10), M.woodDark, 0.42, 1.15, 0.12, false);
-    room.add(g);
-  })();
   // 벽등 (따뜻한 스콘)
-  (function sconce() {
+  function wallSconce(x, y, z, ry) {
     const g = new THREE.Group();
-    g.position.set(-2.6, 2.55, -R + 0.12);
-    add(g, clayBox(0.26, 0.34, 0.16, 3, 14), M.woodDark, 0, 0, 0);
-    add(g, sph(0.16, 14), M.glow, 0, 0.02, 0.14, false).scale.set(1, 1.15, 1);
-    const pl = new THREE.PointLight(0xFFDCAE, 3.2, 4.5, 2);
-    pl.position.set(0, 0.05, 0.28);
+    g.position.set(x, y, z); g.rotation.y = ry || 0;
+    add(g, clayBox(0.24, 0.30, 0.14, 3, 14), M.woodDark, 0, 0, 0);
+    add(g, sph(0.155, 16), M.glow, 0, 0.02, 0.13, false).scale.set(1, 1.1, 1);
+    const pl = new THREE.PointLight(0xFFDCA8, 3.6, 4.6, 2);
+    pl.position.set(0, 0.05, 0.26);
     g.add(pl);
+    room.add(g);
+    return g;
+  }
+  wallSconce(-R + 0.16, 2.62, 0.62, Math.PI / 2);
+  wallSconce(2.98, 2.74, -R + 0.16, 0);
+
+  // 네온 아치 사인 — '나은 비서실'
+  (function neonSign() {
+    const W = 900, H = 900;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    x.clearRect(0, 0, W, H);
+    const ax = W / 2, halfW = 322, topY = 520, botY = 866, rad = halfW;
+
+    // 아치 테두리 (이중 네온)
+    const arch = () => {
+      x.beginPath();
+      x.moveTo(ax - halfW, botY);
+      x.lineTo(ax - halfW, topY);
+      x.arc(ax, topY, rad, Math.PI, 0);
+      x.lineTo(ax + halfW, botY);
+      x.stroke();
+    };
+    x.lineCap = 'round';
+    x.strokeStyle = 'rgba(255,205,132,0.95)';
+    x.lineWidth = 12; x.shadowColor = 'rgba(255,196,112,1)'; x.shadowBlur = 46; arch();
+    x.shadowBlur = 20; x.strokeStyle = 'rgba(255,242,210,1)'; x.lineWidth = 6; arch();
+    x.shadowBlur = 0;
+
+    // 로봇 얼굴 아이콘 (아치 안쪽 위)
+    x.save();
+    x.translate(ax, 322);
+    x.shadowColor = 'rgba(255,204,128,1)'; x.shadowBlur = 26;
+    x.fillStyle = 'rgba(255,232,190,1)';
+    const rw = 96, rh = 74, rr = 24;
+    x.beginPath();
+    x.moveTo(-rw + rr, -rh); x.lineTo(rw - rr, -rh); x.quadraticCurveTo(rw, -rh, rw, -rh + rr);
+    x.lineTo(rw, rh - rr); x.quadraticCurveTo(rw, rh, rw - rr, rh);
+    x.lineTo(-rw + rr, rh); x.quadraticCurveTo(-rw, rh, -rw, rh - rr);
+    x.lineTo(-rw, -rh + rr); x.quadraticCurveTo(-rw, -rh, -rw + rr, -rh);
+    x.fill();
+    x.shadowBlur = 0;
+    x.fillStyle = 'rgba(255,247,232,1)';
+    x.fillRect(-5, -rh - 30, 10, 30);
+    x.beginPath(); x.arc(0, -rh - 36, 13, 0, Math.PI * 2); x.fill();
+    x.fillStyle = '#3B2E24';
+    x.beginPath(); x.arc(-30, 2, 13, 0, Math.PI * 2); x.fill();
+    x.beginPath(); x.arc(30, 2, 13, 0, Math.PI * 2); x.fill();
+    x.restore();
+
+    // 사인 텍스트
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+    x.font = '800 118px "Pretendard","Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR",sans-serif';
+    x.shadowColor = 'rgba(255,198,116,1)'; x.shadowBlur = 38;
+    x.fillStyle = 'rgba(255,214,150,1)';
+    x.fillText('나은 비서실', ax, 600);
+    x.shadowBlur = 10;
+    x.fillStyle = 'rgba(255,248,232,1)';
+    x.fillText('나은 비서실', ax, 600);
+    x.shadowBlur = 0;
+    x.font = '600 38px "Pretendard","Malgun Gothic",sans-serif';
+    x.fillStyle = 'rgba(255,235,198,0.92)';
+    x.fillText('AI  ASSISTANT  OFFICE', ax, 690);
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(2.38, 2.38),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false })
+    );
+    plane.position.set(1.45, 2.30, -R + 0.115);
+    room.add(plane);
+
+    // 사인 앞 은은한 확산광
+    const halo = new THREE.PointLight(0xFFC98C, 7.5, 6.4, 2);
+    halo.position.set(1.45, 2.55, -R + 1.0);
+    room.add(halo);
+  })();
+
+  // 체크리스트 이젤 보드 (뒤 벽 오른쪽)
+  (function checklistEasel() {
+    const g = new THREE.Group();
+    g.position.set(3.72, FLOOR_Y, -R + 0.52);
+    g.rotation.x = -0.10;
+    [-1, 1].forEach(s => {
+      const leg = add(g, clayBox(0.075, 1.30, 0.075, 3, 8), M.woodLight, s * 0.36, 0.62, -0.10);
+      leg.rotation.z = s * 0.07;
+    });
+    add(g, clayBox(0.96, 1.24, 0.07, 4.4, 16), M.cream, 0, 1.06, 0);
+    add(g, clayBox(0.84, 1.10, 0.02, 4.2, 14), clayMat(0xFFFDF7, { roughness: 0.9 }), 0, 1.08, 0.05, false);
+    add(g, clayBox(0.50, 0.07, 0.03, 3, 8), clayMat(0xE8899A), 0, 1.53, 0.065, false);
+    for (let i = 0; i < 5; i++) {
+      const y = 1.36 - i * 0.17;
+      add(g, clayBox(0.10, 0.10, 0.02, 2.2, 8), clayMat(0xF6E2B6), -0.28, y, 0.067, false);
+      if (i < 3) {
+        const t1 = add(g, clayBox(0.075, 0.018, 0.01, 2, 6), clayMat(0xE2727F), -0.30, y - 0.01, 0.075, false);
+        t1.rotation.z = 0.7;
+        const t2 = add(g, clayBox(0.055, 0.018, 0.01, 2, 6), clayMat(0xE2727F), -0.255, y + 0.012, 0.075, false);
+        t2.rotation.z = -0.7;
+      }
+      add(g, clayBox(0.44, 0.045, 0.012, 3, 8), clayMat(i < 3 ? 0xD8C4AA : 0xEADFCE), 0.06, y, 0.066, false);
+    }
+    add(g, clayBox(0.52, 0.06, 0.13, 3, 10), M.woodLight, 0, 0.40, 0.10);
+    room.add(g);
+  })();
+
+  // 벽걸이 TV (로봇 로고 화면)
+  (function wallTV() {
+    const W = 512, H = 320;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d');
+    const grad = x.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#2E4E7A'); grad.addColorStop(1, '#42699A');
+    x.fillStyle = grad; x.fillRect(0, 0, W, H);
+    x.fillStyle = 'rgba(255,255,255,0.10)';
+    x.fillRect(0, 0, W, 26);
+    x.strokeStyle = 'rgba(180,215,255,0.9)'; x.lineWidth = 5;
+    x.strokeRect(196, 108, 120, 96);
+    x.beginPath(); x.arc(232, 152, 9, 0, Math.PI * 2); x.arc(280, 152, 9, 0, Math.PI * 2); x.fillStyle = 'rgba(190,222,255,1)'; x.fill();
+    x.fillRect(250, 84, 14, 26);
+    x.beginPath(); x.arc(257, 78, 10, 0, Math.PI * 2); x.fill();
+    x.fillStyle = 'rgba(200,226,255,0.85)';
+    x.fillRect(40, 250, 150, 8); x.fillRect(40, 272, 96, 8); x.fillRect(360, 250, 112, 8);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+
+    const g = new THREE.Group();
+    g.position.set(5.05, 2.56, -R + 0.12);
+    add(g, clayBox(1.66, 1.04, 0.10, 4.6, 18), M.dark, 0, 0, 0);
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.50, 0.88),
+      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.42, metalness: 0, emissive: 0x6FA0D8, emissiveIntensity: 0.42, emissiveMap: tex }));
+    scr.position.z = 0.056;
+    g.add(scr);
+    room.add(g);
+  })();
+
+  // 블라인드 창 (뒤 벽 오른쪽) — 클릭 소품 'window'
+  const win = (function blindsWindow() {
+    const g = new THREE.Group();
+    g.position.set(6.45, FLOOR_Y, -R + 0.10);
+    g.userData.prop = 'window';
+    add(g, clayBox(1.16, 1.66, 0.12, 4.8, 18), M.cream, 0, 2.02, 0);
+    add(g, clayBox(0.98, 1.44, 0.05, 4.8, 14), new THREE.MeshStandardMaterial({
+      color: 0xFFE7C2, emissive: 0xFFCE94, emissiveIntensity: 0.55, roughness: 0.4
+    }), 0, 2.02, 0.07, false);
+    for (let i = 0; i < 9; i++) {
+      const sl = add(g, clayBox(0.98, 0.10, 0.035, 3, 10), M.woodLight, 0, 1.40 + i * 0.155, 0.11, false);
+      sl.rotation.x = -0.32;
+    }
+    add(g, clayBox(1.30, 0.12, 0.26, 3, 12), M.woodLight, 0, 1.16, 0.06);
+    const sp = plant(g, 0.46, 0.02, 0.30); sp.position.y = 1.24;
+    const pl = new THREE.PointLight(0xFFDFB4, 4.2, 5.2, 2);
+    pl.position.set(0, 1.9, 0.55);
+    g.add(pl);
+    room.add(g);
+    return g;
+  })();
+
+  // 화이트보드 (왼쪽 벽 · 클릭 소품 'board')
+  (function wallBoard() {
+    const g = new THREE.Group();
+    g.position.set(-R + 0.12, FLOOR_Y, 2.15); g.rotation.y = Math.PI / 2;
+    g.userData.prop = 'board';
+    add(g, clayBox(1.94, 1.24, 0.10, 4.8, 18), M.cream, 0, 1.86, 0);
+    add(g, clayBox(1.76, 1.06, 0.05, 4.8, 16), clayMat(0xFDFAF3, { roughness: 0.72 }), 0, 1.86, 0.06, false);
+    add(g, clayBox(0.56, 0.05, 0.03, 3, 8), clayMat(0xE8899A), -0.42, 2.16, 0.09, false);
+    add(g, clayBox(0.86, 0.045, 0.03, 3, 8), clayMat(0x8FB8DE), -0.2, 2.00, 0.09, false);
+    add(g, clayBox(0.66, 0.045, 0.03, 3, 8), clayMat(0x7FC197), 0.14, 1.84, 0.09, false);
+    add(g, clayBox(0.4, 0.045, 0.03, 3, 8), clayMat(0xE8B27A), -0.30, 1.68, 0.09, false);
+    postit(g, 0.66, 2.10, 0.10, 0.08, 0xF9C9D2, 0.13);
+    postit(g, 0.64, 1.88, 0.10, -0.06, 0xFFE9A8, 0.13);
+    add(g, clayBox(1.10, 0.07, 0.16, 3, 12), M.woodLight, 0, 1.19, 0.04);
+    [[-0.2, 0xE8899A], [0.02, 0x8FB8DE], [0.24, 0x7FC197]].forEach(([bx, col]) => {
+      const mk = add(g, cyl(0.018, 0.018, 0.18, 8), clayMat(col, { roughness: 0.6 }), bx, 1.23, 0.02, false);
+      mk.rotation.z = Math.PI / 2;
+    });
+    room.add(g);
+  })();
+
+  // 뒤 벽 소품 선반 (왼쪽) — 화분 · 보관함
+  (function backShelf() {
+    const g = new THREE.Group();
+    g.position.set(-1.55, 2.02, -R + 0.22);
+    add(g, clayBox(2.30, 0.07, 0.30, 3.2, 16), M.woodLight, 0, 0, 0);
+    const p1 = plant(g, -0.86, 0.06, 0.36); p1.position.y = 0.02;
+    const p2 = plant(g, 0.72, 0.06, 0.28); p2.position.y = 0.02;
+    add(g, clayBox(0.26, 0.22, 0.22, 3.4, 10), clayMat(0xF0E2CC), -0.28, 0.14, 0.02, false);
+    add(g, clayBox(0.22, 0.18, 0.20, 3.4, 10), clayMat(0xE9AEB2), -0.28, 0.34, 0.02, false);
+    budVase(g, 0.24, 0.02, 0.0);
     room.add(g);
   })();
 
@@ -616,271 +807,438 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     g.add(c); return c;
   }
 
-  /* ── 지휘실: 아늑한 곡선 책상 + 은은한 모니터 ──────────── */
-  const command = group(0, -5.9);
-  command.userData.prop = 'command';
-  const deskTop = add(command, clayBox(6.0, 0.16, 1.2, 4.8, 24), M.woodLight, 0, 0.76, 0);
-  deskTop.rotation.x = 0;
-  add(command, clayBox(6.0, 0.16, 0.2, 3, 16), M.woodDark, 0, 0.68, -0.52);
-  add(command, clayBox(0.24, 0.76, 0.95, 4.4, 18), M.wood, -2.88, 0.38, 0);
-  add(command, clayBox(0.24, 0.76, 0.95, 4.4, 18), M.wood, 2.88, 0.38, 0);
-  add(command, clayBox(1.25, 0.62, 0.8, 4.4, 18), M.wood, -1.9, 0.31, 0);
-  add(command, clayBox(1.25, 0.62, 0.8, 4.4, 18), M.wood, 1.9, 0.31, 0);
-  monitor(command, -1.95, 0.8, -0.16, 0.28, 1.05, 0.62, screenTexB);
-  monitor(command, 0, 0.8, -0.22, 0, 1.18, 0.7, screenTexA);
-  monitor(command, 1.95, 0.8, -0.16, -0.28, 1.05, 0.62, screenTexC);
-  add(command, clayBox(0.78, 0.06, 0.3, 3, 14), M.dark, 0, 0.86, 0.2);        // 키보드
-  mug(command, 1.3, 0.845, 0.26, 0xC9DBEA);                                  // 머그컵
-  add(command, cyl(0.17, 0.14, 0.34, 14), M.pot, -2.3, 0.98, 0.2);            // 화분
-  plant(command, -2.3, 0.2, 0.45);
-  deskLamp(command, 2.46, 0.845, -0.2);                                       // 미니 램프
-  penCup(command, -0.62, 0.845, 0.32, 0xEBCBD8);                             // 펜꽂이
-  paperSheet(command, -1.4, 0.848, 0.32, 0.4, 0.42, 0.3);                    // 서류
-  paperSheet(command, -1.32, 0.86, 0.27, 0.22, 0.4, 0.28, 0xFFF7E6);
-  postit(command, 0.78, 0.848, 0.34, 0.14, 0xFFE9A8);                        // 포스트잇
-  postit(command, 0.66, 0.85, 0.2, -0.18, 0xF9C9D2, 0.13);
-  chair(command, -2.1, -0.62, 0.05);
-  chair(command, 1.95, -0.62, -0.05);
+  /* ═══ 가구 배치 — 레퍼런스(따뜻한 크림 오피스) 구도 ═══════════ */
 
-  /* ── 대회의실: 둥근 우드 테이블 ─────────────────────────── */
-  const tableAt = group(-4.0, -0.8);
-  tableAt.userData.prop = 'table';
-  add(tableAt, cyl(1.5, 1.5, 0.14, 44), M.wood, 0, 0.74, 0);
-  add(tableAt, cyl(1.36, 1.36, 0.08, 40), M.woodLight, 0, 0.82, 0);
-  add(tableAt, cyl(0.22, 0.26, 0.72, 18), M.woodDark, 0, 0.38, 0);
-  add(tableAt, cyl(0.6, 0.6, 0.1, 26), M.woodDark, 0, 0.06, 0);
-  // 테이블 위 소품 — 노트북 · 서류 · 펜 · 머그 · 다과 · 작은 꽃병
-  mug(tableAt, 0.62, 0.868, 0.2, 0xC9DBEA);
-  mug(tableAt, -0.52, 0.868, -0.34, 0xF7D9CE);
-  laptopMini(tableAt, 0.5, 0.872, -0.62, 2.45);
-  paperSheet(tableAt, -0.8, 0.87, 0.46, 0.42, 0.42, 0.3);
-  paperSheet(tableAt, -0.72, 0.882, 0.4, 0.26, 0.4, 0.28, 0xFFF6E4);
-  pen(tableAt, -0.5, 0.892, 0.3, 0.7, 0xE8899A);
-  paperSheet(tableAt, 0.06, 0.868, 0.33, -0.1, 0.36, 0.44, 0xFBF0DD);      // 노트
-  postit(tableAt, 0.1, 0.884, 0.28, 0.12, 0xFFE9A8, 0.13);
-  plate(tableAt, -0.3, 0.87, -0.86, 0.22, 0xFFFBF2);
-  macaron(tableAt, -0.38, 0.895, -0.82, 0xF7C9D0);
-  macaron(tableAt, -0.24, 0.895, -0.94, 0xF9E3B8);
-  macaron(tableAt, -0.16, 0.895, -0.78, 0xCFE0C9);
-  budVase(tableAt, 0.86, 0.868, 0.56);
-  [[0, -2.15, 0], [0, 2.15, Math.PI], [-2.15, 0, Math.PI / 2], [2.15, 0, -Math.PI / 2]]
-    .forEach(([x, z, ry], i) => chair(tableAt, x, z, ry, PASTEL[i % 4]));
-  plant(tableAt, 1.0, -1.0, 0.55);
+  /* 공용 가구 헬퍼 */
+  function officeChair(g, x, z, ry, cushion) {
+    const ch = new THREE.Group();
+    ch.position.set(x, 0, z); ch.rotation.y = ry || 0;
+    const fab = fabricMat(cushion || 0xEFE6D6, { bumpScale: 0.018 });
+    add(ch, clayBox(0.66, 0.14, 0.64, 3.4, 20), fab, 0, 0.62, 0);
+    add(ch, clayBox(0.60, 0.66, 0.15, 3.0, 18), fab, 0, 1.02, -0.27);
+    add(ch, clayBox(0.66, 0.12, 0.20, 3.0, 16), fab, 0, 1.40, -0.27);
+    add(ch, cyl(0.065, 0.065, 0.40, 12), M.metal, 0, 0.36, 0);
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2;
+      const leg = add(ch, clayBox(0.085, 0.06, 0.44, 3, 8), M.metal, Math.cos(a) * 0.20, 0.09, Math.sin(a) * 0.20, false);
+      leg.rotation.y = -a;
+      add(ch, sph(0.055, 10), softMat(0x585350, { roughness: 0.6 }), Math.cos(a) * 0.38, 0.055, Math.sin(a) * 0.38, false);
+    }
+    g.add(ch);
+    return ch;
+  }
+  function armchair(g, x, z, ry, color) {
+    const a = new THREE.Group();
+    a.position.set(x, 0, z); a.rotation.y = ry || 0;
+    const mat = fabricMat(color || 0xF7ECD9, { bumpScale: 0.022 });
+    add(a, clayBox(0.98, 0.36, 0.94, 3.0, 22), mat, 0, 0.42, 0);
+    add(a, clayBox(0.86, 0.17, 0.82, 2.6, 18), mat, 0, 0.60, 0.03);
+    add(a, clayBox(1.00, 0.80, 0.26, 2.6, 20), mat, 0, 0.74, -0.35);
+    add(a, clayBox(0.22, 0.46, 0.88, 2.6, 18), mat, -0.42, 0.52, 0.01);
+    add(a, clayBox(0.22, 0.46, 0.88, 2.6, 18), mat, 0.42, 0.52, 0.01);
+    [[-0.36, -0.32], [0.36, -0.32], [-0.36, 0.32], [0.36, 0.32]].forEach(([lx, lz]) =>
+      add(a, cyl(0.05, 0.04, 0.24, 8), M.woodDark, lx, 0.12, lz, false));
+    g.add(a);
+    return a;
+  }
+  function stool(g, x, z) {
+    const st = new THREE.Group();
+    st.position.set(x, 0, z);
+    add(st, cyl(0.30, 0.30, 0.09, 22), M.woodLight, 0, 0.58, 0);
+    add(st, cyl(0.27, 0.27, 0.05, 20), fabricMat(0xF3E3C9), 0, 0.64, 0);
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2 + 0.4;
+      const leg = add(st, cyl(0.028, 0.028, 0.56, 8), M.woodDark, Math.cos(a) * 0.17, 0.28, Math.sin(a) * 0.17, false);
+      leg.rotation.z = Math.cos(a) * 0.14;
+      leg.rotation.x = -Math.sin(a) * 0.14;
+    }
+    g.add(st);
+    return st;
+  }
 
-  /* ── 라운지: 소파 · 러그 · 커피 테이블 · 스탠드 ─────────── */
-  const rug = add(room, clayBox(4.6, 0.08, 3.6, 2.4, 22), M.rug, 3.9, FLOOR_Y + 0.04, -3.0);
-  rug.castShadow = false;
-  const rug2 = add(room, clayBox(4.0, 0.07, 3.2, 2.4, 22), fabricMat(0xF3E6D0, { bumpScale: 0.022 }), -4.0, FLOOR_Y + 0.035, -0.8);
-  rug2.castShadow = false;
-  // 러그 결 (보송한 줄무늬)
-  [-0.95, 0, 0.95].forEach(dz => add(room, clayBox(3.9, 0.012, 0.07, 3, 8), fabricMat(0xFBF1DF), 3.9, FLOOR_Y + 0.086, -3.0 + dz, false));
-  [-0.9, 0.9].forEach(dx => add(room, clayBox(0.07, 0.012, 2.7, 3, 8), fabricMat(0xFBF1DF), -4.0 + dx, FLOOR_Y + 0.073, -0.8, false));
-
-  const sofa = group(4.35, -4.35, 0.07);
-  sofa.userData.prop = 'sofa';
-  add(sofa, clayBox(3.2, 0.42, 1.2, 3.2, 22), M.sage, 0, 0.44, 0);
-  add(sofa, clayBox(3.2, 0.8, 0.34, 3.2, 22), M.sage, 0, 0.8, -0.46);
-  add(sofa, clayBox(0.34, 0.68, 1.16, 2.6, 18), M.sageDark, -1.5, 0.66, 0);
-  add(sofa, clayBox(0.34, 0.68, 1.16, 2.6, 18), M.sageDark, 1.5, 0.66, 0);
-  add(sofa, clayBox(1.34, 0.2, 1.02, 2.4, 16), M.sage, -0.76, 0.62, 0.04);
-  add(sofa, clayBox(1.34, 0.2, 1.02, 2.4, 16), M.sage, 0.76, 0.62, 0.04);
-  // 소파 위 푹신한 파스텔 쿠션 3개 + 담요
-  [[-1.04, 0xEBCBD8, 0.58, 0.5, 0.06], [-0.06, 0xF9E3B8, 0.5, 0.44, -0.03], [0.94, 0xCFE0C9, 0.54, 0.46, 0.05]].forEach(([x, c, w, h, rz]) => {
-    const p = new THREE.Group();
-    p.position.set(x, 0.87, -0.11); p.rotation.x = -0.2; p.rotation.z = rz;
-    add(p, clayBox(w, h, 0.17, 2.4, 14), fabricMat(c, { bumpScale: 0.022 }), 0, 0, 0);
-    add(p, sph(0.026, 8), clayMat(0xFDF3E4, { roughness: 0.9 }), 0, 0, 0.09, false);
-    sofa.add(p);
+  /* ── 1. 피클즈 롱데스크 (뒤 벽) ─────────────────────────── */
+  const longDesk = group(2.90, -5.55);
+  longDesk.userData.prop = 'command';
+  add(longDesk, clayBox(7.00, 0.15, 1.35, 4.4, 26), M.woodLight, 0, 0.78, 0);
+  add(longDesk, clayBox(6.90, 0.10, 0.22, 3.4, 16), M.wood, 0, 0.70, -0.56);
+  add(longDesk, clayBox(0.20, 0.78, 1.18, 4.0, 18), M.wood, -3.42, 0.39, 0);
+  add(longDesk, clayBox(0.20, 0.78, 1.18, 4.0, 18), M.wood, 3.42, 0.39, 0);
+  // 서랍장 3개 + 손잡이
+  [-2.30, 0.15, 2.30].forEach((dx, i) => {
+    add(longDesk, clayBox(0.92, 0.62, 1.00, 4.2, 18), M.cream, dx, 0.33, 0);
+    [0.20, 0.44].forEach((dy, k) => {
+      add(longDesk, clayBox(0.80, 0.19, 0.03, 3.4, 10), clayMat(0xFBF3E6, { roughness: 0.8 }), dx, dy, 0.51, false);
+      add(longDesk, clayBox(0.22, 0.035, 0.045, 3, 8), M.woodDark, dx, dy + 0.055, 0.535, false);
+    });
   });
-  const throwB = add(sofa, clayBox(0.46, 0.4, 0.15, 2.8, 12), fabricMat(0xE9C9A8, { bumpScale: 0.024 }), 1.44, 0.94, 0.08, false);
-  throwB.rotation.z = 0.16;
-
-  const coffee = group(3.15, -2.55);
-  coffee.userData.prop = 'coffee';
-  add(coffee, cyl(0.76, 0.76, 0.12, 30), M.woodLight, 0, 0.42, 0);
-  add(coffee, cyl(0.1, 0.1, 0.4, 12), M.woodDark, 0, 0.22, 0);
-  add(coffee, cyl(0.36, 0.36, 0.08, 22), M.woodDark, 0, 0.05, 0);
-  // 커피 테이블 위 — 머그 두 잔 · 티팟 · 디저트 접시 · 책
-  mug(coffee, 0.3, 0.49, 0.14, 0xF9E3B8, 0.9);
-  mug(coffee, -0.3, 0.49, -0.1, 0xEBCBD8, 0.9);
-  add(coffee, sph(0.135, 20), clayMat(0xF3DCC4), 0.0, 0.6, -0.28).scale.set(1, 0.86, 1);
-  add(coffee, cyl(0.048, 0.068, 0.05, 14), clayMat(0xF3DCC4), 0.0, 0.7, -0.28, false);
-  add(coffee, sph(0.03, 10), clayMat(0xE9A78F), 0.0, 0.735, -0.28, false);
-  const spout = add(coffee, cyl(0.024, 0.038, 0.15, 10), clayMat(0xF3DCC4), 0.14, 0.62, -0.28, false);
-  spout.rotation.z = 1.15;
-  add(coffee, new THREE.TorusGeometry(0.062, 0.015, 8, 14), clayMat(0xF3DCC4), -0.12, 0.61, -0.28, false);
-  plate(coffee, 0.04, 0.49, 0.3, 0.19, 0xFFFBF2);
-  macaron(coffee, -0.02, 0.515, 0.28, 0xF7C9D0);
-  macaron(coffee, 0.1, 0.515, 0.34, 0xCFE0C9);
-  book(coffee, 0.44, 0.5, 0.0, 0.26, 0.045, 0.2, 0xD1B49A);
-  book(coffee, 0.44, 0.545, 0.01, 0.24, 0.04, 0.19, 0x9DC0DC);
-
-  /* ── 작업실 책상 (개인 자리) ─────────────────────────────── */
-  const deskSpots = [[-4.5, 3.1, 0.22], [-4.5, 5.3, 0.12], [4.3, 3.6, -0.3]];
-  deskSpots.forEach(([x, z, ry], di) => {
-    const d = group(x, z, ry);
-    d.userData.prop = 'desk';
-    add(d, clayBox(2.0, 0.13, 1.0, 4.8, 22), M.woodLight, 0, 0.75, 0);
-    add(d, clayBox(0.16, 0.74, 0.9, 4.4, 18), M.wood, -0.92, 0.37, 0);
-    add(d, clayBox(0.16, 0.74, 0.9, 4.4, 18), M.wood, 0.92, 0.37, 0);
-    add(d, clayBox(0.7, 0.56, 0.84, 4.4, 18), M.wood, 0.52, 0.28, 0);
-    add(d, clayBox(0.66, 0.05, 0.44, 4.6, 14), M.dark, -0.2, 0.84, 0.06);
-    add(d, clayBox(0.54, 0.36, 0.06, 4.6, 14), M.dark, -0.2, 1.02, -0.06);
-    mug(d, 0.6, 0.82, 0.22, 0xF9E3B8);                                        // 머그컵
-    postit(d, -0.55, 0.822, 0.24, 0.1, [0xFFE9A8, 0xF9C9D2, 0xCFE0C9][di % 3], 0.14);
-    penCup(d, 0.82, 0.82, -0.26, 0xEDE0C8);
-    chair(d, 0, 1.1, Math.PI);
+  // 4인 자리 — 노트북(뒤에서 보이게) · 머그 · 펜꽂이 · 포스트잇
+  const DESK_X = [1.15, 2.40, 3.65, 4.90];
+  DESK_X.forEach((wx, i) => {
+    const lx = wx - 2.90;
+    laptopMini(longDesk, lx, 0.858, 0.02, Math.PI);
+    mug(longDesk, lx - 0.52, 0.858, 0.10, [0xF9E3B8, 0xC9DBEA, 0xEBCBD8, 0xF7D9CE][i], 0.9);
+    if (i % 2 === 0) penCup(longDesk, lx + 0.52, 0.858, 0.08, 0xEDE0C8);
+    else postit(longDesk, lx + 0.50, 0.862, 0.06, 0.08, [0xFFE9A8, 0xCFE0C9][i % 2], 0.13);
+    officeChair(longDesk, lx, -0.74, 0, [0xEFE6D6, 0xF6E7DA, 0xE7EFE4, 0xF7E3E6][i]);
   });
+  plant(longDesk, -3.72, 0.02, 0.36).position.y = 0.88;
+  plant(longDesk, 3.66, 0.02, 0.30).position.y = 0.88;
+  paperSheet(longDesk, 0.95, 0.862, 0.34, 0.3, 0.34, 0.26, 0xFFFBF0);
+  budVase(longDesk, 1.05, 0.858, -0.42);
 
-  /* ── 책장 ───────────────────────────────────────────────── */
-  const shelf = group(-6.5, -3.3, Math.PI / 2);
+  /* ── 2. 큐의 개인 책상 (왼쪽) ───────────────────────────── */
+  const qDesk = group(-4.45, -1.15);
+  qDesk.userData.prop = 'desk';
+  add(qDesk, clayBox(1.40, 0.14, 2.60, 4.4, 24), M.woodLight, 0, 0.78, 0);
+  add(qDesk, clayBox(0.22, 0.10, 2.50, 3.4, 16), M.wood, -0.58, 0.70, 0);
+  add(qDesk, clayBox(1.20, 0.78, 0.20, 4.0, 18), M.wood, 0, 0.39, -1.20);
+  add(qDesk, clayBox(1.20, 0.78, 0.20, 4.0, 18), M.wood, 0, 0.39, 1.20);
+  add(qDesk, clayBox(0.52, 0.60, 0.86, 4.2, 18), M.cream, 0.34, 0.32, 0.72);
+  add(qDesk, clayBox(0.42, 0.17, 0.03, 3.4, 10), clayMat(0xFBF3E6), 0.34, 0.44, 1.16, false);
+  add(qDesk, clayBox(0.16, 0.03, 0.04, 3, 8), M.woodDark, 0.34, 0.49, 1.19, false);
+  laptopMini(qDesk, -0.02, 0.858, -0.18, -Math.PI / 2);
+  mug(qDesk, 0.30, 0.858, -0.72, 0xF9E3B8);
+  deskLamp(qDesk, -0.26, 0.858, -1.02);
+  penCup(qDesk, 0.34, 0.858, -0.30, 0xEBCBD8);
+  paperSheet(qDesk, -0.10, 0.860, 0.62, 0.5, 0.36, 0.28);
+  officeChair(qDesk, -0.85, 0.0, Math.PI / 2, 0xE7EFE4);
+
+  /* ── 3. 가운데 원탁 (뮤즈 · 키링) ───────────────────────── */
+  add(room, cyl(2.55, 2.55, 0.05, 64), fabricMat(0xF6EBD8, { bumpScale: 0.024 }), -1.00, FLOOR_Y + 0.03, -1.40).castShadow = false;
+  add(room, cyl(2.34, 2.34, 0.02, 64), fabricMat(0xFBF2E2), -1.00, FLOOR_Y + 0.062, -1.40).castShadow = false;
+  const roundTable = group(-1.00, -1.40);
+  roundTable.userData.prop = 'table';
+  add(roundTable, cyl(1.24, 1.24, 0.12, 48), M.woodLight, 0, 0.74, 0);
+  add(roundTable, cyl(1.14, 1.14, 0.05, 46), M.wood, 0, 0.81, 0);
+  add(roundTable, cyl(0.30, 0.34, 0.70, 26), M.woodLight, 0, 0.36, 0);
+  add(roundTable, cyl(0.66, 0.66, 0.09, 34), M.woodDark, 0, 0.05, 0);
+  laptopMini(roundTable, -0.42, 0.868, 0.10, -Math.PI / 2);
+  laptopMini(roundTable, 0.44, 0.868, 0.06, Math.PI / 2);
+  mug(roundTable, -0.10, 0.868, -0.52, 0xF9E3B8);
+  mug(roundTable, 0.18, 0.868, 0.60, 0xEBCBD8);
+  plant(roundTable, 0.02, -0.12, 0.26).position.y = 0.84;
+  paperSheet(roundTable, 0.02, 0.872, 0.36, 0.3, 0.34, 0.26);
+  book(roundTable, -0.62, 0.878, 0.52, 0.30, 0.05, 0.24, 0x9DC0DC);
+  book(roundTable, -0.60, 0.926, 0.52, 0.28, 0.045, 0.22, 0xE9AEB2);
+  macaron(roundTable, 0.55, 0.878, -0.42, 0xF7C9D0);
+  plate(roundTable, 0.55, 0.872, -0.42, 0.19);
+  armchair(room, -2.55, -1.35, Math.PI / 2, 0xF7ECD9);
+  armchair(room, 0.55, -1.35, -Math.PI / 2, 0xF7ECD9);
+
+  /* ── 4. 부이의 모니터 데스크 (오른쪽) ──────────────────── */
+  const bDesk = group(5.30, -2.60);
+  bDesk.userData.prop = 'desk';
+  add(bDesk, clayBox(1.50, 0.14, 2.60, 4.4, 24), M.woodLight, 0, 0.78, 0);
+  add(bDesk, clayBox(0.20, 0.78, 2.50, 3.8, 16), M.wood, 0.62, 0.39, 0);
+  add(bDesk, clayBox(1.30, 0.78, 0.20, 4.0, 18), M.wood, -0.04, 0.39, -1.20);
+  add(bDesk, clayBox(1.30, 0.78, 0.20, 4.0, 18), M.wood, -0.04, 0.39, 1.20);
+  add(bDesk, clayBox(0.52, 0.60, 0.80, 4.2, 18), M.cream, -0.34, 0.32, 0.62);
+  monitor(bDesk, 0.22, 0.85, -0.20, -Math.PI / 2, 1.30, 0.78, screenTexA);
+  add(bDesk, clayBox(0.60, 0.05, 0.22, 3, 12), M.dark, -0.10, 0.862, 0.34, false);
+  add(bDesk, clayBox(0.26, 0.12, 0.22, 3.2, 10), M.metal, -0.46, 0.90, 0.42, false);
+  mug(bDesk, -0.42, 0.858, -0.34, 0xEBCBD8);
+  plant(bDesk, -0.40, 0.02, 0.30).position.y = 0.88;
+  deskLamp(bDesk, -0.20, 0.858, -0.92);
+  officeChair(bDesk, -0.85, 0.0, Math.PI / 2, 0xF7E3E6);
+  // 메모 파티션 (모니터 뒤)
+  const part = new THREE.Group();
+  part.position.set(5.30 + 0.78, FLOOR_Y, -2.60); part.rotation.y = -Math.PI / 2;
+  add(part, clayBox(2.30, 1.42, 0.09, 4.4, 18), M.cream, 0, 0.86, 0);
+  add(part, clayBox(2.12, 1.24, 0.04, 4.2, 16), fabricMat(0xF3E7D6, { bumpScale: 0.02 }), 0, 0.86, 0.05, false);
+  [[-0.66, 0.46, 0xFFE9A8], [-0.30, 0.20, 0xCFE0C9], [0.24, 0.52, 0xF9C9D2], [0.62, 0.16, 0xC9DBEA], [0.10, -0.22, 0xFFE9A8]].forEach(([px, py, col]) => {
+    postit(part, px, 1.06 + py, 0.085, px * 0.14, col, 0.15);
+  });
+  room.add(part);
+
+  /* ── 5. 앞쪽 라운지 (소파 → 안락의자 3 + 낮은 원탁) ─────── */
+  add(room, cyl(3.05, 3.05, 0.05, 72), fabricMat(0xF3E7D4, { bumpScale: 0.026 }), 1.00, FLOOR_Y + 0.03, 3.60).castShadow = false;
+  add(room, cyl(2.80, 2.80, 0.02, 72), fabricMat(0xFBF2E2), 1.00, FLOOR_Y + 0.062, 3.60).castShadow = false;
+  const sofaSeat = armchair(room, -1.15, 3.20, 1.00, 0xF7ECD9);
+  sofaSeat.userData.prop = 'sofa';
+  armchair(room, 1.15, 2.40, -0.05, 0xF7ECD9);
+  armchair(room, 3.15, 3.35, -1.05, 0xF7ECD9);
+
+  const lowTable = group(1.00, 4.55);
+  lowTable.userData.prop = 'coffee';
+  add(lowTable, cyl(0.82, 0.82, 0.10, 40), M.woodLight, 0, 0.44, 0);
+  add(lowTable, cyl(0.74, 0.74, 0.04, 38), M.wood, 0, 0.50, 0);
+  add(lowTable, cyl(0.16, 0.20, 0.42, 18), M.woodDark, 0, 0.22, 0);
+  add(lowTable, cyl(0.44, 0.44, 0.07, 26), M.woodDark, 0, 0.04, 0);
+  plant(lowTable, -0.16, 0.02, 0.34).position.y = 0.52;
+  book(lowTable, 0.34, 0.535, 0.24, 0.28, 0.05, 0.22, 0xD1B49A);
+  book(lowTable, 0.34, 0.585, 0.24, 0.26, 0.045, 0.20, 0xCFE0C9);
+  mug(lowTable, 0.40, 0.525, -0.32, 0xF9E3B8, 0.9);
+  add(lowTable, sph(0.11, 16), clayMat(0xF7E3C8), -0.30, 0.62, -0.36).scale.set(1, 1.1, 1);
+  add(lowTable, cyl(0.15, 0.10, 0.13, 16), clayMat(0xFFE9C4, { emissive: 0xFFCF8A, emissiveIntensity: 0.5 }), -0.30, 0.74, -0.36, false);
+
+  // 라운지 스탠드 · 사이드 테이블
+  const floorLamp = group(-2.55, 4.85);
+  add(floorLamp, cyl(0.24, 0.28, 0.08, 20), M.woodDark, 0, 0.04, 0);
+  add(floorLamp, cyl(0.035, 0.035, 1.86, 10), M.woodDark, 0, 0.98, 0);
+  add(floorLamp, cyl(0.33, 0.25, 0.36, 22), new THREE.MeshStandardMaterial({
+    color: 0xFFE7C2, emissive: 0xFFD49A, emissiveIntensity: 0.72, roughness: 0.62
+  }), 0, 1.98, 0);
+  const lp2 = new THREE.PointLight(0xFFCF96, 5.5, 5.6, 2);
+  lp2.position.set(0, 1.96, 0);
+  floorLamp.add(lp2);
+
+  const sideT = group(2.55, 1.35);
+  add(sideT, cyl(0.34, 0.30, 0.07, 22), M.woodLight, 0, 0.52, 0);
+  add(sideT, cyl(0.055, 0.055, 0.48, 10), M.woodDark, 0, 0.26, 0);
+  add(sideT, cyl(0.20, 0.20, 0.05, 18), M.woodDark, 0, 0.03, 0);
+  mug(sideT, 0.10, 0.555, 0.06, 0xC9DBEA, 0.85);
+  book(sideT, -0.10, 0.575, -0.08, 0.24, 0.045, 0.18, 0xE9AEB2);
+
+  /* ── 6. 미니 커피바 (앞 왼쪽 코너) ─────────────────────── */
+  const bar = group(-5.55, 2.55);
+  add(bar, clayBox(1.00, 0.12, 3.00, 3.8, 22), M.woodLight, 0, 0.92, 0);
+  add(bar, clayBox(0.88, 0.86, 2.86, 3.4, 18), M.cream, 0, 0.44, 0);
+  add(bar, clayBox(0.06, 0.055, 2.80, 2.6, 10), M.glow, 0.47, 0.83, 0, false);
+  // 앞면 로봇 네온 로고
+  add(bar, clayBox(0.02, 0.34, 0.44, 3.4, 12), clayMat(0xE9C9A8, { roughness: 0.9 }), 0.46, 0.52, 0.55, false);
+  [-0.10, 0.10].forEach(dz => add(bar, sph(0.032, 8), M.glow, 0.48, 0.54, 0.55 + dz, false));
+  add(bar, clayBox(0.02, 0.03, 0.16, 2.4, 8), M.glow, 0.48, 0.44, 0.55, false);
+  // 커피머신
+  add(bar, clayBox(0.46, 0.54, 0.40, 3.6, 16), clayMat(0xE7E2D8, { roughness: 0.55 }), 0.02, 1.25, -0.78);
+  add(bar, clayBox(0.40, 0.10, 0.34, 3.2, 12), clayMat(0x585350), 0.02, 1.02, -0.72, false);
+  add(bar, cyl(0.055, 0.055, 0.10, 12), M.metal, 0.02, 0.96, -0.62, false);
+  add(bar, sph(0.03, 10), clayMat(0xE8899A, { emissive: 0xE8899A, emissiveIntensity: 0.3 }), 0.16, 1.44, -0.60, false);
+  mug(bar, -0.02, 0.982, -0.52, 0xFFFBF2, 0.9);
+  // 유리병 · 원두 · 컵
+  [[-0.20, 0.20, 0xE9C9A8, 0.26], [0.16, 0.34, 0xC9DBEA, 0.22], [-0.06, 0.85, 0xF3DCC4, 0.30]].forEach(([dx, dz, col, h]) => {
+    add(bar, cyl(0.09, 0.085, h, 14), clayMat(col, { roughness: 0.45 }), dx, 0.98 + h / 2, dz);
+  });
+  [-0.60, 1.42].forEach(dz => add(bar, cyl(0.038, 0.038, 0.26, 10), M.woodDark, 0.12, 1.11, dz, false));
+  plant(bar, -0.10, 1.30, 0.28).position.y = 0.98;
+  stool(room, -4.52, 1.95);
+  stool(room, -4.52, 3.10);
+
+  /* ── 7. 책장 (왼쪽 벽) ─────────────────────────────────── */
+  const shelf = group(-6.42, -4.00, Math.PI / 2);
   shelf.userData.prop = 'shelf';
-  add(shelf, clayBox(3.0, 2.4, 0.14, 5.4, 20), M.woodDark, 0, 1.22, -0.26);
-  add(shelf, clayBox(0.14, 2.4, 0.62, 5.0, 16), M.wood, -1.5, 1.22, 0);
-  add(shelf, clayBox(0.14, 2.4, 0.62, 5.0, 16), M.wood, 1.5, 1.22, 0);
-  add(shelf, clayBox(3.2, 0.16, 0.66, 4.6, 18), M.wood, 0, 2.42, 0);
-  add(shelf, clayBox(3.2, 0.16, 0.66, 4.6, 18), M.wood, 0, 0.08, 0);
+  add(shelf, clayBox(3.60, 2.74, 0.16, 5.6, 22), M.wood, 0, 1.37, -0.30);
+  add(shelf, clayBox(0.16, 2.74, 0.64, 5.0, 16), M.wood, -1.80, 1.37, 0);
+  add(shelf, clayBox(0.16, 2.74, 0.64, 5.0, 16), M.wood, 1.80, 1.37, 0);
+  add(shelf, clayBox(3.84, 0.16, 0.70, 4.6, 18), M.woodLight, 0, 2.82, 0.02);
+  add(shelf, clayBox(3.84, 0.16, 0.70, 4.6, 18), M.woodLight, 0, 0.08, 0.02);
   for (let i = 0; i < 4; i++) {
-    const y = 0.48 + i * 0.56;
-    add(shelf, clayBox(2.94, 0.09, 0.56, 4.6, 16), M.woodLight, 0, y, 0);
-    let bx = -1.3, b = 0;
-    while (bx < 1.12) {
-      const bw = 0.09 + ((i + b) % 3) * 0.022;
-      const bh = 0.24 + ((i * 3 + b) % 4) * 0.05;
-      book(shelf, bx, y + 0.05 + bh / 2, 0.02, bw, bh, 0.32, [0xE9AEB2, 0x9DC0DC, 0xA9BFA6, 0xE9A78F, 0xF8EEDE, 0x86AE74, 0xE3C37A][(i + b) % 7]);
-      bx += bw + ((b % 5 === 4) ? 0.12 : 0.045);
+    const y = 0.52 + i * 0.62;
+    add(shelf, clayBox(3.52, 0.09, 0.58, 4.6, 16), M.woodLight, 0, y, 0.02);
+    // 선반 아래 간접등
+    add(shelf, clayBox(3.40, 0.028, 0.045, 2.6, 8), M.glow, 0, y - 0.075, 0.28, false);
+    let bx = -1.58, b = 0;
+    while (bx < 1.30) {
+      const bw = 0.085 + ((i + b) % 3) * 0.02;
+      const bh = 0.30 + ((i * 3 + b) % 4) * 0.04;
+      const kind = (i + b) % 5;
+      if (kind === 0) {   // 바인더 (회색 라벨)
+        book(shelf, bx, y + 0.05 + bh / 2, 0.02, bw, bh, 0.34, 0xEDE7DC);
+        add(shelf, clayBox(0.022, 0.09, 0.02, 2, 6), clayMat(0xB9AE9C), bx + bw / 2, y + 0.05 + bh * 0.62, 0.20, false);
+      } else if (kind === 1) {  // 수납박스
+        const bwid = 0.26 + ((i + b) % 3) * 0.04;
+        book(shelf, bx + bwid / 2, y + 0.05 + 0.13, 0.02, bwid, 0.26, 0.32, 0xF0E6D2);
+        add(shelf, clayBox(bwid * 0.5, 0.02, 0.03, 2.4, 6), clayMat(0xD8C8AC), bx + bwid / 2, y + 0.16, 0.18, false);
+      } else {
+        book(shelf, bx, y + 0.05 + bh / 2, 0.02, bw, bh, 0.32,
+          [0xE9AEB2, 0x9DC0DC, 0xA9BFA6, 0xE9A78F, 0xF8EEDE, 0x86AE74, 0xE3C37A][(i + b) % 7]);
+      }
+      bx += ((i + b) % 5 === 1 ? 0.34 : bw) + ((b % 4 === 3) ? 0.10 : 0.035);
       b++;
     }
   }
-  plant(shelf, 1.1, 0.02, 0.5);
-  // 책장 위 소품 — 트로피 · 곰 인형 · 보관함
-  trophyMini(shelf, 1.16, 2.5, 0.02);
-  dollMini(shelf, 0.6, 2.5, 0.04, 0xE7C9A8);
-  add(shelf, clayBox(0.26, 0.2, 0.26, 3.6, 10), clayMat(0xE9AEB2, { roughness: 0.88 }), -1.34, 2.6, 0.02, false);
-  add(shelf, clayBox(0.22, 0.16, 0.24, 3.6, 10), clayMat(0xCDE0C8, { roughness: 0.88 }), -1.34, 2.78, 0.02, false);
-
-  /* ── 화이트보드 ─────────────────────────────────────────── */
-  const board = group(-4.6, -6.7);
-  board.userData.prop = 'board';
-  add(board, clayBox(2.8, 1.62, 0.12, 5.0, 18), M.cream, 0, 1.78, 0);
-  add(board, clayBox(2.56, 1.4, 0.06, 5.0, 16), clayMat(0xFDFBF4, { roughness: 0.7 }), 0, 1.78, 0.08, false);
-  add(board, clayBox(0.72, 0.06, 0.03, 3, 10), clayMat(0xE8899A), -0.55, 2.14, 0.12, false);
-  add(board, clayBox(1.12, 0.05, 0.03, 3, 10), clayMat(0x8FB8DE), -0.2, 1.96, 0.12, false);
-  add(board, clayBox(0.94, 0.05, 0.03, 3, 10), clayMat(0x7FC197), 0.15, 1.8, 0.12, false);
-  add(board, clayBox(0.52, 0.05, 0.03, 3, 10), clayMat(0xE8B27A), -0.4, 1.62, 0.12, false);
-  add(board, clayBox(1.5, 0.14, 0.12, 3, 14), M.woodLight, 0, 0.94, 0.06);
-  // 화이트보드 위 포스트잇 · 자석 · 마커
-  postit(board, 0.92, 2.18, 0.135, 0.06, 0xF9C9D2, 0.15);
-  postit(board, 0.9, 1.92, 0.135, -0.05, 0xFFE9A8, 0.15);
-  postit(board, 0.62, 1.66, 0.135, 0.1, 0xC9DBEA, 0.13);
-  postit(board, -1.02, 1.36, 0.135, -0.08, 0xCFE0C9, 0.14);
-  postit(board, -0.86, 1.62, 0.135, 0.05, 0xF9E3B8, 0.12);
-  [[-0.3, 2.33, 0xE9A78F], [0.34, 2.35, 0x8FB8DE], [1.06, 2.3, 0x9FC7A4]].forEach(([x, y, c]) => {
-    add(board, sph(0.042, 10), clayMat(c, { roughness: 0.5 }), x, y, 0.135, false).scale.set(1, 1, 0.55);
+  // 상단 수납박스 · 화분
+  [[-1.25, 0xF0E6D2, 0.34], [-0.85, 0xE9AEB2, 0.28], [-0.45, 0xF3DCC4, 0.30]].forEach(([dx, col, s]) => {
+    add(shelf, clayBox(s, s * 0.8, 0.34, 3.6, 10), clayMat(col, { roughness: 0.85 }), dx, 3.05, 0.02, false);
   });
-  [[-0.32, 0xE8899A], [0.02, 0x8FB8DE], [0.34, 0x7FC197]].forEach(([x, c], mi) => {
-    const mk = add(board, cyl(0.02, 0.02, 0.22, 8), clayMat(c, { roughness: 0.6 }), x, 1.02, 0.12, false);
-    mk.rotation.z = Math.PI / 2; mk.rotation.y = 0.12 * mi;
-  });
+  plant(shelf, 0.55, 0.02, 0.62).position.y = 2.82;
+  plant(shelf, 1.35, 0.02, 0.44).position.y = 2.82;
+  trophyMini(shelf, -1.55, 3.02, 0.02);
+  dollMini(shelf, 1.05, 3.02, 0.05, 0xE7C9A8);
 
-  /* ── 창문 (따뜻한 채광) ─────────────────────────────────── */
-  const win = group(4.2, -6.72);
-  win.userData.prop = 'window';
-  add(win, clayBox(2.6, 2.0, 0.16, 5.6, 20), M.cream, 0, 1.94, 0);
-  add(win, clayBox(2.3, 1.7, 0.06, 5.6, 16), new THREE.MeshStandardMaterial({
-    color: 0xFFE6C0, emissive: 0xFFCE92, emissiveIntensity: 0.5, roughness: 0.45
-  }), 0, 1.94, 0.075, false);
-  add(win, clayBox(0.09, 1.7, 0.05, 5, 10), M.cream, 0, 1.94, 0.11);
-  add(win, clayBox(2.3, 0.09, 0.05, 5, 10), M.cream, 0, 1.94, 0.11);
-  add(win, clayBox(2.8, 0.14, 0.26, 3, 14), M.woodLight, 0, 0.9, 0.02);
-  // 커튼 막대 · 커튼 · 창턱 화분
-  const rod = add(win, cyl(0.024, 0.024, 3.5, 10), M.woodDark, 0, 3.02, 0.04, false);
-  rod.rotation.z = Math.PI / 2;
-  [-1, 1].forEach(s => {
-    const cur = add(win, clayBox(0.42, 2.0, 0.12, 3.0, 14), fabricMat(s > 0 ? 0xF6E3D2 : 0xF3EADB, { bumpScale: 0.018 }), s * 1.52, 1.96, 0.07);
-    cur.rotation.y = s * 0.05;
-    add(win, clayBox(0.46, 0.08, 0.14, 3.0, 12), fabricMat(0xE9C9A8), s * 1.52, 1.48, 0.08, false);
-  });
-  const sillPlant = plant(win, 1.02, 0.02, 0.38); sillPlant.position.y = 0.97;
-  const sillPlant2 = plant(win, -1.06, 0.02, 0.28); sillPlant2.position.y = 0.97;
-  const winLight = new THREE.PointLight(0xFFE2B8, 4.5, 7, 2);
-  winLight.position.set(0, 1.9, 0.6);
-  win.add(winLight);
+  /* ── 8. 화분 · 조명 · 소품 ─────────────────────────────── */
+  plant(room, -3.05, -6.35, 0.85);
+  plant(room, -6.30, -6.20, 0.95);
+  plant(room, 6.25, -1.10, 1.00);
+  plant(room, 6.30, 1.60, 0.85);
+  plant(room, -6.20, 6.10, 0.95);
+  plant(room, -3.20, 6.25, 0.72);
+  plant(room, 5.10, 5.40, 0.85);
+  plant(room, -0.10, -6.40, 0.70);
+  plant(room, 2.05, -6.40, 0.62);
 
-  /* ── 소품: 화분 · 스탠드 · 천장등 ───────────────────────── */
-  plant(room, -6.2, -6.1, 1.1);
-  plant(room, 6.0, -6.1, 0.95);
-  plant(room, 6.1, 0.9, 1.2);
-  plant(room, -6.3, 6.0, 1.0);
-  plant(room, 5.9, -1.5, 0.8);
-  plant(room, 2.4, 5.3, 0.95);
-  plant(room, 0.6, 6.1, 0.8);
+  // 천장 펜던트 (롱데스크 위 · 라운지 위)
+  function pendant(x, z, y, s) {
+    add(room, cyl(0.012, 0.012, 1.2, 6), M.woodDark, x, y + 0.6, z, false);
+    add(room, cyl(0.26 * s, 0.20 * s, 0.18 * s, 18), M.cream, x, y, z, false);
+    add(room, sph(0.13 * s, 14), M.glow, x, y - 0.12 * s, z, false);
+    const pl = new THREE.PointLight(0xFFD9A6, 3.0 * s, 4.4, 2);
+    pl.position.set(x, y - 0.2, z);
+    room.add(pl);
+  }
+  pendant(2.10, -5.45, 2.85, 1.0);
+  pendant(4.30, -5.45, 2.85, 0.9);
+  pendant(1.00, 3.60, 2.95, 1.1);
 
-  const pouf = group(2.55, 3.75, 0.2);
-  add(pouf, cyl(0.62, 0.66, 0.42, 26), M.sage, 0, 0.21, 0);
-  add(pouf, cyl(0.5, 0.5, 0.06, 22), fabricMat(0xF3E7D2), 0, 0.44, 0);
-  add(pouf, cyl(0.13, 0.12, 0.16, 16), M.cream, 0.2, 0.52, 0.05, false);
-  plant(pouf, -0.45, 0.2, 0.4);
+  // 롱데스크 위 스탠드 조명 위치 보정
+  lampLight.position.set(2.9, 2.55, -5.3);
 
-  const sideTable = group(-1.6, 5.0);
-  add(sideTable, cyl(0.36, 0.32, 0.08, 20), M.woodLight, 0, 0.54, 0);
-  add(sideTable, cyl(0.06, 0.06, 0.5, 12), M.woodDark, 0, 0.27, 0);
-  add(sideTable, cyl(0.22, 0.22, 0.06, 18), M.woodDark, 0, 0.03, 0);
-  add(sideTable, cyl(0.1, 0.09, 0.16, 14), M.cream, 0.06, 0.64, 0.02);
-
-  const lamp = group(5.9, -2.6);
-  add(lamp, cyl(0.26, 0.3, 0.08, 20), M.woodDark, 0, 0.04, 0);
-  add(lamp, cyl(0.04, 0.04, 1.9, 10), M.woodDark, 0, 1.0, 0);
-  add(lamp, cyl(0.34, 0.26, 0.38, 22), new THREE.MeshStandardMaterial({
-    color: 0xFFE6BE, emissive: 0xFFD49A, emissiveIntensity: 0.7, roughness: 0.65
-  }), 0, 2.02, 0);
-  const lampPoint = new THREE.PointLight(0xFFCF96, 6, 6, 2);
-  lampPoint.position.set(0, 2.0, 0);
-  lamp.add(lampPoint);
-
-  // 천장 목걸이 조명(따뜻한 공)
-  add(room, cyl(0.3, 0.3, 0.07, 18), M.cream, -1.4, 3.35, -6.7, false);
-  add(room, sph(0.19, 16), M.glow, -1.4, 3.16, -6.7, false);
-
-  /* ── 캐릭터 (나은님 실제 캐릭터 사진 8장 기준) ───────────── */
+  /* ── 캐릭터 (나은님 실제 캐릭터 사진 기준 · 자리 배치) ───────── */
   const PEOPLE = [
-    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', spots: [0, 1, 5, 4] },
-    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', spots: [1, 2, 3, 19] },
-    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', spots: [2, 3, 4, 5] },
-    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', spots: [3, 4, 19, 0] },
-    { name: '뮤즈',     kind: 'yeti',     color: 0xEDE0C8, zone: 'command', spots: [8, 9, 7] },
-    { name: '하마뮤즈', kind: 'hippo',    color: 0xB49BE0, zone: 'command', spots: [9, 10, 11] },
-    { name: '인스팅트', kind: 'disc',     color: 0xF4EBDC, zone: 'command', spots: [10, 11, 8] },
-    { name: '하크',     kind: 'squircle', color: 0x242424, zone: 'lounge',  spots: [14, 15, 16] },
-    { name: '부이',     kind: 'tri',      color: 0xFF3E9E, zone: 'lounge',  spots: [15, 16, 17] },
-    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'lounge',  spots: [13, 14, 12] },
-    { name: '키링',     kind: 'cat',      color: 0xFCF4E6, zone: 'lounge',  spots: [12, 13, 18] }
+    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', seat: [1.15, -6.28], yaw: 0,           seatY: 0.25, stance: [1.15, -4.28], roam: false, acts: ['type', 'nod', 'type', 'talk', 'stretch'] },
+    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', seat: [2.40, -6.28], yaw: 0,           seatY: 0.25, stance: [2.40, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
+    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', seat: [3.65, -6.28], yaw: 0,           seatY: 0.25, stance: [3.65, -4.28], roam: false, acts: ['type', 'wave', 'nod', 'talk', 'stretch'], face: 'squeeze' },
+    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', seat: [4.90, -6.28], yaw: 0,           seatY: 0.25, stance: [4.90, -4.28], roam: false, acts: ['type', 'nod', 'talk', 'type', 'stretch'] },
+    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'command', seat: [-5.32, -1.15], yaw: Math.PI / 2, seatY: 0.15, stance: [-3.30, -1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'], headphones: true },
+    { name: '뮤즈',     kind: 'yeti',     color: 0xEDE0C8, zone: 'command', seat: [-2.50, -1.33], yaw: Math.PI / 2, seatY: 0.55, stance: [-3.35, -2.45], roam: true,  acts: ['talk', 'wave', 'nod', 'type', 'stretch'] },
+    { name: '키링',     kind: 'cat',      color: 0xFCF4E6, zone: 'command', seat: [0.50, -1.33],  yaw: -Math.PI / 2, seatY: 0.55, stance: [1.70, -1.33], roam: true,  acts: ['talk', 'nod', 'type', 'wave', 'stretch'] },
+    { name: '부이',     kind: 'tri',      color: 0xFF3E9E, zone: 'lounge',  seat: [4.45, -2.60],  yaw: Math.PI / 2, seatY: 0.15, stance: [3.30, -2.60], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'] },
+    { name: '하마뮤즈', kind: 'hippo',    color: 0xB49BE0, zone: 'lounge',  seat: [-1.15, 3.20],  yaw: 1.00,        seatY: 0.50, stance: [-2.35, 2.45], roam: true,  acts: ['sip', 'talk', 'nod', 'wave', 'stretch'], glasses: true },
+    { name: '하크',     kind: 'squircle', color: 0x242424, zone: 'lounge',  seat: [1.15, 2.40],   yaw: -0.05,       seatY: 0.22, stance: [1.15, 1.15], roam: true,  acts: ['type', 'nod', 'talk', 'stretch'] },
+    { name: '인스팅트', kind: 'disc',     color: 0xF4EBDC, zone: 'lounge',  seat: [3.15, 3.35],   yaw: -1.05,       seatY: 0.22, stance: [3.15, 4.60], roam: true,  acts: ['read', 'nod', 'talk', 'stretch'], glasses: true }
   ];
 
-  // 3D 바닥 좌표계 통로 (x, z)
-  const NODES = [
-    [-6.0, 1.8], [-6.1, 3.4], [-3.1, 4.7], [-1.4, 5.3], [-0.6, 4.2],
-    [-1.2, 2.4], [-1.2, 0.4], [-1.0, -1.8], [-1.7, -3.7], [-3.0, -4.8],
-    [-1.0, -4.8], [1.0, -4.8], [2.1, -3.9], [2.2, -2.2], [3.6, -1.9],
-    [5.0, -2.0], [5.4, -0.2], [3.8, 1.0], [2.0, 2.6], [0.2, 3.6]
+  /* ── 길찾기: 바닥 격자 A* (가구 회피) ───────────────────── */
+  const ROOM_LIM = 6.50;
+  const OB_B = [                        // 사각 장애물 (중심 x, z, 반폭, 반높이)
+    { x: 2.90, z: -5.55, hw: 3.58, hd: 1.06 },   // 피클즈 롱데스크 + 의자
+    { x: -4.70, z: -1.15, hw: 1.00, hd: 1.48 },  // 큐 책상 + 의자
+    { x: 4.95, z: -2.60, hw: 1.18, hd: 1.48 },   // 부이 책상 + 파티션
+    { x: -6.42, z: -4.00, hw: 0.64, hd: 1.98 },  // 책장
+    { x: -5.55, z: 2.55, hw: 0.62, hd: 1.62 }    // 커피바
   ];
-  const EDGES = [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,17],[17,18],[18,19]];
-  const ADJ = NODES.map(() => []);
-  EDGES.forEach(([a, b]) => { ADJ[a].push(b); ADJ[b].push(a); });
-  function findPath(a, b) {
-    if (a === b) return [a];
-    const prev = {}, seen = { [a]: true }, q = [a];
-    while (q.length) {
-      const cur = q.shift();
-      for (const nx of ADJ[cur]) {
-        if (seen[nx]) continue;
-        seen[nx] = true; prev[nx] = cur;
-        if (nx === b) { const p = [b]; let c = b; while (c !== a) { c = prev[c]; p.unshift(c); } return p; }
-        q.push(nx);
+  const OB_C = [                        // 원형 장애물 (중심 x, z, 반지름)
+    { x: -1.00, z: -1.40, r: 1.62 },    // 원탁 + 안락의자
+    { x: 1.00, z: 4.55, r: 1.04 },      // 낮은 원탁
+    { x: -1.15, z: 3.20, r: 0.80 },     // 안락의자 3
+    { x: 1.15, z: 2.40, r: 0.80 },
+    { x: 3.15, z: 3.35, r: 0.80 },
+    { x: -4.52, z: 1.95, r: 0.44 },     // 스툴
+    { x: -4.52, z: 3.10, r: 0.44 },
+    { x: -2.55, z: 4.85, r: 0.44 },     // 플로어 램프
+    { x: 2.55, z: 1.35, r: 0.50 },      // 사이드 테이블
+    { x: -3.05, z: -6.35, r: 0.48 }, { x: -6.30, z: -6.20, r: 0.55 },
+    { x: 6.22, z: -1.10, r: 0.55 }, { x: 6.28, z: 1.60, r: 0.50 },
+    { x: -6.18, z: 6.05, r: 0.55 }, { x: -3.20, z: 6.28, r: 0.42 },
+    { x: 5.10, z: 5.40, r: 0.50 }, { x: -0.10, z: -6.42, r: 0.40 },
+    { x: 2.05, z: -6.42, r: 0.36 }
+  ];
+  function blockedAt(x, z, pad) {
+    pad = pad || 0;
+    if (Math.abs(x) > ROOM_LIM - pad || Math.abs(z) > ROOM_LIM - pad) return true;
+    for (let i = 0; i < OB_B.length; i++) {
+      const b = OB_B[i];
+      if (Math.abs(x - b.x) < b.hw + pad && Math.abs(z - b.z) < b.hd + pad) return true;
+    }
+    for (let i = 0; i < OB_C.length; i++) {
+      const c = OB_C[i];
+      const dx = x - c.x, dz = z - c.z;
+      if (dx * dx + dz * dz < (c.r + pad) * (c.r + pad)) return true;
+    }
+    return false;
+  }
+
+  const NAV = { cell: 0.30, min: -6.55, max: 6.55 };
+  const NAVN = Math.round((NAV.max - NAV.min) / NAV.cell) + 1;
+  const navFree = new Uint8Array(NAVN * NAVN);
+  for (let iz = 0; iz < NAVN; iz++) {
+    for (let ix = 0; ix < NAVN; ix++) {
+      navFree[iz * NAVN + ix] = blockedAt(NAV.min + ix * NAV.cell, NAV.min + iz * NAV.cell, 0.26) ? 0 : 1;
+    }
+  }
+  const navIx = x => Math.max(0, Math.min(NAVN - 1, Math.round((x - NAV.min) / NAV.cell)));
+  const navWx = i => NAV.min + i * NAV.cell;
+
+  function nearestFree(ix, iz) {
+    if (navFree[iz * NAVN + ix]) return [ix, iz];
+    for (let r = 1; r <= 5; r++) {
+      for (let dz = -r; dz <= r; dz++) {
+        for (let dx = -r; dx <= r; dx++) {
+          if (Math.max(Math.abs(dx), Math.abs(dz)) !== r) continue;
+          const nx2 = ix + dx, nz2 = iz + dz;
+          if (nx2 < 0 || nz2 < 0 || nx2 >= NAVN || nz2 >= NAVN) continue;
+          if (navFree[nz2 * NAVN + nx2]) return [nx2, nz2];
+        }
       }
     }
     return null;
   }
+  function lineClear(x1, z1, x2, z2) {
+    const d = Math.hypot(x2 - x1, z2 - z1);
+    const n = Math.max(2, Math.ceil(d / 0.14));
+    for (let i = 1; i < n; i++) {
+      const t = i / n;
+      if (blockedAt(x1 + (x2 - x1) * t, z1 + (z2 - z1) * t, 0.22)) return false;
+    }
+    return true;
+  }
+  function findPath(ax, az, bx, bz) {
+    let s = nearestFree(navIx(ax), navIx(az));
+    let e = nearestFree(navIx(bx), navIx(bz));
+    if (!s || !e) return null;
+    const S = s[1] * NAVN + s[0], E = e[1] * NAVN + e[0];
+    if (S === E) return [{ x: bx, z: bz }];
+    const open = [S];
+    const came = new Int32Array(NAVN * NAVN).fill(-1);
+    const gScore = new Float32Array(NAVN * NAVN).fill(1e9);
+    const fScore = new Float32Array(NAVN * NAVN).fill(1e9);
+    const inOpen = new Uint8Array(NAVN * NAVN);
+    gScore[S] = 0;
+    fScore[S] = Math.hypot(s[0] - e[0], s[1] - e[1]);
+    inOpen[S] = 1;
+    const DIRS = [[1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1], [1, 1, 1.414], [1, -1, 1.414], [-1, 1, 1.414], [-1, -1, 1.414]];
+    let guard = 0;
+    while (open.length && guard++ < 6000) {
+      let bi = 0;
+      for (let i = 1; i < open.length; i++) if (fScore[open[i]] < fScore[open[bi]]) bi = i;
+      const cur = open.splice(bi, 1)[0];
+      inOpen[cur] = 0;
+      if (cur === E) {
+        const cells = [];
+        let c = cur;
+        while (c !== -1) { cells.push(c); c = came[c]; }
+        cells.reverse();
+        const pts = cells.map(i => ({ x: navWx(i % NAVN), z: navWx(Math.floor(i / NAVN)) }));
+        pts.push({ x: bx, z: bz });
+        // 스트링 풀링 — 곧게 걸을 수 있는 구간은 건너뛴다
+        const out = [];
+        let i0 = 0;
+        while (i0 < pts.length - 1) {
+          let j = pts.length - 1;
+          while (j > i0 + 1 && !lineClear(pts[i0].x, pts[i0].z, pts[j].x, pts[j].z)) j--;
+          out.push(pts[j]);
+          i0 = j;
+        }
+        return out;
+      }
+      const cx = cur % NAVN, cz = Math.floor(cur / NAVN);
+      for (let d = 0; d < DIRS.length; d++) {
+        const nx2 = cx + DIRS[d][0], nz2 = cz + DIRS[d][1];
+        if (nx2 < 0 || nz2 < 0 || nx2 >= NAVN || nz2 >= NAVN) continue;
+        const ni = nz2 * NAVN + nx2;
+        if (!navFree[ni]) continue;
+        if (DIRS[d][0] && DIRS[d][1] && (!navFree[cz * NAVN + nx2] || !navFree[nz2 * NAVN + cx])) continue;
+        const ng = gScore[cur] + DIRS[d][2];
+        if (ng < gScore[ni]) {
+          gScore[ni] = ng;
+          came[ni] = cur;
+          fScore[ni] = ng + Math.hypot(nx2 - e[0], nz2 - e[1]);
+          if (!inOpen[ni]) { open.push(ni); inOpen[ni] = 1; }
+        }
+      }
+    }
+    return null;
+  }
+
+  // 돌아다닐 자리 (구역별)
+  const ROAM = [
+    { x: -3.80, z: 2.42, yaw: -Math.PI / 2, act: 'sip', label: '커피바' },
+    { x: -5.12, z: -3.90, yaw: -Math.PI / 2, act: 'browse', label: '책장' },
+    { x: -5.15, z: 0.60, yaw: -Math.PI / 2, act: 'browse', label: '화이트보드' },
+    { x: 0.30, z: 1.20, yaw: 0.35, act: 'talk', label: '가운데' },
+    { x: 2.95, z: 5.55, yaw: 0.15, act: 'talk', label: '라운지 앞' },
+    { x: 4.30, z: 0.90, yaw: 1.10, act: 'talk', label: '오른쪽' },
+    { x: -3.30, z: 5.30, yaw: -0.75, act: 'talk', label: '문 앞' }
+  ].map(s => Object.assign({ taken: null }, s));
 
   /* 재질: 캐릭터도 같은 보송 클레이 */
   const furTex = (() => {
@@ -946,6 +1304,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     if (cfg.name === '큐') {
       bigEye(body, -0.155, 0.66, 0.27, 0.16, 0.078);
       bigEye(body, 0.155, 0.66, 0.27, 0.16, 0.078);
+      // 큰 흰 헤드셋 (밴드 + 이어컵)
+      const band = add(body, new THREE.TorusGeometry(0.40, 0.048, 9, 30, Math.PI), clay(0xFBFAF6, { roughness: 0.5 }), 0, 0.72, 0.02, false);
+      band.rotation.z = 0;
+      [-1, 1].forEach(sd => {
+        const cup = add(body, cyl(0.155, 0.155, 0.13, 22), clay(0xF8F5EE, { roughness: 0.44 }), sd * 0.40, 0.60, 0.04, false);
+        cup.rotation.z = Math.PI / 2;
+        const pad = add(body, cyl(0.10, 0.10, 0.15, 18), clay(0xE3DACB, { roughness: 0.7 }), sd * 0.45, 0.60, 0.04, false);
+        pad.rotation.z = Math.PI / 2;
+        add(body, sph(0.028, 10), soft(0xE8899A, { roughness: 0.6 }), sd * 0.47, 0.60, 0.14, false);
+      });
     } else {
       dotEye(body, -0.155, 0.64, 0.32, 0.058);
       dotEye(body, 0.155, 0.64, 0.32, 0.058);
@@ -953,7 +1321,14 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
       m.rotation.z = -0.16;
       m.rotation.x = -0.05;
     }
-    return { body, arms: [], legs: [], top: 1.34 };
+    const arms = [-1, 1].map(side => {
+      const arm = new THREE.Group();
+      arm.position.set(side * 0.33, 0.46, 0.06);
+      add(arm, new THREE.CapsuleGeometry(0.072, 0.11, 8, 14), clay(cfg.color, { roughness: 0.86 }), 0, -0.08, 0);
+      body.add(arm);
+      return arm;
+    });
+    return { body, arms, legs: [], top: 1.34 };
   }
 
   function makeDisc(cfg) {                      // 인스팅트: 아이보리 원반 + 세리프 I
@@ -965,6 +1340,15 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     add(body, clayBox(0.072, 0.34, 0.05, 4.2, 14), ink, 0, 0.52, 0.155);
     add(body, clayBox(0.155, 0.052, 0.05, 4.2, 14), ink, 0, 0.715, 0.152);
     add(body, clayBox(0.155, 0.052, 0.05, 4.2, 14), ink, 0, 0.325, 0.152);
+    if (cfg.glasses) {
+      [-1, 1].forEach(sd => {
+        const rim = add(body, new THREE.TorusGeometry(0.105, 0.017, 8, 22), ink, sd * 0.175, 0.60, 0.175, false);
+        rim.scale.set(1, 1, 0.55);
+        const temple = add(body, clayBox(0.018, 0.016, 0.16, 2, 8), ink, sd * 0.27, 0.60, 0.10, false);
+        temple.rotation.y = sd * 0.42;
+      });
+      add(body, clayBox(0.075, 0.016, 0.02, 2, 8), ink, 0, 0.615, 0.19, false);
+    }
     return { body, arms: [], legs: [], top: 1.04 };
   }
 
@@ -981,6 +1365,18 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     dotEye(body, 0.125, 0.9, 0.235, 0.045);
     add(body, sph(0.024, 12), soft(0x7E6A9A, { roughness: 0.7 }), -0.055, 0.79, 0.29, false);
     add(body, sph(0.024, 12), soft(0x7E6A9A, { roughness: 0.7 }), 0.055, 0.79, 0.29, false);
+    if (cfg.glasses) {
+      const frame = clay(0x9B6FD8, { roughness: 0.45 });
+      [-1, 1].forEach(sd => {
+        const rim = add(body, new THREE.TorusGeometry(0.072, 0.014, 8, 20), frame, sd * 0.125, 0.905, 0.285, false);
+        rim.scale.set(1, 1, 0.5);
+      });
+      add(body, clayBox(0.055, 0.014, 0.02, 2, 8), frame, 0, 0.905, 0.315, false);
+      [-1, 1].forEach(sd => {
+        const tp = add(body, clayBox(0.016, 0.014, 0.12, 2, 8), frame, sd * 0.205, 0.905, 0.235, false);
+        tp.rotation.y = sd * 0.45;
+      });
+    }
     add(body, sph(0.115, 24), soft(0x6E2B45, { roughness: 0.55 }), 0, 0.655, 0.255, false).scale.set(1.2, 0.92, 0.5);
     add(body, sph(0.07, 18), soft(0xEC7C9B, { roughness: 0.7 }), 0, 0.622, 0.3, false).scale.set(1.1, 0.6, 0.45);
     add(body, clayBox(0.05, 0.06, 0.03, 2, 10), soft(0xFFFCF3, { roughness: 0.4 }), 0.045, 0.7, 0.315, false);
@@ -1073,7 +1469,21 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
       add(body, sph(0.013, 8), soft(0xFFFFFF, { roughness: 0.3 }), x - 0.015, 0.505, 0.25, false)
         .scale.set(1, 1, 0.5);
     };
-    eye(-0.085); eye(0.085);
+    if (cfg.face === 'squeeze') {
+      // '> <' 장난스러운 눈 (막내)
+      [-1, 1].forEach(sd => {
+        const x0 = sd * 0.085;
+        const a1 = add(body, clayBox(0.082, 0.024, 0.045, 2.6, 8), soft(0x1E1A18, { roughness: 0.36 }), x0, 0.465, 0.232, false);
+        a1.rotation.z = sd * 0.62;
+        const a2 = add(body, clayBox(0.082, 0.024, 0.045, 2.6, 8), soft(0x1E1A18, { roughness: 0.36 }), x0, 0.418, 0.232, false);
+        a2.rotation.z = -sd * 0.62;
+      });
+      const mo = add(body, new THREE.TorusGeometry(0.036, 0.011, 8, 16, Math.PI), soft(0x1E1A18, { roughness: 0.4 }), 0, 0.395, 0.235, false);
+      mo.scale.set(1, 1, 0.5);
+    } else {
+      eye(-0.085); eye(0.085);
+      smileArc(body, 0, 0.365, 0.235, 0.045, 0.011, 0x1E1A18, true);
+    }
     return { body, arms: [], legs: [], top: 0.98 };
   }
 
@@ -1112,20 +1522,19 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   }
 
   const walkers = PEOPLE.map((cfg, i) => {
+    const sx = cfg.seat[0], sz = cfg.seat[1];
     const built = buildCharacter(cfg);
-    const startIdx = cfg.spots[0];
-    const [sx, sz] = NODES[startIdx];
     built.root.scale.setScalar(1.5);
     built.top *= 1.5;
-    built.root.position.set(sx, FLOOR_Y, sz);
+    built.root.position.set(sx, cfg.seatY, sz);
+    built.root.rotation.y = cfg.yaw;
     scene.add(built.root);
     return Object.assign({
-      cfg, idx: startIdx, targetIdx: startIdx, path: [],
-      node: built, phase: Math.random() * 6, speed: 0.85,
-      wait: 1.5 + Math.random() * 4, busy: false, segT: 0, segD: 0,
-      from: new THREE.Vector3(sx, 0, sz), to: new THREE.Vector3(sx, 0, sz),
-      yaw: 0,
-      bx: sx, bz: sz, px: sx, pz: sz, ox: 0, oz: 0
+      cfg, state: 'sit', pose: 1, act: 'type', actT: 3 + Math.random() * 3,
+      t: 9 + i * 1.6 + Math.random() * 7, phase: Math.random() * 6,
+      path: [], pi: 0, speed: 0.85 + Math.random() * 0.25, stage: null,
+      roamSpot: null, stance: { x: cfg.stance[0], z: cfg.stance[1] },
+      yawTarget: cfg.yaw
     }, built);
   });
   // 클릭·호버 판정용 메시 목록
@@ -1161,7 +1570,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     ring.position.set(w.root.position.x, 0.2, w.root.position.z);
     ring.visible = true;
     tagName.textContent = w.cfg.name;
-    tagMeta.textContent = ZONE_NAME[w.cfg.zone] + ' · ' + (w.busy ? '이동 중' : '근무 중');
+    tagMeta.textContent = ZONE_NAME[w.cfg.zone] + ' · ' + (w.state === 'walk' ? '이동 중' : (w.act === 'sip' ? '커피 타임' : '근무 중'));
     tag.hidden = false;
     void tag.offsetWidth;
     tag.classList.add('on');
@@ -1182,8 +1591,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   scene.add(ring);
 
   /* ── 카메라 조작 ────────────────────────────────────────── */
-  const cam = { az: 0.78, pol: 0.98, dist: 34, target: new THREE.Vector3(0.1, 1.5, -0.3), size: 8.2, zoom: 1 };
-  const camBase = { az: 0.76, pol: 1.0 };
+  const cam = { az: 0.74, pol: 1.00, dist: 34, target: new THREE.Vector3(0.25, 1.30, -0.55), size: 7.6, zoom: 1 };
+  const camBase = { az: 0.74, pol: 1.0 };
   // 좁은 화면(모바일)은 방 안쪽이 화면을 가득 채우도록 더 당겨서 보여준다
   let camNarrow = null;
   function fitCam() {
@@ -1191,26 +1600,18 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const isNarrow = w < 520;
     if (isNarrow === camNarrow) return;
     camNarrow = isNarrow;
-    cam.size = isNarrow ? 6.2 : 8.2;
+    cam.size = isNarrow ? 5.9 : 7.6;
     cam.zoom = 1;
   }
 
   // 구역 핀을 3D 좌표에 맞춰 화면 위에 놓는다
+  // 구역 핀을 3D 좌표에 맞춰 화면 위에 놓는다
   const PIN_ANCHORS = [
-    { sel: '.pin-meeting', v: new THREE.Vector3(-4.7, 2.1, -0.3) },
-    { sel: '.pin-command', v: new THREE.Vector3(-0.1, 2.3, -5.9) },
-    { sel: '.pin-lounge',  v: new THREE.Vector3(4.4, 2.0, -3.4) }
+    { sel: '.pin-meeting', v: new THREE.Vector3(2.90, 2.98, -5.95) },
+    { sel: '.pin-command', v: new THREE.Vector3(-1.00, 2.58, -1.40) },
+    { sel: '.pin-lounge',  v: new THREE.Vector3(1.00, 2.38, 3.60) }
   ].map(o => ({ el: document.querySelector(o.sel), v: o.v }));
-  function placePins() {
-    const w = host.clientWidth, h = host.clientHeight;
-    if (!w || !h) return;
-    PIN_ANCHORS.forEach(o => {
-      if (!o.el) return;
-      tmpV.copy(o.v).project(camera);
-      o.el.style.left = ((tmpV.x * 0.5 + 0.5) * 100).toFixed(2) + '%';
-      o.el.style.top = ((-tmpV.y * 0.5 + 0.5) * 100).toFixed(2) + '%';
-    });
-  }
+
   function applyCamera() {
     const d = cam.dist, p = cam.pol, a = cam.az;
     camera.position.set(
@@ -1372,164 +1773,220 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     if (window.officePropOpen) window.officePropOpen(p.userData.prop, rect);
   }
 
-  /* ── 이동 & 애니메이션 ──────────────────────────────────── */
+  /* ── 행동 상태머신 & 애니메이션 ─────────────────────────── */
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clock = new THREE.Clock();
   const tmpV = new THREE.Vector3();
 
-  /* ── 겹침 방지: 스팟 예약 · 최소 간격 · 가구/벽 클램핑 ───── */
-  const MIN_DIST = 1.66;               // 캐릭터 중심 사이 최소 거리 (1.5배 확대 크기 기준)
-  const ROOM_LIM = 6.35;               // 바닥 경계
-  const OB_ROUND = [                   // 원형 장애물 (중심 x, z, 반지름 + 몸 반경)
-    { x: -4.0, z: -0.8, r: 2.3 },      // 회의 테이블 + 의자
-    { x: 3.15, z: -2.55, r: 1.15 },    // 커피 테이블
-    { x: 5.9, z: -2.6, r: 0.62 },      // 스탠드
-    { x: 2.55, z: 3.75, r: 1.05 },     // 푸프
-    { x: -1.6, z: 5.0, r: 0.7 },       // 사이드 테이블
-    { x: -6.2, z: -6.1, r: 0.78 }, { x: 6.0, z: -6.1, r: 0.72 },
-    { x: 6.1, z: 0.9, r: 0.82 }, { x: -6.3, z: 6.0, r: 0.72 },
-    { x: 5.9, z: -1.5, r: 0.62 }, { x: 2.4, z: 5.3, r: 0.72 },
-    { x: 0.6, z: 6.1, r: 0.68 }
-  ];
-  const OB_BOX = [                     // 사각 장애물 (중심 x, z, 반폭, 반높이 + 몸 반경)
-    { x: 0, z: -5.9, hw: 3.42, hd: 1.05 },       // 지휘실 책상 + 의자
-    { x: 4.35, z: -4.42, hw: 2.12, hd: 1.08 },   // 소파
-    { x: -4.5, z: 3.1, hw: 1.44, hd: 1.0 },      // 작업실 책상
-    { x: -4.5, z: 5.3, hw: 1.44, hd: 1.0 },
-    { x: 4.3, z: 3.6, hw: 1.44, hd: 1.0 },
-    { x: -6.55, z: -3.3, hw: 0.7, hd: 1.95 },    // 책장
-    { x: -4.6, z: -6.68, hw: 1.75, hd: 0.48 },   // 화이트보드
-    { x: 5.9, z: -6.6, hw: 1.3, hd: 0.52 }       // 창가 화분
-  ];
-  function clampWalk(p) {
-    p.x = clamp(p.x, -ROOM_LIM, ROOM_LIM);
-    p.z = clamp(p.z, -ROOM_LIM, ROOM_LIM);
-    for (let i = 0; i < OB_ROUND.length; i++) {
-      const c = OB_ROUND[i];
-      const dx = p.x - c.x, dz = p.z - c.z, d = Math.hypot(dx, dz);
-      if (d < c.r && d > 0.0001) { p.x = c.x + (dx / d) * c.r; p.z = c.z + (dz / d) * c.r; }
-    }
-    for (let i = 0; i < OB_BOX.length; i++) {
-      const b = OB_BOX[i];
-      const nx = clamp(p.x, b.x - b.hw, b.x + b.hw);
-      const nz = clamp(p.z, b.z - b.hd, b.z + b.hd);
-      if (nx === p.x && nz === p.z) {
-        const dxl = p.x - (b.x - b.hw), dxr = (b.x + b.hw) - p.x;
-        const dzl = p.z - (b.z - b.hd), dzr = (b.z + b.hd) - p.z;
-        const m = Math.min(dxl, dxr, dzl, dzr);
-        if (m === dxl) p.x = b.x - b.hw;
-        else if (m === dxr) p.x = b.x + b.hw;
-        else if (m === dzl) p.z = b.z - b.hd;
-        else p.z = b.z + b.hd;
-      }
-    }
+  function pickAct(w) {
+    const pool = w.cfg.acts || ['type', 'nod'];
+    let a = pool[(Math.random() * pool.length) | 0];
+    if (w.state === 'rest' && w.roamSpot) a = w.roamSpot.act;
+    w.act = a;
+    w.actT = 2.8 + Math.random() * 4.4;
   }
-
-  function nodeTaken(i, self) {
-    return walkers.some(o => o !== self && (o.idx === i || o.targetIdx === i || o.path.indexOf(i) >= 0));
+  function pickRoam(w) {
+    const free = ROAM.filter(s => !s.taken);
+    if (!free.length) return null;
+    const far = free.filter(s => Math.hypot(s.x - w.cfg.seat[0], s.z - w.cfg.seat[1]) > 2.4);
+    const pool = far.length ? far : free;
+    return pool[(Math.random() * pool.length) | 0];
   }
-  function pickSpot(w) {
-    const free = w.cfg.spots.filter(i => i !== w.idx && !nodeTaken(i, w));
-    if (!free.length) { w.wait = 1.6 + Math.random() * 2.4; return; }
-    const target = free[(Math.random() * free.length) | 0];
-    const [tx, tz] = NODES[target];
-    if (walkers.some(o => o !== w && Math.hypot(o.bx - tx, o.bz - tz) < MIN_DIST)) {
-      w.wait = 1.2 + Math.random() * 1.8; return;
-    }
-    const path = findPath(w.idx, target);
-    if (!path || path.length < 2) { w.wait = 1.6; return; }
-    w.path = path.slice(1);
-    w.busy = true;
-    if (focusTarget === w) tagMeta.textContent = ZONE_NAME[w.cfg.zone] + ' · 이동 중';
-    nextSegment(w);
+  function beginRoam(w) {
+    const spot = pickRoam(w);
+    if (!spot) { w.t = 3 + Math.random() * 5; return; }
+    const path = findPath(w.stance.x, w.stance.z, spot.x, spot.z);
+    if (!path || !path.length) { w.t = 3 + Math.random() * 5; return; }
+    spot.taken = w;
+    w.roamSpot = spot;
+    w.path = path; w.pi = 0; w.stage = 'out';
+    w.state = 'stand';
   }
-  function nextSegment(w) {
-    if (!w.path.length) {
-      w.busy = false; w.wait = 2 + Math.random() * 5; w.idx = w.targetIdx;
-      w.bx = w.to.x; w.bz = w.to.z;
-      if (focusTarget === w) tagMeta.textContent = ZONE_NAME[w.cfg.zone] + ' · 근무 중';
-      return;
+  function beginReturn(w) {
+    const from = { x: w.root.position.x, z: w.root.position.z };
+    const path = findPath(from.x, from.z, w.stance.x, w.stance.z);
+    if (w.roamSpot) w.roamSpot.taken = null;
+    w.roamSpot = null;
+    if (path && path.length) { w.path = path; w.pi = 0; w.state = 'walk'; w.stage = 'back'; }
+    else { w.state = 'settle'; }
+  }
+  function arrive(w) {
+    if (w.stage === 'out' && w.roamSpot) {
+      w.stage = 'rest';
+      w.state = 'rest';
+      w.t = 2.8 + Math.random() * 3.6;
+      w.yawTarget = w.roamSpot.yaw;
+      w.act = w.roamSpot.act;
+    } else {
+      w.state = 'settle';
+      w.yawTarget = w.cfg.yaw;
     }
-    const n = w.path.shift();
-    w.targetIdx = n;
-    const [x, z] = NODES[n];
-    w.from.set(w.bx, 0, w.bz);
-    w.to.set(x, 0, z);
-    w.segD = w.from.distanceTo(w.to);
-    w.segT = 0;
-    w.yaw = Math.atan2(w.to.x - w.from.x, w.to.z - w.from.z);
   }
 
   function updateCharacter(w, dt, t) {
-    if (!reduce) {
-      if (!w.busy) {
-        w.wait -= dt;
-        if (w.wait <= 0) pickSpot(w);
-      } else {
-        const sp = w.speed * dt;
-        w.segT += sp;
-        const k = w.segD > 0 ? Math.min(1, w.segT / w.segD) : 1;
-        tmpV.copy(w.from).lerp(w.to, k);
-        w.bx = tmpV.x; w.bz = tmpV.z;
-        let d = w.yaw - w.root.rotation.y;
-        while (d > Math.PI) d -= Math.PI * 2;
-        while (d < -Math.PI) d += Math.PI * 2;
-        w.root.rotation.y += d * Math.min(1, dt * 7);
-        w.phase += dt * 9.5;
-        const s = Math.sin(w.phase);
-        if (w.legs.length > 1) { w.legs[0].rotation.x = s * 0.55; w.legs[1].rotation.x = -s * 0.55; }
-        if (w.arms.length > 1) { w.arms[0].rotation.x = -s * 0.45; w.arms[1].rotation.x = s * 0.45; }
-        w.body.position.y = w.baseY + Math.abs(Math.cos(w.phase)) * 0.032;
-        w.body.rotation.z = s * 0.035;
-        if (k >= 1) nextSegment(w);
+    const damp = Math.min(1, dt * 7);
+    if (w.state !== 'walk') w.phase += dt * 1.2;
+    if (reduce) return;
+    switch (w.state) {
+      case 'sit':
+        w.t -= dt; w.actT -= dt;
+        if (w.actT <= 0) pickAct(w);
+        w.pose += (1 - w.pose) * damp;
+        if (w.t <= 0) {
+          if (w.cfg.roam && Math.random() < 0.6) beginRoam(w);
+          else { w.state = 'stretch'; w.t = 3.6; }
+        }
+        break;
+      case 'stretch':
+        w.t -= dt;
+        w.pose += ((w.t > 1.3 ? 0.10 : 1) - w.pose) * damp;
+        w.act = 'wave';
+        w.actT = 99;
+        if (w.t <= 0) { w.pose = 1; w.state = 'sit'; w.t = 10 + Math.random() * 16; pickAct(w); }
+        break;
+      case 'stand': {
+        w.pose += (0 - w.pose) * damp;
+        const k = 1 - w.pose;
+        w.root.position.x = w.cfg.seat[0] + (w.stance.x - w.cfg.seat[0]) * k;
+        w.root.position.z = w.cfg.seat[1] + (w.stance.z - w.cfg.seat[1]) * k;
+        w.yawTarget = Math.atan2(w.stance.x - w.cfg.seat[0], w.stance.z - w.cfg.seat[1]) || w.cfg.yaw;
+        if (w.pose < 0.06) { w.pose = 0; w.state = 'walk'; }
+        break;
       }
-      if (!w.busy) {
-        w.phase += dt * 1.6;
-        const b = Math.sin(w.phase) * 0.5 + 0.5;
-        w.body.position.y = w.baseY + b * 0.012;
-        w.body.rotation.z *= 0.9;
-        if (w.legs.length > 1) { w.legs[0].rotation.x *= 0.86; w.legs[1].rotation.x *= 0.86; }
-        if (w.arms.length > 1) { w.arms[0].rotation.x *= 0.86; w.arms[1].rotation.x *= 0.86; }
-        w.root.rotation.y += Math.sin(t * 0.5 + w.phase) * 0.0012;
+      case 'walk': {
+        const p = w.path[w.pi];
+        if (!p) { arrive(w); break; }
+        const dx = p.x - w.root.position.x, dz = p.z - w.root.position.z;
+        const d = Math.hypot(dx, dz);
+        if (d < 0.09) {
+          w.pi++;
+          if (w.pi >= w.path.length) arrive(w);
+          break;
+        }
+        const step = Math.min(d, w.speed * dt);
+        w.root.position.x += (dx / d) * step;
+        w.root.position.z += (dz / d) * step;
+        w.yawTarget = Math.atan2(dx, dz);
+        w.phase += dt * 8.6;
+        break;
+      }
+      case 'rest':
+        w.t -= dt;
+        if (w.t <= 0) beginReturn(w);
+        break;
+      case 'settle': {
+        w.pose += (1 - w.pose) * damp;
+        const k = w.pose;
+        w.root.position.x = w.stance.x + (w.cfg.seat[0] - w.stance.x) * k;
+        w.root.position.z = w.stance.z + (w.cfg.seat[1] - w.stance.z) * k;
+        if (w.pose > 0.97) {
+          w.pose = 1; w.state = 'sit'; w.t = 11 + Math.random() * 16;
+          w.root.position.x = w.cfg.seat[0];
+          w.root.position.z = w.cfg.seat[1];
+          pickAct(w);
+        }
+        break;
       }
     }
   }
 
-  // 매 프레임 모든 캐릭터 쌍의 간격을 벌리고, 장애물 밖으로 밀어낸다
-  const sepP = { x: 0, z: 0 };
+  function applyPose(w, dt, t) {
+    const damp = Math.min(1, dt * 7);
+    const targetY = FLOOR_Y + w.pose * (w.cfg.seatY - FLOOR_Y);
+    w.root.position.y += (targetY - w.root.position.y) * Math.min(1, dt * 6);
+
+    let d = w.yawTarget - w.root.rotation.y;
+    while (d > Math.PI) d -= Math.PI * 2;
+    while (d < -Math.PI) d += Math.PI * 2;
+    w.root.rotation.y += d * Math.min(1, dt * 5);
+
+    const walking = (w.state === 'walk' || w.state === 'stand' || w.state === 'settle');
+    const sitAmt = w.pose;
+
+    w.legs.forEach((leg, i) => {
+      const target = walking
+        ? (w.state === 'walk' ? Math.sin(w.phase + i * Math.PI) * 0.52 : 0)
+        : (sitAmt * 1.05 + (i % 2 ? 0.10 : 0));
+      leg.rotation.x += (target - leg.rotation.x) * damp;
+    });
+
+    let bx = 0, by = 0, bob = 0;
+    if (w.state === 'walk') {
+      bob = Math.abs(Math.sin(w.phase)) * 0.03;
+      bx = 0.05;
+      w.arms.forEach((arm, i) => {
+        arm.rotation.x += (Math.sin(w.phase + i * Math.PI) * 0.42 - arm.rotation.x) * damp;
+        arm.rotation.z += (0 - arm.rotation.z) * damp;
+      });
+    } else {
+      const a = w.act;
+      if (a === 'type' && sitAmt > 0.35) {
+        bx = 0.12 + Math.sin(t * 1.6) * 0.02;
+        w.arms.forEach((arm, i) => {
+          const target = -0.78 + Math.sin(t * 6.5 + i * Math.PI) * 0.16;
+          arm.rotation.x += (target - arm.rotation.x) * Math.min(1, dt * 12);
+        });
+      } else if (a === 'wave') {
+        bx = -0.02; by = Math.sin(t * 3.4) * 0.05;
+        w.arms.forEach((arm, i) => {
+          const target = i === 1 ? (-2.0 + Math.sin(t * 6) * 0.28) : -0.25;
+          arm.rotation.x += (target - arm.rotation.x) * Math.min(1, dt * 8);
+        });
+      } else if (a === 'sip') {
+        bx = -0.06;
+        w.arms.forEach((arm, i) => {
+          const target = i === 0 ? (-1.5 + Math.sin(t * 2.2) * 0.08) : -0.2;
+          arm.rotation.x += (target - arm.rotation.x) * Math.min(1, dt * 6);
+        });
+      } else if (a === 'read') {
+        bx = 0.16;
+        w.arms.forEach((arm, i) => {
+          const target = -0.75 + Math.sin(t * 1.1 + i) * 0.06;
+          arm.rotation.x += (target - arm.rotation.x) * Math.min(1, dt * 6);
+        });
+      } else if (a === 'nod') {
+        bx = 0.05 + Math.sin(t * 2.4) * 0.08;
+        w.arms.forEach(arm => { arm.rotation.x += (-0.25 - arm.rotation.x) * Math.min(1, dt * 4); });
+      } else if (a === 'talk') {
+        by = Math.sin(t * 0.9 + w.phase) * 0.14;
+        w.arms.forEach((arm, i) => {
+          const target = -0.35 + Math.sin(t * 1.7 + i * 2.1) * 0.22;
+          arm.rotation.x += (target - arm.rotation.x) * Math.min(1, dt * 5);
+        });
+      } else if (a === 'browse') {
+        bx = 0.10;
+        w.arms.forEach((arm, i) => {
+          const target = i === 1 ? (-1.15 + Math.sin(t * 1.4) * 0.22) : -0.3;
+          arm.rotation.x += (target - arm.rotation.x) * Math.min(1, dt * 5);
+        });
+      } else {
+        bob = (Math.sin(t * 1.3 + w.phase) * 0.5 + 0.5) * 0.012;
+        w.arms.forEach(arm => { arm.rotation.x += (0 - arm.rotation.x) * damp; });
+      }
+    }
+    w.body.position.y = bob;
+    w.body.rotation.x += (bx - w.body.rotation.x) * damp;
+    w.body.rotation.y += (by - w.body.rotation.y) * Math.min(1, dt * 3);
+  }
+
+  // 걷는 사람끼리(앉은 사람과도) 너무 붙지 않게 살짝 밀어낸다
   function separate(dt) {
+    const k = Math.min(1, dt * 6);
     for (let i = 0; i < walkers.length; i++) {
       const a = walkers[i];
-      a.px = a.bx; a.pz = a.bz;
-    }
-    for (let it = 0; it < 3; it++) {
-      for (let i = 0; i < walkers.length; i++) {
-        for (let j = i + 1; j < walkers.length; j++) {
-          const a = walkers[i], b = walkers[j];
-          let dx = b.px - a.px, dz = b.pz - a.pz;
-          const d2 = dx * dx + dz * dz;
-          if (d2 >= MIN_DIST * MIN_DIST) continue;
-          let d = Math.sqrt(d2);
-          if (d < 0.0001) { dx = Math.cos(i * 2.1 + j); dz = Math.sin(i * 2.1 + j); d = 0.0001; }
-          const push = (MIN_DIST - d) * 0.5, nx = dx / d, nz = dz / d;
-          a.px -= nx * push; a.pz -= nz * push;
-          b.px += nx * push; b.pz += nz * push;
+      if (a.state !== 'walk') continue;
+      for (let j = 0; j < walkers.length; j++) {
+        if (i === j) continue;
+        const b = walkers[j];
+        const dx = a.root.position.x - b.root.position.x;
+        const dz = a.root.position.z - b.root.position.z;
+        const d = Math.hypot(dx, dz);
+        if (d > 0.0001 && d < 0.82) {
+          const push = (0.82 - d) * k;
+          a.root.position.x += (dx / d) * push;
+          a.root.position.z += (dz / d) * push;
         }
       }
-      for (let i = 0; i < walkers.length; i++) {
-        const w = walkers[i];
-        sepP.x = w.px; sepP.z = w.pz;
-        clampWalk(sepP);
-        w.px = sepP.x; w.pz = sepP.z;
-      }
-    }
-    const k = Math.min(1, dt * 8);
-    for (let i = 0; i < walkers.length; i++) {
-      const w = walkers[i];
-      w.ox += (w.px - w.bx - w.ox) * k;
-      w.oz += (w.pz - w.bz - w.oz) * k;
-      w.root.position.x = w.bx + w.ox;
-      w.root.position.z = w.bz + w.oz;
     }
   }
 
@@ -1546,12 +2003,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   function frame() {
     const dt = Math.min(0.05, clock.getDelta());
     const t = clock.elapsedTime;
-    walkers.forEach(w => updateCharacter(w, dt, t));
+    walkers.forEach(w => { updateCharacter(w, dt, t); applyPose(w, dt, t); });
     separate(dt);
     if (focusTarget) {
       const rp = focusTarget.root.position;
       ring.position.set(rp.x, 0.2, rp.z);
-      tmpV.set(rp.x, focusTarget.top + 0.18, rp.z).project(camera);
+      tmpV.set(rp.x, focusTarget.top + 0.18 + rp.y, rp.z).project(camera);
       tag.style.transform = 'translate(-50%,-100%) translate(' +
         ((tmpV.x * 0.5 + 0.5) * host.clientWidth).toFixed(1) + 'px,' +
         (((-tmpV.y * 0.5 + 0.5) * host.clientHeight) - 8).toFixed(1) + 'px)';
@@ -1566,6 +2023,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   stage.classList.add('stage-3d');
   host.hidden = false;
   window.__office3dReady = true;
-  window.__o3d = { scene, camera, cam, walkers, applyCamera, ring, renderer, THREE };  // 개발용 핸들
+  window.__o3d = { scene, camera, cam, walkers, applyCamera, ring, renderer, THREE, ROAM, findPath };  // 개발용 핸들
   requestAnimationFrame(frame);
 })();
