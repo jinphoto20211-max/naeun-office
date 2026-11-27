@@ -1611,6 +1611,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     { sel: '.pin-command', v: new THREE.Vector3(-1.00, 2.58, -1.40) },
     { sel: '.pin-lounge',  v: new THREE.Vector3(1.00, 2.38, 3.60) }
   ].map(o => ({ el: document.querySelector(o.sel), v: o.v }));
+  function placePins() {
+    const w = host.clientWidth, h = host.clientHeight;
+    if (!w || !h) return;
+    PIN_ANCHORS.forEach(o => {
+      if (!o.el) return;
+      tmpV.copy(o.v).project(camera);
+      o.el.style.left = ((tmpV.x * 0.5 + 0.5) * 100).toFixed(2) + '%';
+      o.el.style.top = ((-tmpV.y * 0.5 + 0.5) * 100).toFixed(2) + '%';
+    });
+  }
 
   function applyCamera() {
     const d = cam.dist, p = cam.pol, a = cam.az;
