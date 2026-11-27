@@ -551,7 +551,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     hovered = o;
     if (o) {
       o.traverse(n => {
-        if (n.isMesh && n.material && n.material.emissive) { n.userData.baseEmi = n.material.emissive.getHex(); n.material.emissive.setHex(0xFFC98A); n.material.emissiveIntensity = 0.42; }
+        if (n.isMesh && n.material && n.material.emissive) { n.userData.baseEmi = n.material.emissive.getHex(); n.material.emissive.setHex(0xFFD2A0); n.material.emissiveIntensity = 0.16; }
       });
       canvas.style.cursor = 'pointer';
       tip.hidden = false;
@@ -607,6 +607,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 이동 & 애니메이션 ──────────────────────────────────── */
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clock = new THREE.Clock();
+  let lastDeclutter = 0;
   const tmpV = new THREE.Vector3();
 
   function pickSpot(w) {
@@ -684,6 +685,18 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const sy = (-tmpV.y * 0.5 + 0.5) * host.clientHeight;
     w.pill.style.transform = 'translate(-50%,-100%) translate(' + sx.toFixed(1) + 'px,' + (sy - 6).toFixed(1) + 'px)';
     w.pill.style.opacity = inFront ? '1' : '0';
+    w.sx = sx; w.sy = sy; w.vis = inFront;
+  }
+
+  function declutterPills() {
+    const kept = [];
+    walkers.slice().sort((a, b) => b.sy - a.sy).forEach(w => {
+      if (!w.vis) return;
+      const wHalf = 30, hHalf = 9;
+      const clash = kept.some(k => Math.abs(k.sx - w.sx) < wHalf + 26 && Math.abs(k.sy - w.sy) < hHalf * 2);
+      w.pill.classList.toggle('dim', clash);
+      if (!clash) kept.push(w);
+    });
   }
 
   /* ── 렌더 루프 ──────────────────────────────────────────── */
@@ -699,6 +712,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const dt = Math.min(0.05, clock.getDelta());
     const t = clock.elapsedTime;
     walkers.forEach(w => updateCharacter(w, dt, t));
+    if (t - lastDeclutter > 0.25) { lastDeclutter = t; declutterPills(); }
     if (focusTarget) {
       cam.target.lerp(new THREE.Vector3(focusTarget.root.position.x * 0.55, 0.9, focusTarget.root.position.z * 0.55), 0.04);
       applyCamera();

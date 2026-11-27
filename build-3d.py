@@ -44,6 +44,7 @@ CSS = """  /* OFFICE3D-CSS:START */
     letter-spacing:-.2px; white-space:nowrap; line-height:1.25;
     box-shadow:0 3px 10px rgba(90,65,45,.20); transition:opacity .2s ease; will-change:transform;
   }
+  .o3d-pill.dim{opacity:.15 !important}
   .o3d-dot{width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 2px rgba(34,197,94,.22); flex:0 0 auto}
   .o3d-prog{display:inline-block; width:26px; height:3px; border-radius:2px; background:rgba(120,96,74,.18); overflow:hidden}
   .o3d-prog > i{display:block; height:100%; width:0%; background:#7FC197; border-radius:2px; transition:width .18s linear}
