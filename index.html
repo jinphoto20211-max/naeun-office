@@ -698,7 +698,7 @@
   .walker-art{display:block; transform-origin:50% 92%; transition:transform .22s ease}
   .walker-art img{
     display:block; height:var(--chH); width:auto; max-width:none; user-select:none; -webkit-user-drag:none;
-    filter:drop-shadow(0 1px 1px rgba(70,50,34,.14));
+    filter:drop-shadow(0 1px 1px rgba(70,50,34,.14)) brightness(calc(1 - var(--haze,0) * .05)) saturate(calc(1 - var(--haze,0) * .07));
   }
   .walker.flip .walker-art{transform:scaleX(-1)}
   .walker.walking .walker-art img{animation:walkStep var(--step,.6s) ease-in-out infinite}
@@ -1896,6 +1896,7 @@
     function apply(w, x, y, dur){
       w.pos = [x, y];
       w.el.style.setProperty('--ds', (0.865 + (y - 40) * 0.0062).toFixed(3));
+      w.el.style.setProperty('--haze', Math.max(0, Math.min(1, (64 - y) / 22)).toFixed(3));
       w.el.style.zIndex = String(10 + Math.round(y));
       if (dur){ w.el.style.setProperty('--dur', dur + 'ms'); }
       w.el.style.left = x + '%';
@@ -2055,7 +2056,8 @@
       var left = r.left + r.width / 2 - w / 2;
       left = Math.max(10, Math.min(vw - w - 10, left));
       var top = r.top - h - 12;
-      if (top < 10) top = Math.min(vh - h - 10, r.bottom + 12);
+      if (top < 10) top = r.bottom + 12;
+      top = Math.max(10, Math.min(vh - h - 10, top));
       card.style.left = Math.round(left) + 'px';
       card.style.top = Math.round(top) + 'px';
     }
