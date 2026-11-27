@@ -2,18 +2,20 @@
 
 나은님 전용 비서실 대시보드 (GitHub Pages 정적 페이지).
 
-- `index.html` — 앱 본체 (단일 파일, 이미지 Base64 인라인 + three.js 모듈 인라인)
-  - 오피스 맵: **3D 클레이 오피스**(three.js, CDN import) — 10명 캐릭터가 통로로 걸어 다니고,
-    책상·테이블·소파·책장·화이트보드·창문을 눌러 요약 카드를 띄웁니다.
-    WebGL/CDN 을 못 쓰는 환경에서는 2D 스프라이트 판(`build-walkers.py`)이 자동으로 남습니다.
+- `index.html` — 앱 본체 (단일 파일)
+  - 오피스 맵: **2.5D 살아있는 오피스** — 클레이 톤 오피스 사진(`assets/office-bg.jpg`) 위에
+    캐릭터 스프라이트(`assets/chars/*.png`)를 원본 사진의 아이소메트릭 좌표에 맞춰 배치.
+    숨쉬기·까딱임 CSS 모션, 2~3명씩 순환하는 말풍선(현재 하는 일), 캐릭터 클릭 시 상태·지시 팝업.
+    모바일에서는 기본 확대(1.6배) + 드래그/핀치로 둘러볼 수 있습니다.
   - 트래커: 체험단·설문·응모·상품권 집계와 노션 공용 허브 요약(맨 위 카드)
+  - 회의실: 오늘의 안건 + AI 단톡방(임베드/새 창) — 방 주인 비밀번호는 브라우저에만 저장
 - `build-tracker.py` — 트래커 탭 HTML/CSS 생성 (노션 기록 → 수치)
-- `build-walkers.py` — 2D 스프라이트 오피스(폴백) 마크업·CSS·JS 생성, 사물 카드 공유 로직
-- `build-3d.py` — `assets/office3d.js` 를 index.html 안에 인라인 주입 (3D 씬 마크업·CSS 포함)
-- `assets/office3d.js` — three.js 3D 오피스 씬 (방·가구·10명 캐릭터·이동·사물 클릭)
-- `assets/office-room.jpg`, `sprites/*.png` — 2D 판 배경·캐릭터 원본
+- `build-walkers.py`, `build-clay.py`, `build-people.py` — 이전 2D/3D 실험용 생성기(지금 화면에는 미사용)
+- `assets/office-bg.jpg` — 캐릭터를 지운 빈 오피스 배경 (1254×1254)
+- `assets/chars/*.png` — 11명 캐릭터 투명 스프라이트
 - `deploy.sh` — 커밋·푸시 후 Pages 반영 확인
 
-빌드 순서: `python3 build-tracker.py` → `python3 build-walkers.py` → `python3 build-3d.py`
+2.5D 스테이지의 마크업·CSS·JS는 `work` 스크립트로 주입된 상태이며, 좌표/말풍선 문구는
+`index.html` 안의 `OFFICE25D-SCRIPT` 블록에서 바로 고칠 수 있습니다.
 
 페이지는 `noindex` 이고 개인 식별 정보·계정 핸들은 넣지 않습니다.
