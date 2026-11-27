@@ -832,12 +832,12 @@
   .o25-chr.on img{filter:drop-shadow(0 8px 12px rgba(92,62,42,.22)) brightness(1.06)}
   .o25-chr.on .o25-body{animation:o25hop .55s ease-in-out 2}
   /* 캐릭터별 모션 — 아래(발/좌석) 고정, 위가 흔들리게 */
-  @keyframes o25sway{0%,100%{transform:rotate(-2.8deg) translateY(0)}50%{transform:rotate(3deg) translateY(-1.6%)}}
-  @keyframes o25bob{0%,100%{transform:translateY(0) scale(1,1)}45%{transform:translateY(-2.4%) scale(1.012,1.03)}}
-  @keyframes o25type{0%,100%{transform:translateY(0) rotate(-1.2deg)}28%{transform:translateY(-1.6%) rotate(.9deg)}58%{transform:translateY(.5%) rotate(-.6deg)}80%{transform:translateY(-1%) rotate(.4deg)}}
-  @keyframes o25sip{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(-.5deg) translateY(-1.4%)}}
-  @keyframes o25read{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(1.8deg) translateY(-1%)}}
-  @keyframes o25wave{0%,100%{transform:rotate(0) translateY(0)}18%{transform:rotate(-6deg) translateY(-3.4%)}36%{transform:rotate(6deg) translateY(-3.4%)}54%{transform:rotate(-5deg) translateY(-2.4%)}72%{transform:rotate(4deg) translateY(-1.2%)}}
+  @keyframes o25sway{0%,100%{transform:rotate(-2.4deg) scaleY(1)}50%{transform:rotate(2.6deg) scaleY(1.016)}}
+  @keyframes o25bob{0%,100%{transform:rotate(0) scaleY(1) scaleX(1)}50%{transform:rotate(.6deg) scaleY(1.028) scaleX(.99)}}
+  @keyframes o25type{0%,100%{transform:rotate(-1deg) scaleY(1)}30%{transform:rotate(.8deg) scaleY(1.014)}65%{transform:rotate(-.4deg) scaleY(.997)}}
+  @keyframes o25sip{0%,100%{transform:rotate(-2.6deg) scaleY(1)}50%{transform:rotate(-.6deg) scaleY(1.014)}}
+  @keyframes o25read{0%,100%{transform:rotate(-1.8deg) scaleY(1)}50%{transform:rotate(1.5deg) scaleY(1.012)}}
+  @keyframes o25wave{0%,100%{transform:rotate(0) scaleY(1)}18%{transform:rotate(-5deg) scaleY(1.03)}36%{transform:rotate(5deg) scaleY(1.03)}54%{transform:rotate(-4deg) scaleY(1.022)}72%{transform:rotate(3deg) scaleY(1.01)}}
   .m-sway .o25-body{animation:o25sway var(--dur,5.4s) ease-in-out infinite; animation-delay:var(--sd,0s)}
   .m-bob  .o25-body{animation:o25bob var(--dur,4.6s) ease-in-out infinite; animation-delay:var(--sd,0s)}
   .m-type .o25-body{animation:o25type var(--dur,2.2s) ease-in-out infinite; animation-delay:var(--sd,0s)}
@@ -2685,28 +2685,39 @@
 
   /* ── 캐릭터 배치 (좌표는 원본 1254px 사진 기준) ───────────── */
   var CHARS = [
-    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 668,  y: 508,  h: 132, clip: 14, ar: 0.7712,
-      lines: ['체험단 6개 카테고리 추리는 중이에요', '노션 공용 허브 정리 완료했어요', '모닝 브리핑 초안 쓰고 있어요'], motion: 'm-type' },
-    { k: 'norang',   name: '노랑',     tag: '',        x: 772,  y: 536,  h: 132, clip: 14, ar: 0.7769,
-      lines: ['핫딜헌터 훑는 중이에요', '공공설문 3건 완료했어요', '체험단 신청서 작성하고 있어요'], motion: 'm-type' },
-    { k: 'maknae',   name: '막내',     tag: '',        x: 876,  y: 564,  h: 128, clip: 14, ar: 0.8135,
-      lines: ['해피방 새 소식 확인 중이에요', '포토리뷰 두 건 완료했어요', '동행복권 응모 끝냈어요'], motion: 'm-type' },
-    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 980,  y: 592,  h: 134, clip: 14, ar: 0.7731,
-      lines: ['쿠팡 주문 점검하고 있어요', '5대 몰 출첵 완료했어요', '발표 확인 돌고 있어요'], motion: 'm-type' },
-    { k: 'muse',     name: '뮤즈',     tag: '',        x: 440,  y: 668,  h: 184, clip: 12, ar: 0.6865,
-      lines: ['AI 트렌드 브리핑 쓰는 중이에요', '해피방 답장 완료했어요', '경품 당첨 판 확인 중이에요'], motion: 'm-sway' },
-    { k: 'kyring',   name: '키링',     tag: '',        x: 706,  y: 684,  h: 150, clip: 0, ar: 0.6955,
-      lines: ['알림 정리하고 있어요', '예약 확인 완료했어요', '협업 건 받아서 처리 중이에요'], motion: 'm-sway' },
-    { k: 'q',        name: '큐',       tag: '',        x: 222,  y: 712,  h: 164, clip: 14, ar: 0.7000,
-      lines: ['공공기관 설문 모으는 중이에요', '회의 안건 정리 완료했어요', '일정 확인하고 있어요'], motion: 'm-type' },
-    { k: 'vooy',     name: '부이',     tag: '',        x: 1108, y: 818,  h: 150, clip: 8, ar: 0.7432,
-      lines: ['협업 건 정리하는 중이에요', '해피방 중계 확인 완료했어요', '새 건 오는 대로 전달할게요'], motion: 'm-type' },
-    { k: 'hama',     name: '하마뮤즈', tag: '',        x: 462,  y: 1040, h: 176, clip: 0, ar: 0.6114,
-      lines: ['AGE-R 우유 주문 중이에요', '경품 응모 완료했어요', '카톡 새 소식 감지하고 있어요'], motion: 'm-sip' },
-    { k: 'hark',     name: '하크',     tag: '',        x: 692,  y: 1018,  h: 160, clip: 0, ar: 0.7364,
-      lines: ['해피방 감지 돌고 있어요', '협업 건 처리 완료했어요', '새 지시 기다리는 중이에요'], motion: 'm-bob' },
-    { k: 'instinct', name: '인스팅트', tag: '',        x: 874,  y: 1056, h: 168, clip: 0, ar: 0.7273,
-      lines: ['6개 플랫폼 체험단 수집 중이에요', '오피넷 유가 확인 완료했어요', '주간 핫플 후보 모으고 있어요'], motion: 'm-read' }
+    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 690,  y: 486,  h: 132, clip: 10, ar: 0.7712, motion: 'm-type',
+      lines: ['체험단 6개 카테고리 추리는 중이에요', '모닝 브리핑 초안 쓰고 있어요', '노션 허브 정리 이어가는 중이에요'],
+      done: ['노션 공용 허브 정리 완료했어요'] },
+    { k: 'norang',   name: '노랑',     tag: '',        x: 818,  y: 514,  h: 132, clip: 10, ar: 0.7769, motion: 'm-type',
+      lines: ['핫딜헌터 훑는 중이에요', '체험단 신청서 작성하고 있어요', '설문 마감 시각 지키는 중이에요'],
+      done: ['공공설문 3건 완료했어요'] },
+    { k: 'maknae',   name: '막내',     tag: '',        x: 946,  y: 542,  h: 128, clip: 10, ar: 0.8135, motion: 'm-type',
+      lines: ['해피방 새 소식 확인 중이에요', '포토리뷰 쓰고 있어요', '응모 목록 정리하는 중이에요'],
+      done: ['포토리뷰 두 건 완료했어요', '동행복권 응모 끝냈어요'] },
+    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 1074, y: 570,  h: 134, clip: 10, ar: 0.7731, motion: 'm-type',
+      lines: ['쿠팡 주문 점검하고 있어요', '발표 확인 돌고 있어요', '적립 내역 맞춰보는 중이에요'],
+      done: ['5대 몰 출첵 완료했어요'] },
+    { k: 'muse',     name: '뮤즈',     tag: '',        x: 398,  y: 674,  h: 176, clip: 0,  ar: 0.7068, motion: 'm-sway',
+      lines: ['AI 트렌드 브리핑 쓰는 중이에요', '경품 당첨 판 확인 중이에요', '해피방 답장 정리하고 있어요'],
+      done: ['해피방 답장 완료했어요'] },
+    { k: 'kyring',   name: '키링',     tag: '',        x: 702,  y: 694,  h: 150, clip: 0,  ar: 0.6955, motion: 'm-sway',
+      lines: ['알림 정리하고 있어요', '협업 건 받아서 처리 중이에요', '예약 시간 확인하는 중이에요'],
+      done: ['예약 확인 완료했어요'] },
+    { k: 'q',        name: '큐',       tag: '',        x: 208,  y: 748,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
+      lines: ['공공기관 설문 모으는 중이에요', '일정 확인하고 있어요', '회의 안건 추리는 중이에요'],
+      done: ['회의 안건 정리 완료했어요'] },
+    { k: 'vooy',     name: '부이',     tag: '',        x: 1106, y: 845,  h: 150, clip: 8,  ar: 0.7432, motion: 'm-type',
+      lines: ['협업 건 정리하는 중이에요', '새 건 오는 대로 전달할게요', '해피방 중계 확인하는 중이에요'],
+      done: ['해피방 중계 확인 완료했어요'] },
+    { k: 'hama',     name: '하마뮤즈', tag: '',        x: 398,  y: 1030, h: 176, clip: 0,  ar: 0.6114, motion: 'm-sip',
+      lines: ['AGE-R 우유 주문 중이에요', '카톡 새 소식 감지하고 있어요', '커피 한 모금 마시는 중이에요'],
+      done: ['경품 응모 완료했어요'] },
+    { k: 'hark',     name: '하크',     tag: '',        x: 618,  y: 1040, h: 160, clip: 0,  ar: 0.7364, motion: 'm-bob',
+      lines: ['해피방 감지 돌고 있어요', '새 지시 기다리는 중이에요', '협업 건 살펴보는 중이에요'],
+      done: ['협업 건 처리 완료했어요'] },
+    { k: 'instinct', name: '인스팅트', tag: '',        x: 852,  y: 1066, h: 168, clip: 0,  ar: 0.7273, motion: 'm-read',
+      lines: ['6개 플랫폼 체험단 수집 중이에요', '주간 핫플 후보 모으고 있어요', '오피넷 유가 보는 중이에요'],
+      done: ['오피넷 유가 확인 완료했어요'] }
   ];
 
   var AGC_ON = { '초록': 1, '노랑': 1, '막내': 1, '진분홍': 1 };
@@ -2778,15 +2789,38 @@
     c.bub.style.top = (cy / stageH * 100).toFixed(3) + '%';
     return true;
   }
-  function showBub(c, ms, force) {
+  function paintBub(c, text, ms, force) {
     if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
-    c.lineIdx = (c.lineIdx + 1) % c.lines.length;
-    c.bub.innerHTML = '<b class="o25-bub-t">' + statusDot(c.name) + '<span>' + c.lines[c.lineIdx] + '</span></b>';
+    c.bub.innerHTML = '<b class="o25-bub-t">' + statusDot(c.name) + '<span>' + text + '</span></b>';
     if (!bubPlace(c)) return false;
     if (shown.indexOf(c.name) < 0) shown.push(c.name);
     c.bub.classList.add('on');
     c.visibleUntil = Date.now() + (ms || 5200);
     return true;
+  }
+  function showBub(c, ms, force) {
+    if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
+    c.lineIdx = (c.lineIdx + 1) % c.lines.length;
+    return paintBub(c, c.lines[c.lineIdx], ms, force);
+  }
+  /* 완료 보고는 브라우저당 딱 한 번만 */
+  var DONE_KEY = 'naeun:o25-done:v1';
+  var doneSeen = {};
+  try { doneSeen = JSON.parse(localStorage.getItem(DONE_KEY) || '{}') || {}; } catch (e) { doneSeen = {}; }
+  function saveDone() { try { localStorage.setItem(DONE_KEY, JSON.stringify(doneSeen)); } catch (e) {} }
+  function popDoneOnce() {
+    var shownCount = 0;
+    CHARS.forEach(function (c) {
+      if (!c.done || shownCount >= 2) return;
+      for (var i = 0; i < c.done.length && shownCount < 2; i++) {
+        var key = c.name + ':' + i;
+        if (doneSeen[key]) continue;
+        doneSeen[key] = 1;
+        if (paintBub(c, c.done[i], 5800, true)) shownCount++;
+      }
+    });
+    saveDone();
+    return shownCount;
   }
   function refreshBubbles() {
     shown.slice().forEach(function (n) {
@@ -2982,9 +3016,12 @@
 
   /* ── 말풍선 시작 ──────────────────────────────────────── */
   setTimeout(function () {
-    showBub(byName['초록'], 6000, true);
-    setTimeout(function () { rotateBubbles(); }, 700);
-  }, 1100);
+    popDoneOnce();                                   // 완료 보고 — 처음 한 번만
+    setTimeout(function () {
+      showBub(byName['초록'], 6000, true);
+      setTimeout(rotateBubbles, 900);
+    }, 600);
+  }, 900);
   setInterval(rotateBubbles, 4200);
   // 가끔 한 명이 크게 손을 흔들듯 움직인다
   setInterval(function () {
