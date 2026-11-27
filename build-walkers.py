@@ -105,19 +105,46 @@ for name, space, sprite, sub, acts, spots in PEOPLE:
            uri, w, h, name, space, label)
     )
 
+# ── 사물 핫스팟 (배경 이미지 1200×1200 기준 좌표·크기 %) ─────────────────────
+PROPS = [
+    ("table",   "회의 테이블",  17.0, 41.5, 24.0, 18.0, "round"),
+    ("command", "지휘실 책상",  29.5, 16.5, 42.0, 21.5, ""),
+    ("sofa",    "라운지 소파",  58.0, 40.5, 25.0, 13.0, ""),
+    ("coffee",  "커피 테이블",  51.0, 47.0, 16.0, 11.0, ""),
+    ("shelf",   "책장",          4.5, 31.0, 21.5, 17.0, ""),
+    ("window",  "창문",         74.0, 19.5, 14.5, 16.5, ""),
+    ("desk",    "작업실 책상",  51.0, 65.0, 15.5, 13.5, ""),
+]
+
+PROPS_HTML = "\n" + "\n".join(
+    '            <button class="prop prop-%s%s" type="button" data-prop="%s" '
+    'style="left:%g%%; top:%g%%; width:%g%%; height:%g%%" aria-label="%s — 눌러서 확인">'
+    '<span class="prop-glow" aria-hidden="true"></span>'
+    '<span class="prop-tip" aria-hidden="true">%s</span></button>'
+    % (pid, (" round" if shape == "round" else ""), pid, x, y, w, h, label, label)
+    for pid, label, x, y, w, h, shape in PROPS
+)
+
 STAGE = """<div class="office-stage" id="officeStage">
         <div class="office-zoom" id="officeZoom">
           <img class="office-room" src="%s" alt="열 명의 비서가 지휘실·회의실·라운지 사이를 오가는 클레이 3D 오피스" decoding="async" fetchpriority="high">
+          <div class="office-props" id="officeProps">%s
+          </div>
           <div class="office-actors" id="officeActors">
 %s
           </div>
+        </div>
+        <div class="prop-card" id="propCard" hidden>
+          <div class="prop-card-top"><b id="propTitle"></b><button type="button" class="prop-card-x" id="propClose" aria-label="닫기">✕</button></div>
+          <p id="propBody"></p>
+          <button type="button" class="prop-card-go" id="propGo" hidden></button>
         </div>
         <div class="office-overlay">
           <button class="pin pin-meeting" type="button" data-space="meeting" aria-pressed="true"><span class="pin-dot" aria-hidden="true"></span>대회의실</button>
           <button class="pin pin-command" type="button" data-space="command" aria-pressed="false"><span class="pin-dot" aria-hidden="true"></span>지휘실</button>
           <button class="pin pin-lounge" type="button" data-space="lounge" aria-pressed="false"><span class="pin-dot" aria-hidden="true"></span>라운지</button>
         </div>
-      </div>""" % (ROOM_URI, "\n".join(walkers_html))
+      </div>""" % (ROOM_URI, PROPS_HTML, "\n".join(walkers_html))
 
 STAGE_TEXT = "      <!-- OFFICE-STAGE:START -->\n" + STAGE + "\n      <!-- OFFICE-STAGE:END -->"
 
@@ -368,6 +395,125 @@ JS_TEXT = """  (function(){
 """.replace("__NODES__", "[" + ",".join("[%g,%g]" % n for n in NODES) + "]") \
    .replace("__EDGES__", "[" + ",".join("[%d,%d]" % e for e in EDGES) + "]")
 
+
+CSS_TEXT = CSS_TEXT + """  /* 사물 핫스팟 — 배경 물건에 맞춘 클릭 영역 */
+  .office-props{position:absolute; inset:0; z-index:0}
+  .prop{
+    position:absolute; margin:0; padding:0; border:0; background:none; border-radius:14px; cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .prop.round{border-radius:50%}
+  .prop-glow{
+    position:absolute; inset:0; border-radius:inherit; opacity:0; transition:opacity .28s ease;
+    background:radial-gradient(closest-side, rgba(255,238,198,.52), rgba(255,214,150,.22) 62%, rgba(255,214,150,0) 100%);
+    box-shadow:inset 0 0 0 1.5px rgba(255,246,224,.78), 0 0 20px rgba(255,214,150,.32);
+  }
+  .prop:hover .prop-glow, .prop:focus-visible .prop-glow, .prop.on .prop-glow{opacity:1}
+  .prop-tip{
+    position:absolute; left:50%; top:0; transform:translate(-50%,-118%) scale(.96); opacity:0;
+    padding:3px 9px; border-radius:999px; background:rgba(52,40,32,.9); color:#FFF8EF;
+    font-size:11px; font-weight:700; letter-spacing:-.2px; white-space:nowrap; pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease; z-index:2;
+  }
+  .prop:hover .prop-tip, .prop:focus-visible .prop-tip, .prop.on .prop-tip{opacity:1; transform:translate(-50%,-128%) scale(1)}
+  .prop-card{
+    position:absolute; left:50%; bottom:14px; transform:translate(-50%,10px); width:min(88%,420px); z-index:950;
+    padding:13px 15px 14px; border-radius:18px; background:rgba(255,253,249,.975); text-align:left;
+    box-shadow:0 14px 34px rgba(90,62,40,.30), inset 0 0 0 1px rgba(255,255,255,.9);
+    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+  }
+  .prop-card.open{opacity:1; transform:translate(-50%,0); pointer-events:auto}
+  .prop-card-top{display:flex; align-items:center; justify-content:space-between; gap:10px}
+  .prop-card-top b{font-size:13.5px; font-weight:800; letter-spacing:-.3px; color:#443830}
+  .prop-card-x{border:0; background:none; font-size:12px; color:#9C8B7E; padding:2px 5px; cursor:pointer; line-height:1}
+  .prop-card p{margin:6px 0 0; font-size:11.8px; line-height:1.6; color:#6C5B50; letter-spacing:-.2px}
+  .prop-card-go{
+    margin-top:9px; display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border-radius:999px;
+    border:0; background:#4B3A31; color:#FFFAF3; font-size:11.5px; font-weight:800; cursor:pointer;
+  }
+  .prop-card-go[hidden]{display:none}
+  @media (max-width:720px){
+    .prop-tip{font-size:9.5px; padding:2px 7px}
+    .prop-card{width:min(92%,360px); bottom:10px; padding:11px 13px 12px}
+    .prop-card-top b{font-size:12.5px}
+    .prop-card p{font-size:10.8px}
+    .prop-card-go{font-size:10.5px; padding:6px 11px}
+  }
+  @media (max-width:560px){
+    .prop{border-radius:12px}
+    .prop-glow{box-shadow:inset 0 0 0 1px rgba(255,246,224,.7)}
+  }
+"""
+JS_TEXT = JS_TEXT + """
+  /* 사물 핫스팟 — 배경 물건 클릭 */
+  (function(){
+    var stage = $('#officeStage'), wrap = $('#officeProps'), card = $('#propCard');
+    if (!stage || !wrap || !card) return;
+    var elTitle = $('#propTitle'), elBody = $('#propBody'), elGo = $('#propGo'), elClose = $('#propClose');
+    var open = null, goFn = null;
+    function countStatus(s){
+      if (typeof MEMBERS === 'undefined' || !MEMBERS) return 0;
+      return MEMBERS.filter(function(m){
+        if (m.support) return false;
+        var st = (typeof statusOf === 'function') ? statusOf(m.name) : m.status;
+        return st === s;
+      }).length;
+    }
+    var DEF = {
+      table:   { title:'회의 테이블',
+                 body: function(){ return '오늘 안건 3건 — 차앤박 앰플 구매·인증(D-1) · 펀드 시험(D-2) · 고령군청 발표 확인(D-21). 08시 브리핑은 6개 플랫폼 카테고리로 정리했어요.'; },
+                 go:'회의실 열기', act: function(){ selectTab('meeting'); } },
+      command: { title:'지휘실 책상',
+                 body: function(){ return '모니터 한눈에 — 누적 응모 233 · 발표 대기 43 · 오늘 발표 9건 · 미결 14건. 지시 문구를 여기서 만들어 복사할 수 있어요.'; },
+                 go:'지휘실에서 지시하기', act: function(){ openModal('', null); } },
+      sofa:    { title:'라운지 소파',
+                 body: function(){ return '지금 대기 중 ' + countStatus('idle') + '명 · 온라인 ' + countStatus('online') + '명. 잠깐 쉬어가는 자리예요.'; },
+                 go:'비서현황 보기', act: function(){ selectTab('team'); } },
+      coffee:  { title:'커피 테이블',
+                 body: function(){ return '커피 한 잔 ☕ 발표 확인은 10시·18시에 한 번 더 돕니다. 오늘 발표 9건이 남아 있어요.'; },
+                 go:'', act: null },
+      shelf:   { title:'책장 — 노션 공용 허브',
+                 body: function(){ return '허브 사본 — 미결 14건 · 증시 탈출 3단계·회복 0단계 · 오피넷 최저 1,775원(논공농협).'; },
+                 go:'허브 요약 보기', act: function(){
+                   selectTab('tracker');
+                   setTimeout(function(){
+                     var hub = $('.hub-top'); if (!hub) return;
+                     var box = (hub.closest ? hub.closest('.card') : null) || hub;
+                     if (box.scrollIntoView) box.scrollIntoView({ behavior:'smooth', block:'center' });
+                   }, 280);
+                 } },
+      window:  { title:'창문',
+                 body: function(){ return '창밖 바람 한 번 🌿 방 안 공기를 잠깐 바꿔 봅니다.'; }, go:'', act: null },
+      desk:    { title:'작업실 책상',
+                 body: function(){ return '개인 책상 네 자리 — 오늘 남은 큐 18건(리뷰·후기 4 · 미결 14).'; },
+                 go:'작업실 열기', act: function(){ selectTab('work'); } }
+    };
+    function show(pid, node){
+      var d = DEF[pid]; if (!d) return;
+      open = pid; goFn = d.act;
+      elTitle.textContent = d.title;
+      elBody.textContent = (typeof d.body === 'function') ? d.body() : d.body;
+      if (d.go && d.act){ elGo.hidden = false; elGo.textContent = d.go; } else { elGo.hidden = true; }
+      card.hidden = false;
+      requestAnimationFrame(function(){ card.classList.add('open'); });
+      $$('.prop', wrap).forEach(function(p){ p.classList.toggle('on', p === node); });
+    }
+    function hide(){
+      card.classList.remove('open'); card.hidden = true; open = null; goFn = null;
+      $$('.prop', wrap).forEach(function(p){ p.classList.remove('on'); });
+    }
+    $$('.prop', wrap).forEach(function(p){
+      p.addEventListener('click', function(e){ e.stopPropagation(); show(p.getAttribute('data-prop'), p); });
+    });
+    elClose.addEventListener('click', function(e){ e.stopPropagation(); hide(); });
+    elGo.addEventListener('click', function(e){ e.stopPropagation(); if (goFn) goFn(); hide(); });
+    document.addEventListener('click', function(e){
+      if (open && !card.contains(e.target) && !wrap.contains(e.target)) hide();
+    });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && open) hide(); });
+    $$('.pin').forEach(function(pin){ pin.addEventListener('click', hide); });
+  })();
+"""
 
 def swap_between(html, start_marker, end_marker, body, fallback_anchor):
     """마커 사이를 body로 교체(마커는 남긴다). 마커가 없으면 fallback_anchor 앞에 삽입."""
