@@ -345,9 +345,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   wallZ.receiveShadow = wallX.receiveShadow = true;
   [wallZ, wallX].forEach((w, i) => {
     const capW = i === 0 ? R * 2 + 1.5 : WALL_T + 0.24;
-    const capD = i === 0 ? WALL_T + 0.24 : R * 2 + 1.5 - WALL_T;
+    const capD = i === 0 ? WALL_T + 0.24 : R * 2 + 0.7;
     const x = i === 0 ? 0 : -R - WALL_T / 2 + 0.06;
-    const z = i === 0 ? -R - WALL_T / 2 + 0.06 : (WALL_T + 0.24) / 2;
+    const z = i === 0 ? -R - WALL_T / 2 + 0.06 : 0.4;
     add(room, clayBox(capW, 0.2, capD, 4.4, 20), M.wallTrim, x, WALL_H + 0.02, z);
     add(room, clayBox(capW - 0.06, 0.46, capD - 0.06, 4.4, 20), M.wallBase, x, 0.28, z);
   });
@@ -547,13 +547,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   for (let i = 0; i < 4; i++) {
     const y = 0.48 + i * 0.56;
     add(shelf, clayBox(2.94, 0.09, 0.56, 4.6, 16), M.woodLight, 0, y, 0);
-    let bx = -1.2;
-    for (let b = 0; b < 7; b++) {
-      const bw = 0.1 + ((i + b) % 3) * 0.02;
-      const bh = 0.26 + ((i * 3 + b) % 4) * 0.05;
+    let bx = -1.3, b = 0;
+    while (bx < 1.12) {
+      const bw = 0.09 + ((i + b) % 3) * 0.022;
+      const bh = 0.24 + ((i * 3 + b) % 4) * 0.05;
       book(shelf, bx, y + 0.05 + bh / 2, 0.02, bw, bh, 0.32, [0xE9AEB2, 0x9DC0DC, 0xA9BFA6, 0xE9A78F, 0xF8EEDE, 0x86AE74, 0xE3C37A][(i + b) % 7]);
-      bx += bw + 0.06;
-      if (bx > 1.1) break;
+      bx += bw + ((b % 5 === 4) ? 0.12 : 0.045);
+      b++;
     }
   }
   plant(shelf, 1.1, 0.02, 0.5);
@@ -1166,7 +1166,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const kept = [];
     walkers.slice().sort((a, b) => b.sy - a.sy).forEach(w => {
       if (!w.vis) return;
-      const clash = kept.some(k => Math.abs(k.sx - w.sx) < 56 && Math.abs(k.sy - w.sy) < 18);
+      const clash = kept.some(k => Math.abs(k.sx - w.sx) < 62 && Math.abs(k.sy - w.sy) < 19);
       w.pill.classList.toggle('dim', clash);
       if (!clash) kept.push(w);
     });
