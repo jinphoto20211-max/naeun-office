@@ -719,6 +719,7 @@
   }
   .walker .nametag::after{width:.5em; height:.5em; bottom:-.26em}
   .walker:hover .nametag, .walker:focus-visible .nametag{background:#fff; box-shadow:0 5px 14px rgba(90,65,45,.26)}
+  .walker .nametag.dim{opacity:0}
   .walker-bubble{
     position:absolute; left:50%; bottom:100%; margin-bottom:2px; padding:3px 8px; border-radius:12px;
     background:rgba(255,255,255,.97); color:#5A4839; font-size:calc(var(--tagF) * .92); font-weight:700;
@@ -1893,6 +1894,30 @@
         bubbleLoop(w);
       }, 7000 + Math.random() * 15000);
     }
+    // 이름표 겹침 정리 — 겹치는 이름표는 잠시 숨긴다(가까운 캐릭터 우선)
+    function declutter(){
+      var list = [];
+      walkers.forEach(function(w){
+        var t = w.el.querySelector('.nametag');
+        var r = t.getBoundingClientRect();
+        if (!r.width) return;
+        list.push({ t: t, r: r, y: w.pos[1] });
+      });
+      list.sort(function(a, b){ return a.y - b.y; });
+      var kept = [];
+      list.forEach(function(o){
+        var clash = false;
+        for (var i = 0; i < kept.length; i++){
+          var k = kept[i].r;
+          if (o.r.left < k.right - 2 && o.r.right > k.left + 2 &&
+              o.r.top < k.bottom - 2 && o.r.bottom > k.top + 2){ clash = true; break; }
+        }
+        o.t.classList.toggle('dim', clash);
+        if (!clash) kept.push(o);
+      });
+    }
+    setInterval(function(){ if (!document.hidden && stage.offsetParent !== null) declutter(); }, 420);
+    window.addEventListener('resize', declutter);
     walkers.forEach(function(w, i){
       var start = w.spots[0];
       for (var k = 0; k < w.spots.length; k++){
@@ -1909,7 +1934,9 @@
     });
     document.addEventListener('visibilitychange', function(){
       if (!document.hidden) walkers.forEach(function(w){ if (!w.busy) schedule(w); });
+      setTimeout(declutter, 120);
     });
+    setTimeout(declutter, 120);
   })();
   /* OFFICE-WALKERS-JS:END */
   /* ── 지휘실 모달 ── */
