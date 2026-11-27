@@ -826,8 +826,8 @@
     box-shadow:0 3px 10px rgba(90,65,45,.20); transition:opacity .2s ease; will-change:transform;
   }
   .o3d-dot{width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 2px rgba(34,197,94,.22); flex:0 0 auto}
-  .o3d-bar{display:inline-block; width:26px; height:3px; border-radius:2px; background:rgba(120,96,74,.18); overflow:hidden}
-  .o3d-bar > i{display:block; height:100%; width:0%; background:#7FC197; border-radius:2px; transition:width .18s linear}
+  .o3d-prog{display:inline-block; width:26px; height:3px; border-radius:2px; background:rgba(120,96,74,.18); overflow:hidden}
+  .o3d-prog > i{display:block; height:100%; width:0%; background:#7FC197; border-radius:2px; transition:width .18s linear}
   .o3d-tip{
     position:absolute; left:0; top:0; transform:translate(-50%,-150%); z-index:8; pointer-events:none;
     padding:3px 9px; border-radius:999px; background:rgba(52,40,32,.92); color:#FFF8EF;
@@ -851,14 +851,13 @@
   .o3d-chip.on{background:#FBE8E9; border-color:#E6A0AA}
   @media (max-width:720px){
     .o3d-pill{font-size:9.5px; padding:2px 7px 2px 6px}
-    .o3d-bar-bar{display:inline-block}
     .o3d-chip{font-size:9.5px; padding:2px 8px 2px 3px}
     .o3d-chip img{width:19px; height:19px}
     .o3d-bar{bottom:6px; gap:4px; padding:5px 8px}
   }
   @media (max-width:560px){
     .o3d-pill{font-size:8.8px; padding:2px 6px 2px 5px; gap:4px}
-    .o3d-bar{width:22px; height:2.5px}
+    .o3d-prog{width:22px; height:2.5px}
     .o3d-chip span{display:none}
     .o3d-chip{padding:2px}
   }
@@ -2079,6 +2078,9 @@
       }).length;
     }
     var DEF = {
+      board:   { title:'화이트보드',
+                 body: function(){ return '오늘의 판 — 08시 브리핑 6개 플랫폼 · 발표 확인 10시/18시 · 미결 14건 정리 중.'; },
+                 go:'회의실 열기', act: function(){ selectTab('meeting'); } },
       table:   { title:'회의 테이블',
                  body: function(){ return '오늘 안건 3건 — 차앤박 앰플 구매·인증(D-1) · 펀드 시험(D-2) · 고령군청 발표 확인(D-21). 08시 브리핑은 6개 플랫폼 카테고리로 정리했어요.'; },
                  go:'회의실 열기', act: function(){ selectTab('meeting'); } },
@@ -2581,7 +2583,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   renderer.toneMappingExposure = 1.03;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 120);
+  const camera = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 200);
 
   /* ── 팔레트 ─────────────────────────────────────────────── */
   const C = {
@@ -2766,6 +2768,17 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     }
   }
 
+  /* ── 화이트보드 (뒷벽 왼쪽) ─────────────────────────────── */
+  const board = group(-4.6, -6.8);
+  board.userData.prop = 'board';
+  add(board, box(2.7, 1.55, 0.08), mat(C.cream), 0, 1.75, 0);
+  add(board, box(2.5, 1.36, 0.04), mat(0xFDFBF4, 0.6), 0, 1.75, 0.06, false);
+  add(board, box(0.7, 0.05, 0.02), mat(0xE8899A, 0.8), -0.55, 2.12, 0.09, false);
+  add(board, box(1.1, 0.04, 0.02), mat(0x8FB8DE, 0.8), -0.2, 1.95, 0.09, false);
+  add(board, box(0.9, 0.04, 0.02), mat(0x7FC197, 0.8), 0.15, 1.8, 0.09, false);
+  add(board, box(0.5, 0.04, 0.02), mat(0xE8B27A, 0.8), -0.4, 1.62, 0.09, false);
+  add(board, box(1.4, 0.12, 0.1), mat(C.woodLight), 0, 0.94, 0.08);
+
   /* ── 창문 (뒷벽) ────────────────────────────────────────── */
   const win = group(4.2, -6.84);
   win.userData.prop = 'window';
@@ -2935,7 +2948,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     });
 
     root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-    root.scale.setScalar(cfg.height);
+    root.scale.setScalar(cfg.height * 1.18);
     root.userData.name = cfg.name;
     return { root, body, arms, legs, head, torso };
   }
@@ -2949,12 +2962,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
     const pill = document.createElement('div');
     pill.className = 'o3d-pill';
-    pill.innerHTML = '<i class="o3d-dot"></i><b>' + cfg.name + '</b><span class="o3d-bar"><i></i></span>';
+    pill.innerHTML = '<i class="o3d-dot"></i><b>' + cfg.name + '</b><span class="o3d-prog"><i></i></span>';
     pillLayer.appendChild(pill);
 
     return Object.assign({
       cfg, idx: startIdx, path: [], pill,
-      bar: pill.querySelector('.o3d-bar > i'),
+      bar: pill.querySelector('.o3d-prog > i'),
       node: built, phase: Math.random() * 6, speed: 0.85,
       wait: 1.5 + Math.random() * 4, busy: false, segT: 0, segD: 0,
       from: new THREE.Vector3(sx, 0, sz), to: new THREE.Vector3(sx, 0, sz),
@@ -2993,8 +3006,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   scene.add(ring);
 
   /* ── 카메라 조작 ────────────────────────────────────────── */
-  const cam = { az: 0.72, pol: 1.03, dist: 20.5, target: new THREE.Vector3(0, 0.9, 0.4) };
-  const camBase = { az: 0.72, pol: 1.03, dist: 20.5 };
+  const cam = { az: 0.76, pol: 1.0, dist: 34, target: new THREE.Vector3(0, 1.0, -0.2), size: 10.4, zoom: 1 };
+  const camBase = { az: 0.76, pol: 1.0 };
   function applyCamera() {
     const d = cam.dist, p = cam.pol, a = cam.az;
     camera.position.set(
@@ -3003,6 +3016,11 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
       cam.target.z + d * Math.sin(p) * Math.cos(a)
     );
     camera.lookAt(cam.target);
+    const half = cam.size / cam.zoom;
+    const aspect = (host.clientWidth || 1) / (host.clientHeight || 1);
+    camera.left = -half * aspect; camera.right = half * aspect;
+    camera.top = half; camera.bottom = -half;
+    camera.updateProjectionMatrix();
   }
 
   const pointers = new Map();
@@ -3041,7 +3059,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   canvas.addEventListener('pointerleave', () => { pointers.clear(); dragging = false; hideTip(); });
   canvas.addEventListener('wheel', e => {
     e.preventDefault();
-    cam.dist = clamp(cam.dist + Math.sign(e.deltaY) * 1.1, 13, 30);
+    cam.zoom = clamp(cam.zoom * (e.deltaY > 0 ? 0.92 : 1.08), 0.7, 2.4);
     applyCamera();
   }, { passive: false });
   function pinchDistance() {
@@ -3091,7 +3109,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   }
   function hideTip() { setHover(null); }
 
-  const PROP_LABEL = { table: '회의 테이블', command: '지휘실 책상', sofa: '라운지 소파', coffee: '커피 테이블', shelf: '책장', window: '창문', desk: '작업실 책상' };
+  const PROP_LABEL = { board: '화이트보드', table: '회의 테이블', command: '지휘실 책상', sofa: '라운지 소파', coffee: '커피 테이블', shelf: '책장', window: '창문', desk: '작업실 책상' };
 
   function raycastAt(ev) {
     const r = canvas.getBoundingClientRect();
@@ -3199,7 +3217,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
       }
     }
     // 이름표(HTML) 투영
-    tmpV.set(w.root.position.x, 1.55 * w.cfg.height, w.root.position.z);
+    tmpV.set(w.root.position.x, 1.62 * w.cfg.height, w.root.position.z);
     tmpV.project(camera);
     const inFront = tmpV.z < 1;
     const sx = (tmpV.x * 0.5 + 0.5) * host.clientWidth;
@@ -3212,8 +3230,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   function resize() {
     const w = host.clientWidth || 320, h = host.clientHeight || 320;
     renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    applyCamera();
   }
   const ro = new ResizeObserver(resize);
   ro.observe(host);

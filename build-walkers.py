@@ -465,6 +465,9 @@ JS_TEXT = JS_TEXT + """
       }).length;
     }
     var DEF = {
+      board:   { title:'화이트보드',
+                 body: function(){ return '오늘의 판 — 08시 브리핑 6개 플랫폼 · 발표 확인 10시/18시 · 미결 14건 정리 중.'; },
+                 go:'회의실 열기', act: function(){ selectTab('meeting'); } },
       table:   { title:'회의 테이블',
                  body: function(){ return '오늘 안건 3건 — 차앤박 앰플 구매·인증(D-1) · 펀드 시험(D-2) · 고령군청 발표 확인(D-21). 08시 브리핑은 6개 플랫폼 카테고리로 정리했어요.'; },
                  go:'회의실 열기', act: function(){ selectTab('meeting'); } },

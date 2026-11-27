@@ -45,8 +45,8 @@ CSS = """  /* OFFICE3D-CSS:START */
     box-shadow:0 3px 10px rgba(90,65,45,.20); transition:opacity .2s ease; will-change:transform;
   }
   .o3d-dot{width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 2px rgba(34,197,94,.22); flex:0 0 auto}
-  .o3d-bar{display:inline-block; width:26px; height:3px; border-radius:2px; background:rgba(120,96,74,.18); overflow:hidden}
-  .o3d-bar > i{display:block; height:100%; width:0%; background:#7FC197; border-radius:2px; transition:width .18s linear}
+  .o3d-prog{display:inline-block; width:26px; height:3px; border-radius:2px; background:rgba(120,96,74,.18); overflow:hidden}
+  .o3d-prog > i{display:block; height:100%; width:0%; background:#7FC197; border-radius:2px; transition:width .18s linear}
   .o3d-tip{
     position:absolute; left:0; top:0; transform:translate(-50%,-150%); z-index:8; pointer-events:none;
     padding:3px 9px; border-radius:999px; background:rgba(52,40,32,.92); color:#FFF8EF;
@@ -70,14 +70,13 @@ CSS = """  /* OFFICE3D-CSS:START */
   .o3d-chip.on{background:#FBE8E9; border-color:#E6A0AA}
   @media (max-width:720px){
     .o3d-pill{font-size:9.5px; padding:2px 7px 2px 6px}
-    .o3d-bar-bar{display:inline-block}
     .o3d-chip{font-size:9.5px; padding:2px 8px 2px 3px}
     .o3d-chip img{width:19px; height:19px}
     .o3d-bar{bottom:6px; gap:4px; padding:5px 8px}
   }
   @media (max-width:560px){
     .o3d-pill{font-size:8.8px; padding:2px 6px 2px 5px; gap:4px}
-    .o3d-bar{width:22px; height:2.5px}
+    .o3d-prog{width:22px; height:2.5px}
     .o3d-chip span{display:none}
     .o3d-chip{padding:2px}
   }
