@@ -90,9 +90,9 @@ CSS = """  /* OFFICE3D-CSS:START */
     .o3d-bar{bottom:6px; gap:4px; padding:5px 8px}
   }
   @media (max-width:560px){
-    .o3d-tag{font-size:8.8px; padding:2px 6px 2px 5px; gap:4px}
-    .o3d-tag span{font-size:8.2px}
-    .stage-3d .office-overlay .pin{font-size:7.6px; padding:1.5px 5px; gap:3px}
+    .o3d-tag{font-size:9.6px; padding:2px 7px 2px 5px; gap:4px}
+    .o3d-tag span{font-size:8.8px}
+    .stage-3d .office-overlay .pin{font-size:8.6px; padding:2px 6px; gap:3px}
     .o3d-chip span{display:none}
     .o3d-chip{padding:2px}
   }

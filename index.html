@@ -875,9 +875,9 @@
     .o3d-bar{bottom:6px; gap:4px; padding:5px 8px}
   }
   @media (max-width:560px){
-    .o3d-tag{font-size:8.8px; padding:2px 6px 2px 5px; gap:4px}
-    .o3d-tag span{font-size:8.2px}
-    .stage-3d .office-overlay .pin{font-size:7.6px; padding:1.5px 5px; gap:3px}
+    .o3d-tag{font-size:9.6px; padding:2px 7px 2px 5px; gap:4px}
+    .o3d-tag span{font-size:8.8px}
+    .stage-3d .office-overlay .pin{font-size:8.6px; padding:2px 6px; gap:3px}
     .o3d-chip span{display:none}
     .o3d-chip{padding:2px}
   }
@@ -3733,8 +3733,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const built = buildCharacter(cfg);
     const startIdx = cfg.spots[0];
     const [sx, sz] = NODES[startIdx];
-    built.root.scale.setScalar(1.2);
-    built.top *= 1.2;
+    built.root.scale.setScalar(1.5);
+    built.top *= 1.5;
     built.root.position.set(sx, FLOOR_Y, sz);
     scene.add(built.root);
     return Object.assign({
@@ -3800,8 +3800,18 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   scene.add(ring);
 
   /* ── 카메라 조작 ────────────────────────────────────────── */
-  const cam = { az: 0.78, pol: 0.98, dist: 34, target: new THREE.Vector3(-0.2, 1.55, -0.3), size: 11.6, zoom: 1 };
+  const cam = { az: 0.78, pol: 0.98, dist: 34, target: new THREE.Vector3(0.1, 1.5, -0.3), size: 8.2, zoom: 1 };
   const camBase = { az: 0.76, pol: 1.0 };
+  // 좁은 화면(모바일)은 방 안쪽이 화면을 가득 채우도록 더 당겨서 보여준다
+  let camNarrow = null;
+  function fitCam() {
+    const w = host.clientWidth || 320;
+    const isNarrow = w < 520;
+    if (isNarrow === camNarrow) return;
+    camNarrow = isNarrow;
+    cam.size = isNarrow ? 6.2 : 8.2;
+    cam.zoom = 1;
+  }
 
   // 구역 핀을 3D 좌표에 맞춰 화면 위에 놓는다
   const PIN_ANCHORS = [
@@ -3855,7 +3865,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
       applyCamera();
     } else if (pointers.size === 2) {
       const d = pinchDistance();
-      if (pinchStart) cam.dist = clamp(cam.dist * (pinchStart / d), 13, 30);
+      if (pinchStart) cam.zoom = clamp(cam.zoom * (d / pinchStart), 0.6, 2.6);
       pinchStart = d;
       applyCamera();
     }
@@ -3986,28 +3996,28 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   const tmpV = new THREE.Vector3();
 
   /* ── 겹침 방지: 스팟 예약 · 최소 간격 · 가구/벽 클램핑 ───── */
-  const MIN_DIST = 1.3;                // 캐릭터 중심 사이 최소 거리 (1.2배 확대 크기 기준)
+  const MIN_DIST = 1.66;               // 캐릭터 중심 사이 최소 거리 (1.5배 확대 크기 기준)
   const ROOM_LIM = 6.35;               // 바닥 경계
   const OB_ROUND = [                   // 원형 장애물 (중심 x, z, 반지름 + 몸 반경)
-    { x: -4.0, z: -0.8, r: 2.12 },     // 회의 테이블 + 의자
-    { x: 3.15, z: -2.55, r: 1.02 },    // 커피 테이블
-    { x: 5.9, z: -2.6, r: 0.55 },      // 스탠드
-    { x: 2.55, z: 3.75, r: 0.95 },     // 푸프
-    { x: -1.6, z: 5.0, r: 0.6 },       // 사이드 테이블
-    { x: -6.2, z: -6.1, r: 0.7 }, { x: 6.0, z: -6.1, r: 0.65 },
-    { x: 6.1, z: 0.9, r: 0.75 }, { x: -6.3, z: 6.0, r: 0.65 },
-    { x: 5.9, z: -1.5, r: 0.55 }, { x: 2.4, z: 5.3, r: 0.65 },
-    { x: 0.6, z: 6.1, r: 0.6 }
+    { x: -4.0, z: -0.8, r: 2.3 },      // 회의 테이블 + 의자
+    { x: 3.15, z: -2.55, r: 1.15 },    // 커피 테이블
+    { x: 5.9, z: -2.6, r: 0.62 },      // 스탠드
+    { x: 2.55, z: 3.75, r: 1.05 },     // 푸프
+    { x: -1.6, z: 5.0, r: 0.7 },       // 사이드 테이블
+    { x: -6.2, z: -6.1, r: 0.78 }, { x: 6.0, z: -6.1, r: 0.72 },
+    { x: 6.1, z: 0.9, r: 0.82 }, { x: -6.3, z: 6.0, r: 0.72 },
+    { x: 5.9, z: -1.5, r: 0.62 }, { x: 2.4, z: 5.3, r: 0.72 },
+    { x: 0.6, z: 6.1, r: 0.68 }
   ];
   const OB_BOX = [                     // 사각 장애물 (중심 x, z, 반폭, 반높이 + 몸 반경)
-    { x: 0, z: -5.9, hw: 3.3, hd: 0.95 },        // 지휘실 책상 + 의자
-    { x: 4.35, z: -4.42, hw: 2.02, hd: 0.98 },   // 소파
-    { x: -4.5, z: 3.1, hw: 1.34, hd: 0.9 },      // 작업실 책상
-    { x: -4.5, z: 5.3, hw: 1.34, hd: 0.9 },
-    { x: 4.3, z: 3.6, hw: 1.34, hd: 0.9 },
-    { x: -6.55, z: -3.3, hw: 0.62, hd: 1.85 },   // 책장
-    { x: -4.6, z: -6.68, hw: 1.65, hd: 0.4 },    // 화이트보드
-    { x: 5.9, z: -6.6, hw: 1.2, hd: 0.45 }       // 창가 화분
+    { x: 0, z: -5.9, hw: 3.42, hd: 1.05 },       // 지휘실 책상 + 의자
+    { x: 4.35, z: -4.42, hw: 2.12, hd: 1.08 },   // 소파
+    { x: -4.5, z: 3.1, hw: 1.44, hd: 1.0 },      // 작업실 책상
+    { x: -4.5, z: 5.3, hw: 1.44, hd: 1.0 },
+    { x: 4.3, z: 3.6, hw: 1.44, hd: 1.0 },
+    { x: -6.55, z: -3.3, hw: 0.7, hd: 1.95 },    // 책장
+    { x: -4.6, z: -6.68, hw: 1.75, hd: 0.48 },   // 화이트보드
+    { x: 5.9, z: -6.6, hw: 1.3, hd: 0.52 }       // 창가 화분
   ];
   function clampWalk(p) {
     p.x = clamp(p.x, -ROOM_LIM, ROOM_LIM);
@@ -4041,7 +4051,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     if (!free.length) { w.wait = 1.6 + Math.random() * 2.4; return; }
     const target = free[(Math.random() * free.length) | 0];
     const [tx, tz] = NODES[target];
-    if (walkers.some(o => o !== w && Math.hypot(o.bx - tx, o.bz - tz) < MIN_DIST * 1.08)) {
+    if (walkers.some(o => o !== w && Math.hypot(o.bx - tx, o.bz - tz) < MIN_DIST)) {
       w.wait = 1.2 + Math.random() * 1.8; return;
     }
     const path = findPath(w.idx, target);
@@ -4144,6 +4154,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 렌더 루프 ──────────────────────────────────────────── */
   function resize() {
     const w = host.clientWidth || 320, h = host.clientHeight || 320;
+    fitCam();
     renderer.setSize(w, h, false);
     applyCamera();
   }
