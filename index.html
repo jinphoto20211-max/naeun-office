@@ -3776,7 +3776,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   function focusOn(w) {
     focusTarget = w;
     chips.forEach((c, i) => c.classList.toggle('on', walkers[i] === w));
-    ring.position.set(w.root.position.x, 0.16, w.root.position.z);
+    ring.position.set(w.root.position.x, 0.2, w.root.position.z);
     ring.visible = true;
     tagName.textContent = w.cfg.name;
     tagMeta.textContent = ZONE_NAME[w.cfg.zone] + ' · ' + (w.busy ? '이동 중' : '근무 중');
@@ -3791,7 +3791,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     }, 4200);
   }
   const ring = new THREE.Mesh(
-    new THREE.RingGeometry(0.5, 0.72, 40),
+    new THREE.RingGeometry(0.58, 0.82, 40),
     new THREE.MeshBasicMaterial({ color: 0xE6A0AA, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
   );
   ring.rotation.x = -Math.PI / 2;
@@ -3799,7 +3799,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   scene.add(ring);
 
   /* ── 카메라 조작 ────────────────────────────────────────── */
-  const cam = { az: 0.78, pol: 0.98, dist: 34, target: new THREE.Vector3(0.2, 1.5, -0.3), size: 11.3, zoom: 1 };
+  const cam = { az: 0.78, pol: 0.98, dist: 34, target: new THREE.Vector3(-0.2, 1.55, -0.3), size: 11.6, zoom: 1 };
   const camBase = { az: 0.76, pol: 1.0 };
 
   // 구역 핀을 3D 좌표에 맞춰 화면 위에 놓는다
@@ -4156,13 +4156,11 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     separate(dt);
     if (focusTarget) {
       const rp = focusTarget.root.position;
-      ring.position.set(rp.x, 0.16, rp.z);
+      ring.position.set(rp.x, 0.2, rp.z);
       tmpV.set(rp.x, focusTarget.top + 0.18, rp.z).project(camera);
       tag.style.transform = 'translate(-50%,-100%) translate(' +
         ((tmpV.x * 0.5 + 0.5) * host.clientWidth).toFixed(1) + 'px,' +
         (((-tmpV.y * 0.5 + 0.5) * host.clientHeight) - 8).toFixed(1) + 'px)';
-      cam.target.lerp(new THREE.Vector3(rp.x * 0.55, 0.9, rp.z * 0.55), 0.04);
-      applyCamera();
     }
     if (ring.visible) ring.material.opacity = 0.35 + Math.sin(t * 3) * 0.18;
     renderer.render(scene, camera);
