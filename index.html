@@ -1037,12 +1037,13 @@
           if (wrap.scrollIntoView) wrap.scrollIntoView({ behavior:'smooth', block:'center' });
         });
         // 화면에 들어오면 자동으로 한 번 불러온다 (탭이 보일 때만)
+        var card = document.getElementById('agcMapCard') || wrap;
         var io = null;
         if (window.IntersectionObserver) {
           io = new IntersectionObserver(function(es){
             es.forEach(function(e){ if (e.isIntersecting) { load(); io.disconnect(); } });
-          }, { rootMargin: '200px' });
-          io.observe(wrap);
+          }, { rootMargin: '300px' });
+          io.observe(card);
         } else {
           setTimeout(load, 1200);
         }
