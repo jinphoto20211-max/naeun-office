@@ -1008,6 +1008,7 @@
             <div class="o3d-pills" id="office3dPills" aria-hidden="true"></div>
             <div class="o3d-bar" id="office3dBar" aria-label="비서 아바타"></div>
           </div>
+          
           <!-- OFFICE3D:END -->
         </div>
         <div class="prop-card" id="propCard" hidden>
@@ -2757,14 +2758,20 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   });
 
   /* ── 책장 ───────────────────────────────────────────────── */
-  const shelf = group(-6.45, -3.3, Math.PI / 2);
+  const shelf = group(-6.5, -3.3, Math.PI / 2);
   shelf.userData.prop = 'shelf';
-  add(shelf, box(3.0, 2.3, 0.5), mat(C.wood), 0, 1.15, 0);
+  add(shelf, box(3.0, 2.3, 0.1), mat(C.woodDark), 0, 1.15, -0.24);       // 뒤판
+  add(shelf, box(0.1, 2.3, 0.56), mat(C.wood), -1.45, 1.15, 0);          // 옆판
+  add(shelf, box(0.1, 2.3, 0.56), mat(C.wood), 1.45, 1.15, 0);
+  add(shelf, box(3.1, 0.12, 0.6), mat(C.wood), 0, 2.3, 0);               // 상판
+  add(shelf, box(3.1, 0.12, 0.6), mat(C.wood), 0, 0.08, 0);              // 하판
   for (let i = 0; i < 4; i++) {
-    add(shelf, box(2.9, 0.06, 0.44), mat(C.woodDark), 0, 0.42 + i * 0.55, 0.03);
-    for (let b = 0; b < 7; b++) {
-      const col = [C.pink, C.blue, C.sage, C.coral, C.cream, C.leaf2][(i + b) % 6];
-      add(shelf, box(0.07, 0.32, 0.3), mat(col, 1), -1.25 + b * 0.37, 0.6 + i * 0.55, 0.06);
+    const y = 0.44 + i * 0.52;
+    add(shelf, box(2.86, 0.06, 0.5), mat(C.woodLight), 0, y, 0);
+    for (let b = 0; b < 8; b++) {
+      const col = [C.pink, C.blue, C.sage, C.coral, C.cream, C.leaf2, 0xE3C37A][(i + b) % 7];
+      const hgt = 0.24 + ((i + b) % 3) * 0.06;
+      add(shelf, box(0.075, hgt, 0.26), mat(col, 1), -1.18 + b * 0.33, y + 0.03 + hgt / 2, 0.04);
     }
   }
 
@@ -3006,7 +3013,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   scene.add(ring);
 
   /* ── 카메라 조작 ────────────────────────────────────────── */
-  const cam = { az: 0.76, pol: 1.0, dist: 34, target: new THREE.Vector3(0, 1.0, -0.2), size: 10.4, zoom: 1 };
+  const cam = { az: 0.78, pol: 0.98, dist: 34, target: new THREE.Vector3(0.2, 1.15, -0.6), size: 8.9, zoom: 1 };
   const camBase = { az: 0.76, pol: 1.0 };
   function applyCamera() {
     const d = cam.dist, p = cam.pol, a = cam.az;
