@@ -555,7 +555,8 @@
 
 
   /* ── 노션 허브 요약 ── */
-  .hub-card{margin-top:16px; padding:22px}
+  .hub-card{margin-top:0; padding:22px}
+  .hub-card + .trk-card{margin-top:16px}
   .hub-top{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px}
   .hub-top h3{font-size:16px; font-weight:800; letter-spacing:-.35px}
   .hub-top span{font-size:11.5px; font-weight:700; color:var(--muted)}
@@ -880,6 +881,37 @@
       <button class="cmd-btn" type="button" data-goto="work">작업실에서 보기</button>
     </div>
     <!-- TRACKER-PANEL:START -->
+<div class="card hub-card">
+<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 담당별 요약 · 노션 동기화 11/27 07:30</span></div>
+<div class="hub-grid">
+<div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/25 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/25 S&P500 7,182.78로 낙폭을 줄였지만 하이일드·변동성·추세 경계가 이어집니다. 11/26 추수감사절 휴장으로 11/27 판정은 건너뛰고 마지막 판정(11/25 기준)을 유지합니다.</p></div>
+<div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/27 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,813원 · 옥포농협클린 1,784원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
+</div>
+<div class="hub-sub">🚧 미결 건 <span class="n">14건</span><em>피클 · 노랑 10 · 하마뮤즈 4</em></div>
+<ul class="hub-list">
+<li class="hub-row"><span class="hub-who">서울온 만족도</span><span class="hub-body"><b>서울특별시 서울온 만족도 조사</b><i>엠보팅 18문항 완료 → 제출 때 SMS 인증번호 필요</i></span><span class="trk-d wait">~12/7</span></li>
+<li class="hub-row"><span class="hub-who">한국무역협회</span><span class="hub-body"><b>수출 퀴즈</b><i>개인 SNS 공유 + 계정 아이디 노출 캡처 필수</i></span><span class="trk-d wait">~12/3</span></li>
+<li class="hub-row"><span class="hub-who">마이리얼트립</span><span class="hub-body"><b>서호주 퍼스 2인</b><i>카카오 로그인 후 실명인증</i></span><span class="trk-d warn">~11/30</span></li>
+<li class="hub-row"><span class="hub-who">국민연금공단</span><span class="hub-body"><b>블루투스 이어폰 만족도 조사</b><i>응답자 이름란 PASS 인증 전용</i></span><span class="trk-d wait">~12/7</span></li>
+<li class="hub-row"><span class="hub-who">밀양시</span><span class="hub-body"><b>퀴즈·설문 이벤트</b><i>실명·아이핀 인증 필요</i></span><span class="trk-d warn">~11/27</span></li>
+<li class="hub-row"><span class="hub-who">엠브레인</span><span class="hub-body"><b>패널파워 3일 주기 점검</b><i>로그인 보안문자 대기 · 11/26 회차 미접속</i></span><span class="trk-d wait">점검</span></li>
+<li class="hub-row"><span class="hub-who">서울아리수</span><span class="hub-body"><b>AI 숏폼 투표</b><i>제출 때 02-120 SMS 인증</i></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">성평등가족부</span><span class="hub-body"><b>청소년 아르바이트 퀴즈</b><i>자동입력방지 문자(CAPTCHA)</i></span><span class="trk-d wait">~11/30</span></li>
+<li class="hub-row"><span class="hub-who">삼성증권</span><span class="hub-body"><b>채권 라이브 퀴즈</b><i>11/27 16~17시 라이브 시청 후 O/X 제출</i></span><span class="trk-d today">오늘</span></li>
+<li class="hub-row"><span class="hub-who">일제강제동원</span><span class="hub-body"><b>SNS 팔로우 이벤트</b><i>인스타 완료 · 쓰레드 팔로우 인증 필요</i></span><span class="trk-d warn">~11/27</span></li>
+<li class="hub-row"><span class="hub-who">국토안전관리원</span><span class="hub-body"><b>모두의 광장 일산 2건</b><i>간편인증 로그인 후 진행</i></span><span class="trk-d wait">~12/4</span></li>
+<li class="hub-row"><span class="hub-who">템빨</span><span class="hub-body"><b>오버기어드 룰렛</b><i>카톡 앱 전용 · 이용권 1장 보유</i></span><span class="trk-d wait">상시</span></li>
+<li class="hub-row"><span class="hub-who">몽실몽실</span><span class="hub-body"><b>먼치킨 꽁이 2027 캘린더</b><i>유튜브 앱 로그인 오류로 진행 불가</i></span><span class="trk-d wait">마감 지남</span></li>
+<li class="hub-row"><span class="hub-who">KOSIS·잡아바</span><span class="hub-body"><b>통계 퀴즈 / 일자리 퀴즈</b><i>캡차·통합회원 로그인 직접 필요</i></span><span class="trk-d wait">11/27·11/29</span></li>
+</ul>
+<div class="hub-sub">담당별 지금 하는 일</div>
+<div class="hub-grid three">
+<div class="hub-box"><div class="hub-label">⚡ 인스팅트</div><ul class="hub-ul"><li>07:00 체험단 5대 플랫폼 수집 → ⚡수집 판 게시</li><li>11·12·14시 핫딜헌터 (11/26 630건 · 신규 90)</li><li>08:30 오피넷 유가 · 목요일 공공 퀴즈 수집</li></ul></div>
+<div class="hub-box"><div class="hub-label">🦛 하마뮤즈</div><ul class="hub-ul"><li>AGE-R 2시간마다 우유·쿠키 · 15초 카톡 감지</li><li>휴대폰 조작 필요 경품 응모 진행 (11/18분 ~60건)</li><li>노랑이 넘긴 건(템빨·몽실몽실) 앱 전용 작업</li></ul></div>
+<div class="hub-box"><div class="hub-label">🎧 뮤즈</div><ul class="hub-ul"><li>10:00 AI 트렌드 브리핑 (365일 루틴)</li><li>5분마다 해피방 새 메시지 확인·답장</li><li>08:00 경품 확인·응모 · 일 09:09·15:09 판 확인</li></ul></div>
+</div>
+<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
+</div>
 <div class="card trk-card">
 <div class="trk-top"><p class="trk-stamp">트래커 기준 <b>2026-11-27(금) 20:30</b> · 노션 동기화 11/27 07:30 · 미결 건 11/27 11:37</p><button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button></div>
 <div class="trk-rule" aria-hidden="true"></div>
@@ -982,37 +1014,6 @@
 <li class="trk-row"><span class="trk-pf hold">미결</span><span class="trk-body"><span class="trk-t">하마뮤즈 4건</span><span class="trk-m">국토안전관리원 일산 · 템빨 룰렛 · 몽실몽실 캘린더 · KOSIS · 잡아바(항목 기준 4건)</span></span><span class="trk-d wait">4건</span></li>
 </ul></div>
 <p class="trk-foot">집계 기준 — 누적 응모는 기록이 남은 11/12~11/27 접수분(체험단은 카톡 선물하기 포함, 설문·응모는 일자별 완료 집계)입니다. 당첨률은 노션 발표 명단에 결과가 확정된 건(당첨 7 + 미당첨·미선정 28) 기준이고, 미결 건은 노션 🚧 미결 건의 항목 수입니다. 수치는 노션 두 현황판과 <code>current-status.md</code> 기록만으로 계산했습니다.</p>
-</div>
-<div class="card hub-card">
-<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 담당별 요약 · 노션 동기화 11/27 07:30</span></div>
-<div class="hub-grid">
-<div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/25 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/25 S&P500 7,182.78로 낙폭을 줄였지만 하이일드·변동성·추세 경계가 이어집니다. 11/26 추수감사절 휴장으로 11/27 판정은 건너뛰고 마지막 판정(11/25 기준)을 유지합니다.</p></div>
-<div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/27 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,813원 · 옥포농협클린 1,784원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
-</div>
-<div class="hub-sub">🚧 미결 건 <span class="n">14건</span><em>피클 · 노랑 10 · 하마뮤즈 4</em></div>
-<ul class="hub-list">
-<li class="hub-row"><span class="hub-who">서울온 만족도</span><span class="hub-body"><b>서울특별시 서울온 만족도 조사</b><i>엠보팅 18문항 완료 → 제출 때 SMS 인증번호 필요</i></span><span class="trk-d wait">~12/7</span></li>
-<li class="hub-row"><span class="hub-who">한국무역협회</span><span class="hub-body"><b>수출 퀴즈</b><i>개인 SNS 공유 + 계정 아이디 노출 캡처 필수</i></span><span class="trk-d wait">~12/3</span></li>
-<li class="hub-row"><span class="hub-who">마이리얼트립</span><span class="hub-body"><b>서호주 퍼스 2인</b><i>카카오 로그인 후 실명인증</i></span><span class="trk-d warn">~11/30</span></li>
-<li class="hub-row"><span class="hub-who">국민연금공단</span><span class="hub-body"><b>블루투스 이어폰 만족도 조사</b><i>응답자 이름란 PASS 인증 전용</i></span><span class="trk-d wait">~12/7</span></li>
-<li class="hub-row"><span class="hub-who">밀양시</span><span class="hub-body"><b>퀴즈·설문 이벤트</b><i>실명·아이핀 인증 필요</i></span><span class="trk-d warn">~11/27</span></li>
-<li class="hub-row"><span class="hub-who">엠브레인</span><span class="hub-body"><b>패널파워 3일 주기 점검</b><i>로그인 보안문자 대기 · 11/26 회차 미접속</i></span><span class="trk-d wait">점검</span></li>
-<li class="hub-row"><span class="hub-who">서울아리수</span><span class="hub-body"><b>AI 숏폼 투표</b><i>제출 때 02-120 SMS 인증</i></span><span class="trk-d warn">~11/29</span></li>
-<li class="hub-row"><span class="hub-who">성평등가족부</span><span class="hub-body"><b>청소년 아르바이트 퀴즈</b><i>자동입력방지 문자(CAPTCHA)</i></span><span class="trk-d wait">~11/30</span></li>
-<li class="hub-row"><span class="hub-who">삼성증권</span><span class="hub-body"><b>채권 라이브 퀴즈</b><i>11/27 16~17시 라이브 시청 후 O/X 제출</i></span><span class="trk-d today">오늘</span></li>
-<li class="hub-row"><span class="hub-who">일제강제동원</span><span class="hub-body"><b>SNS 팔로우 이벤트</b><i>인스타 완료 · 쓰레드 팔로우 인증 필요</i></span><span class="trk-d warn">~11/27</span></li>
-<li class="hub-row"><span class="hub-who">국토안전관리원</span><span class="hub-body"><b>모두의 광장 일산 2건</b><i>간편인증 로그인 후 진행</i></span><span class="trk-d wait">~12/4</span></li>
-<li class="hub-row"><span class="hub-who">템빨</span><span class="hub-body"><b>오버기어드 룰렛</b><i>카톡 앱 전용 · 이용권 1장 보유</i></span><span class="trk-d wait">상시</span></li>
-<li class="hub-row"><span class="hub-who">몽실몽실</span><span class="hub-body"><b>먼치킨 꽁이 2027 캘린더</b><i>유튜브 앱 로그인 오류로 진행 불가</i></span><span class="trk-d wait">마감 지남</span></li>
-<li class="hub-row"><span class="hub-who">KOSIS·잡아바</span><span class="hub-body"><b>통계 퀴즈 / 일자리 퀴즈</b><i>캡차·통합회원 로그인 직접 필요</i></span><span class="trk-d wait">11/27·11/29</span></li>
-</ul>
-<div class="hub-sub">담당별 지금 하는 일</div>
-<div class="hub-grid three">
-<div class="hub-box"><div class="hub-label">⚡ 인스팅트</div><ul class="hub-ul"><li>07:00 체험단 5대 플랫폼 수집 → ⚡수집 판 게시</li><li>11·12·14시 핫딜헌터 (11/26 630건 · 신규 90)</li><li>08:30 오피넷 유가 · 목요일 공공 퀴즈 수집</li></ul></div>
-<div class="hub-box"><div class="hub-label">🦛 하마뮤즈</div><ul class="hub-ul"><li>AGE-R 2시간마다 우유·쿠키 · 15초 카톡 감지</li><li>휴대폰 조작 필요 경품 응모 진행 (11/18분 ~60건)</li><li>노랑이 넘긴 건(템빨·몽실몽실) 앱 전용 작업</li></ul></div>
-<div class="hub-box"><div class="hub-label">🎧 뮤즈</div><ul class="hub-ul"><li>10:00 AI 트렌드 브리핑 (365일 루틴)</li><li>5분마다 해피방 새 메시지 확인·답장</li><li>08:00 경품 확인·응모 · 일 09:09·15:09 판 확인</li></ul></div>
-</div>
-<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
 </div>
     <!-- TRACKER-PANEL:END -->
   </section>

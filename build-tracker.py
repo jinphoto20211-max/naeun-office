@@ -246,6 +246,9 @@ def hub_html():
 def sections():
     out = []
 
+    # 노션 공용 허브 요약 — 트래커 맨 위(1번 카드)
+    out.append(hub_html())
+
     # 요약
     out.append('<div class="card trk-card">')
     out.append('<div class="trk-top"><p class="trk-stamp">트래커 기준 <b>%s</b> · '
@@ -323,7 +326,6 @@ def sections():
                '미결 건은 노션 🚧 미결 건의 항목 수입니다. 수치는 노션 두 현황판과 '
                '<code>current-status.md</code> 기록만으로 계산했습니다.</p>' % (WINS_N, MISSES))
     out.append('</div>')
-    out.append(hub_html())
     return "\n".join(out)
 
 
@@ -401,7 +403,8 @@ CSS = """
 
 HUB_CSS = """
   /* ── 노션 허브 요약 ── */
-  .hub-card{margin-top:16px; padding:22px}
+  .hub-card{margin-top:0; padding:22px}
+  .hub-card + .trk-card{margin-top:16px}
   .hub-top{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px}
   .hub-top h3{font-size:16px; font-weight:800; letter-spacing:-.35px}
   .hub-top span{font-size:11.5px; font-weight:700; color:var(--muted)}
