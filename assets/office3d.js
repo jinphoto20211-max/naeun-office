@@ -260,18 +260,23 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   add(room, cyl(0.26, 0.26, 0.05, 16), mat(C.cream), -1.4, 3.2, -6.8, false);  // 천장 조명
   add(room, sph(0.17, 12), mat(0xFFE9C0, 0.5, { emissive: 0xFFE0A8, emissiveIntensity: 0.7 }), -1.4, 3.03, -6.8, false);
 
-  /* ── 캐릭터 ─────────────────────────────────────────────── */
+  /* ── 캐릭터 (나은님 실제 캐릭터 사진 8장 기준 리모델링) ──────
+     큐·부이 = 둥근 삼각 클레이 / 하마뮤즈 = 보라 하마 / 뮤즈 = 크림 예티
+     인스팅트 = 아이보리 원반 + 세리프 I / 하크 = 검정 스쿼클 + 흰 부채
+     키링 = 흰 고양이(^ ^) / 초록·노랑·연분홍·진분홍 = 4엽 피클
+  */
   const PEOPLE = [
-    { name: '뮤즈',     color: 0xB49BD6, head: 0xC3AEE0, kind: 'hippo', height: 1.0,  zone: 'command', spots: [9, 10, 8] },
-    { name: '인스팅트', color: 0xB98A5F, head: 0xC79A6D, kind: 'owl',   height: 0.98, zone: 'command', spots: [10, 11, 12] },
-    { name: '초록',     color: 0x8FC166, head: 0x9ACB70, kind: 'pickle',height: 1.06, zone: 'meeting', spots: [0, 1, 5] },
-    { name: '노랑',     color: 0xF3D265, head: 0xF7DA76, kind: 'chick', height: 0.92, zone: 'meeting', spots: [1, 2, 5] },
-    { name: '진분홍',   color: 0xF0A0C0, head: 0xF5B2CC, kind: 'bunny', height: 0.96, zone: 'meeting', spots: [2, 3, 4] },
-    { name: '막내',     color: 0xA8DCC6, head: 0xB6E4D1, kind: 'cat',   height: 0.9,  zone: 'meeting', spots: [3, 4, 19] },
-    { name: '하크',     color: 0x7FB6E8, head: 0x92C2EE, kind: 'cat',   height: 0.95, zone: 'lounge',  spots: [14, 15] },
-    { name: '부이',     color: 0xF4F0E6, head: 0xFFFBF2, kind: 'bear',  height: 1.0,  zone: 'lounge',  spots: [15, 16] },
-    { name: '큐',       color: 0xEE9A62, head: 0xF4AB78, kind: 'fox',   height: 0.97, zone: 'lounge',  spots: [13, 14] },
-    { name: '키링',     color: 0xBBA8CE, head: 0xC8B7D9, kind: 'koala', height: 0.94, zone: 'lounge',  spots: [12, 13] }
+    { name: '초록',     kind: 'clover',   color: 0x6ECC55, zone: 'meeting', spots: [0, 1, 5] },
+    { name: '노랑',     kind: 'clover',   color: 0xF7D63F, zone: 'meeting', spots: [1, 2, 3] },
+    { name: '진분홍',   kind: 'clover',   color: 0xF0329A, zone: 'meeting', spots: [2, 3, 4] },
+    { name: '막내',     kind: 'clover',   color: 0xFCC9DC, zone: 'meeting', spots: [3, 4, 19] },
+    { name: '뮤즈',     kind: 'yeti',     color: 0xEDE0C8, zone: 'command', spots: [8, 9] },
+    { name: '하마뮤즈', kind: 'hippo',    color: 0xB49BE0, zone: 'command', spots: [9, 10, 11] },
+    { name: '인스팅트', kind: 'disc',     color: 0xF4EBDC, zone: 'command', spots: [10, 11, 12] },
+    { name: '하크',     kind: 'squircle', color: 0x242424, zone: 'lounge',  spots: [14, 15] },
+    { name: '부이',     kind: 'tri',      color: 0xFF3E9E, zone: 'lounge',  spots: [15, 16] },
+    { name: '큐',       kind: 'tri',      color: 0x4E9DF0, zone: 'lounge',  spots: [13, 14] },
+    { name: '키링',     kind: 'cat',      color: 0xFCF4E6, zone: 'lounge',  spots: [12, 13] }
   ];
 
   // 3D 바닥 좌표계 통로 (x, z)
@@ -299,117 +304,282 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     return null;
   }
 
-  const eyes = (g, y, z, r = 0.055, gap = 0.1, color = 0x2A2320) => {
-    add(g, sph(r, 12), mat(color, 0.4), -gap, y, z, false);
-    add(g, sph(r, 12), mat(color, 0.4), gap, y, z, false);
-  };
+  /* ── 재질: 무광 클레이 + 아주 얇은 보송 결 ───────────────── */
+  const furTex = (() => {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const x = c.getContext('2d');
+    x.fillStyle = '#808080'; x.fillRect(0, 0, 128, 128);
+    for (let i = 0; i < 3200; i++) {
+      const g = 96 + ((Math.random() * 64) | 0);
+      x.fillStyle = 'rgb(' + g + ',' + g + ',' + g + ')';
+      x.fillRect((Math.random() * 128) | 0, (Math.random() * 128) | 0, 1, 1 + ((Math.random() * 2) | 0));
+    }
+    const t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(3, 3);
+    return t;
+  })();
 
-  function buildCharacter(cfg) {
-    const root = new THREE.Group();
+  const clay = (color, o) => new THREE.MeshStandardMaterial(Object.assign({
+    color, roughness: 0.96, metalness: 0, bumpMap: furTex, bumpScale: 0.0035
+  }, o || {}));
+  const soft = (color, o) => new THREE.MeshStandardMaterial(Object.assign({
+    color, roughness: 0.62, metalness: 0
+  }, o || {}));
+
+  // 둥근 다각형(삼각·스퀘클) 단면
+  function roundShape(pts, r) {
+    const P = pts.map(p => new THREE.Vector2(p[0], p[1]));
+    const n = P.length, s = new THREE.Shape();
+    const a = [], b = [];
+    for (let i = 0; i < n; i++) {
+      const prev = P[(i - 1 + n) % n], cur = P[i], next = P[(i + 1) % n];
+      a.push(cur.clone().sub(prev).normalize().multiplyScalar(r).add(cur));
+      b.push(cur.clone().sub(next).normalize().multiplyScalar(r).add(cur));
+    }
+    s.moveTo(b[0].x, b[0].y);
+    for (let i = 1; i < n; i++) {
+      s.lineTo(a[i].x, a[i].y);
+      s.quadraticCurveTo(P[i].x, P[i].y, b[i].x, b[i].y);
+    }
+    s.lineTo(a[0].x, a[0].y);
+    s.quadraticCurveTo(P[0].x, P[0].y, b[0].x, b[0].y);
+    s.closePath();
+    return s;
+  }
+  function claySlab(shape, depth, bevel) {
+    const g = new THREE.ExtrudeGeometry(shape, {
+      depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel,
+      bevelSegments: 5, curveSegments: 18
+    });
+    g.center();
+    return g;
+  }
+
+  // 큰 만화 눈: 흰 눈알 + 세로 동공 (+작은 하이라이트)
+  function bigEye(g, x, y, z, r, pr, dark) {
+    const w = add(g, sph(r, 20), soft(0xFFFFFF, { roughness: 0.42 }), x, y, z, false);
+    w.scale.set(1, 1.1, 0.74);
+    const p = add(g, sph(pr, 18), soft(dark || 0x1C1815, { roughness: 0.36 }), x, y - r * 0.03, z + r * 0.58, false);
+    p.scale.set(1, 1.34, 0.56);
+    const s = add(g, sph(pr * 0.3, 10), soft(0xFFFFFF, { roughness: 0.3 }), x - pr * 0.38, y + pr * 0.6, z + r * 0.66, false);
+    s.scale.set(1, 1.1, 0.5);
+    return w;
+  }
+  // 작은 점 눈
+  function dotEye(g, x, y, z, r, color) {
+    const e = add(g, sph(r, 14), soft(color || 0x241E1B, { roughness: 0.34 }), x, y, z, false);
+    e.scale.set(1, 1.12, 0.7);
+    add(g, sph(r * 0.34, 8), soft(0xFFFFFF, { roughness: 0.3 }), x - r * 0.3, y + r * 0.42, z + r * 0.5, false)
+      .scale.set(1, 1, 0.5);
+    return e;
+  }
+  // 웃는 눈(^) · 웃는 입(‿)
+  function smileArc(g, x, y, z, r, tube, color, flip) {
+    const t = add(g, new THREE.TorusGeometry(r, tube, 8, 16, Math.PI), soft(color || 0x2A2320, { roughness: 0.4 }), x, y, z, false);
+    if (flip) t.rotation.z = Math.PI;
+    t.scale.set(1, 1, 0.6);
+    return t;
+  }
+  function cheek(g, x, y, z, r, color) {
+    const c = add(g, sph(r, 12), soft(color || 0xF2A9BE, { roughness: 0.9 }), x, y, z, false);
+    c.scale.set(1, 0.82, 0.34);
+    return c;
+  }
+
+  /* ── 캐릭터별 몸 만들기 ─────────────────────────────────── */
+  function makeTri(cfg) {                       // 큐 · 부이
     const body = new THREE.Group();
-    body.position.y = 0.44;
-    root.add(body);
-
-    const bodyMat = mat(cfg.color, 0.98);
-    const headMat = mat(cfg.head, 0.98);
-
-    // 몸통
-    let torsoGeo;
-    if (cfg.kind === 'pickle' || cfg.kind === 'owl') torsoGeo = new THREE.CapsuleGeometry(0.23, cfg.kind === 'pickle' ? 0.5 : 0.32, 6, 16);
-    else torsoGeo = new THREE.CapsuleGeometry(0.26, 0.3, 6, 16);
-    const torso = add(body, torsoGeo, bodyMat, 0, cfg.kind === 'pickle' ? 0.32 : 0.26, 0);
-    torso.scale.z = 0.86;
-
-    // 머리
-    const headY = cfg.kind === 'pickle' ? 0.86 : 0.74;
-    const head = add(body, sph(cfg.kind === 'owl' ? 0.3 : 0.29, 20), headMat, 0, headY, 0);
-    head.scale.set(1.02, 0.96, 0.96);
-
-    // 얼굴
-    const eyeY = headY + 0.02, eyeZ = 0.245;
-    if (cfg.kind === 'owl') {
-      add(body, sph(0.12, 14), mat(0xFFF6E8), -0.11, eyeY, eyeZ * 0.92, false);
-      add(body, sph(0.12, 14), mat(0xFFF6E8), 0.11, eyeY, eyeZ * 0.92, false);
-      eyes(body, eyeY, eyeZ * 1.02, 0.045, 0.11);
-      add(body, new THREE.ConeGeometry(0.055, 0.13, 8), mat(0xE8A65E), 0, eyeY - 0.02, eyeZ + 0.03, false).rotation.x = Math.PI / 2;
+    const pts = [[-0.52, -0.5], [0.52, -0.5], [0, 0.52]];
+    const geo = claySlab(roundShape(pts, 0.19), 0.5, 0.1);
+    const shell = add(body, geo, soft(cfg.color, { roughness: 0.72 }), 0, 0.6, 0);
+    shell.scale.set(1, 1, 1);
+    if (cfg.kind === 'tri' && cfg.name === '큐') {
+      bigEye(body, -0.16, 0.66, 0.3, 0.155, 0.075);
+      bigEye(body, 0.16, 0.66, 0.3, 0.155, 0.075);
     } else {
-      eyes(body, eyeY, eyeZ, cfg.kind === 'hippo' ? 0.045 : 0.05, 0.105);
-      if (cfg.kind === 'hippo') {
-        const snout = add(body, sph(0.13, 14), mat(0xD8C7EA), 0, eyeY - 0.12, eyeZ + 0.02);
-        snout.scale.set(1.25, 0.8, 0.8);
-        add(body, sph(0.028, 8), mat(0x8E7CA6, 0.6), -0.05, eyeY - 0.11, eyeZ + 0.13, false);
-        add(body, sph(0.028, 8), mat(0x8E7CA6, 0.6), 0.05, eyeY - 0.11, eyeZ + 0.13, false);
-      } else {
-        add(body, sph(0.035, 8), mat(0xE8899A, 0.6), -0.19, eyeY - 0.07, eyeZ - 0.02, false);
-        add(body, sph(0.035, 8), mat(0xE8899A, 0.6), 0.19, eyeY - 0.07, eyeZ - 0.02, false);
-      }
+      dotEye(body, -0.155, 0.62, 0.3, 0.058);
+      dotEye(body, 0.155, 0.62, 0.3, 0.058);
+      const m = add(body, new THREE.CapsuleGeometry(0.026, 0.12, 4, 10), soft(0x241E1B, { roughness: 0.36 }), 0, 0.4, 0.33, false);
+      m.rotation.z = -0.16;
+      m.rotation.x = -0.05;
     }
+    return { body, arms: [], legs: [], top: 1.24 };
+  }
 
-    // 귀 / 특징
-    const earMat = mat(cfg.head, 0.98);
-    if (cfg.kind === 'bunny') {
-      [-0.13, 0.13].forEach(x => {
-        const ear = add(body, new THREE.CapsuleGeometry(0.055, 0.34, 4, 10), earMat, x, headY + 0.34, -0.02);
-        ear.rotation.z = x > 0 ? -0.16 : 0.16;
-      });
-    } else if (cfg.kind === 'cat') {
-      [-0.16, 0.16].forEach(x => {
-        const ear = add(body, new THREE.ConeGeometry(0.1, 0.2, 8), earMat, x, headY + 0.26, 0);
-        ear.rotation.z = x > 0 ? -0.28 : 0.28;
-      });
-    } else if (cfg.kind === 'bear' || cfg.kind === 'koala') {
-      [-0.2, 0.2].forEach(x => add(body, sph(0.11, 12), earMat, x, headY + 0.2, -0.02));
-    } else if (cfg.kind === 'fox') {
-      [-0.15, 0.15].forEach(x => {
-        const ear = add(body, new THREE.ConeGeometry(0.11, 0.28, 8), earMat, x, headY + 0.3, -0.02);
-        ear.rotation.z = x > 0 ? -0.2 : 0.2;
-      });
-      const tail = add(body, new THREE.CapsuleGeometry(0.1, 0.34, 4, 10), mat(0xF7C48F), 0, 0.26, -0.3);
-      tail.rotation.x = 0.7;
-    } else if (cfg.kind === 'chick') {
-      add(body, new THREE.ConeGeometry(0.05, 0.12, 8), mat(0xF0A24E), 0, eyeY - 0.09, eyeZ + 0.04, false).rotation.x = Math.PI / 2;
-      add(body, sph(0.09, 10), mat(0xF7E08A), 0, headY + 0.26, -0.02, false);
-    } else if (cfg.kind === 'pickle') {
-      add(body, new THREE.CapsuleGeometry(0.03, 0.16, 4, 8), mat(0x7FB35A), 0, headY + 0.32, 0);
-    } else if (cfg.kind === 'hippo') {
-      [-0.2, 0.2].forEach(x => add(body, sph(0.08, 10), mat(0xA48CC0), x, headY + 0.22, -0.04));
-      // 헤드폰
-      const band = add(body, new THREE.TorusGeometry(0.3, 0.035, 8, 20, Math.PI), mat(0x6E6878, 0.6), 0, headY + 0.02, 0);
-      band.rotation.z = Math.PI;
-      add(body, sph(0.075, 12), mat(0x6E6878, 0.6), -0.3, headY, 0);
-      add(body, sph(0.075, 12), mat(0x6E6878, 0.6), 0.3, headY, 0);
-    } else if (cfg.kind === 'owl') {
-      [-0.22, 0.22].forEach(x => {
-        const tuft = add(body, new THREE.ConeGeometry(0.07, 0.18, 8), earMat, x, headY + 0.26, -0.02);
-        tuft.rotation.z = x > 0 ? -0.35 : 0.35;
-      });
-    }
+  function makeDisc(cfg) {                      // 인스팅트: 아이보리 원반 + 세리프 I
+    const body = new THREE.Group();
+    const shell = add(body, sph(0.5, 32), clay(cfg.color, { roughness: 0.9 }), 0, 0.52, 0);
+    shell.scale.set(1, 1, 0.36);
+    const ink = soft(0x2C2A28, { roughness: 0.55 });
+    add(body, box(0.075, 0.3, 0.05), ink, 0, 0.52, 0.155);
+    add(body, box(0.085, 0.05, 0.05), ink, 0, 0.695, 0.155);
+    add(body, box(0.175, 0.055, 0.055), ink, 0, 0.69, 0.15);
+    add(body, box(0.175, 0.055, 0.055), ink, 0, 0.35, 0.15);
+    return { body, arms: [], legs: [], top: 1.04 };
+  }
 
-    // 팔
-    const armMat = bodyMat;
+  function makeHippo(cfg) {                     // 하마뮤즈: 보라 보송 하마
+    const body = new THREE.Group();
+    const purple = clay(cfg.color);
+    const light = clay(0xC8B2EA);
+    add(body, sph(0.34, 24), purple, 0, 0.4, 0).scale.set(1.02, 1.02, 0.94);
+    const head = add(body, sph(0.31, 26), purple, 0, 0.8, 0);
+    head.scale.set(1.1, 0.96, 0.96);
+    // 주둥이
+    const mz = add(body, sph(0.21, 24), light, 0, 0.71, 0.14);
+    mz.scale.set(1.42, 0.74, 0.78);
+    // 볼
+    cheek(body, -0.26, 0.68, 0.19, 0.095, 0xF39BB8);
+    cheek(body, 0.26, 0.68, 0.19, 0.095, 0xF39BB8);
+    // 눈 + 콧구멍
+    dotEye(body, -0.125, 0.9, 0.235, 0.045);
+    dotEye(body, 0.125, 0.9, 0.235, 0.045);
+    add(body, sph(0.024, 10), soft(0x7E6A9A, { roughness: 0.7 }), -0.055, 0.8, 0.33, false);
+    add(body, sph(0.024, 10), soft(0x7E6A9A, { roughness: 0.7 }), 0.055, 0.8, 0.33, false);
+    // 벌린 입 + 혀 + 앞니 하나
+    const mouth = add(body, sph(0.115, 20), soft(0x6E2B45, { roughness: 0.55 }), 0, 0.66, 0.25, false);
+    mouth.scale.set(1.18, 0.9, 0.55);
+    const tongue = add(body, sph(0.07, 16), soft(0xEC7C9B, { roughness: 0.7 }), 0, 0.625, 0.3, false);
+    tongue.scale.set(1.1, 0.6, 0.5);
+    add(body, box(0.05, 0.055, 0.03), soft(0xFFFCF3, { roughness: 0.4 }), 0.045, 0.7, 0.305, false);
+    // 귀
+    [-0.22, 0.22].forEach(x => {
+      add(body, sph(0.1, 16), purple, x, 1.02, -0.02).scale.set(1, 1, 0.8);
+      add(body, sph(0.062, 14), soft(0xF6A9C6, { roughness: 0.85 }), x, 1.02, 0.045, false).scale.set(1, 1, 0.5);
+    });
+    // 팔 · 다리
     const arms = [-1, 1].map(side => {
       const arm = new THREE.Group();
-      arm.position.set(side * 0.28, 0.52, 0);
-      const upper = add(arm, new THREE.CapsuleGeometry(0.075, 0.3, 4, 10), armMat, 0, -0.16, 0);
-      upper.rotation.z = side * 0.12;
+      arm.position.set(side * 0.32, 0.5, 0);
+      add(arm, new THREE.CapsuleGeometry(0.075, 0.2, 5, 12), purple, 0, -0.13, 0);
       body.add(arm);
       return arm;
     });
-
-    // 다리
     const legs = [-1, 1].map(side => {
       const leg = new THREE.Group();
-      leg.position.set(side * 0.12, 0.3, 0);
-      add(leg, new THREE.CapsuleGeometry(0.085, 0.2, 4, 10), mat(cfg.color, 0.98), 0, -0.15, 0);
-      add(leg, sph(0.09, 10), mat(cfg.head, 0.98), 0, -0.28, 0.02);
-      root.add(leg);
+      leg.position.set(side * 0.14, 0.22, 0.02);
+      add(leg, new THREE.CapsuleGeometry(0.088, 0.1, 5, 12), purple, 0, -0.13, 0);
       return leg;
     });
+    return { body, arms, legs, top: 1.24 };
+  }
 
+  function makeYeti(cfg) {                      // 뮤즈: 크림 보송 예티
+    const body = new THREE.Group();
+    const cream = clay(cfg.color);
+    const peak = clay(0xE4D4B7);
+    add(body, sph(0.37, 26), cream, 0, 0.44, 0).scale.set(1.0, 1.18, 0.9);
+    const head = add(body, sph(0.31, 26), cream, 0, 0.83, 0);
+    head.scale.set(1.03, 1.0, 0.96);
+    add(body, sph(0.235, 24), clay(0xF9E1C2, { roughness: 0.88 }), 0, 0.83, 0.18).scale.set(1.06, 1.02, 0.44);
+    dotEye(body, -0.09, 0.855, 0.36, 0.03);
+    dotEye(body, 0.09, 0.855, 0.36, 0.03);
+    smileArc(body, 0, 0.8, 0.4, 0.045, 0.011, 0x3A2C22, true);
+    cheek(body, -0.155, 0.8, 0.35, 0.05, 0xF3B0AE);
+    cheek(body, 0.155, 0.8, 0.35, 0.05, 0xF3B0AE);
+    add(body, sph(0.07, 12), peak, 0, 1.12, -0.02, false).scale.set(1, 0.7, 1);
+    const arms = [-1, 1].map(side => {
+      const arm = new THREE.Group();
+      arm.position.set(side * 0.34, 0.58, 0);
+      const a = add(arm, new THREE.CapsuleGeometry(0.09, 0.2, 5, 12), cream, side * 0.04, -0.14, 0);
+      a.rotation.z = side * 0.18;
+      body.add(arm);
+      return arm;
+    });
+    const legs = [-1, 1].map(side => {
+      const leg = new THREE.Group();
+      leg.position.set(side * 0.16, 0.26, 0);
+      add(leg, new THREE.CapsuleGeometry(0.105, 0.1, 5, 12), cream, 0, -0.16, 0);
+      return leg;
+    });
+    return { body, arms, legs, top: 1.3 };
+  }
+
+  function makeCat(cfg) {                       // 키링: 흰 고양이 (^ ^)
+    const body = new THREE.Group();
+    const cream = clay(cfg.color, { roughness: 0.92 });
+    add(body, sph(0.4, 28), cream, 0, 0.44, 0).scale.set(1.06, 0.94, 0.86);
+    const head = add(body, sph(0.36, 26), cream, 0, 0.68, 0);
+    head.scale.set(1.08, 0.86, 0.88);
+    // 뾰족 귀
+    [-1, 1].forEach(side => {
+      const ear = add(body, new THREE.ConeGeometry(0.135, 0.22, 22), cream, side * 0.235, 0.92, -0.02);
+      ear.rotation.z = side * -0.16;
+      add(body, sph(0.045, 12), cream, side * 0.27, 1.01, -0.02, false);
+    });
+    smileArc(body, -0.135, 0.62, 0.32, 0.058, 0.015, 0x2A2320, false);
+    smileArc(body, 0.135, 0.62, 0.32, 0.058, 0.015, 0x2A2320, false);
+    cheek(body, -0.215, 0.55, 0.27, 0.062, 0xF7B4C4);
+    cheek(body, 0.215, 0.55, 0.27, 0.062, 0xF7B4C4);
+    const arms = [-1, 1].map(side => {
+      const arm = new THREE.Group();
+      arm.position.set(side * 0.34, 0.46, 0.12);
+      add(arm, sph(0.105, 16), cream, side * 0.03, -0.05, 0);
+      body.add(arm);
+      return arm;
+    });
+    const legs = [-1, 1].map(side => {
+      const leg = new THREE.Group();
+      leg.position.set(side * 0.16, 0.16, 0.08);
+      add(leg, sph(0.11, 16), cream, 0, -0.04, 0);
+      return leg;
+    });
+    return { body, arms, legs, top: 1.12 };
+  }
+
+  function makeClover(cfg) {                    // 초록·노랑·연분홍·진분홍: 4엽 피클
+    const body = new THREE.Group();
+    const m = clay(cfg.color, { roughness: 0.93 });
+    const R = 0.215, D = 0.152, cy = 0.36;
+    [[-1, 1], [1, 1], [-1, -1], [1, -1]].forEach(([sx, sy]) => {
+      add(body, sph(R, 20), m, sx * D, cy + sy * D, 0).scale.set(1.02, 1.02, 0.8);
+    });
+    const eye = (x) => {
+      const e = add(body, sph(0.045, 16), soft(0x1E1A18, { roughness: 0.34 }), x, cy + 0.015, 0.145, false);
+      e.scale.set(0.92, 1.55, 0.55);
+      add(body, sph(0.012, 8), soft(0xFFFFFF, { roughness: 0.3 }), x - 0.014, cy + 0.075, 0.185, false)
+        .scale.set(1, 1, 0.5);
+    };
+    eye(-0.085); eye(0.085);
+    return { body, arms: [], legs: [], top: 0.94 };
+  }
+
+  function makeSquircle(cfg) {                  // 하크: 검정 스퀘클 + 흰 부채꼴
+    const body = new THREE.Group();
+    const black = soft(cfg.color, { roughness: 0.88 });
+    const s = roundShape([[-0.36, -0.36], [0.36, -0.36], [0.36, 0.36], [-0.36, 0.36]], 0.21);
+    add(body, claySlab(s, 0.24, 0.07), black, 0, 0.46, 0);
+    // 흰 부채(은행잎) 심볼
+    const f = new THREE.Shape();
+    f.moveTo(-0.21, -0.01);
+    f.bezierCurveTo(-0.12, 0.10, -0.02, 0.16, 0.07, 0.17);
+    f.bezierCurveTo(0.16, 0.18, 0.20, 0.10, 0.20, 0.01);
+    f.bezierCurveTo(0.20, -0.09, 0.15, -0.16, 0.06, -0.18);
+    f.bezierCurveTo(-0.04, -0.19, -0.15, -0.09, -0.21, -0.01);
+    const fg = new THREE.ExtrudeGeometry(f, { depth: 0.06, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 4, curveSegments: 20 });
+    fg.center();
+    const fan = add(body, fg, soft(0xFBFBF8, { roughness: 0.5 }), 0.01, 0.47, 0.14);
+    fan.rotation.z = -0.08;
+    return { body, arms: [], legs: [], top: 1.0 };
+  }
+
+  const BUILDERS = { tri: makeTri, disc: makeDisc, hippo: makeHippo, yeti: makeYeti, cat: makeCat, clover: makeClover, squircle: makeSquircle };
+
+  function buildCharacter(cfg) {
+    const root = new THREE.Group();
+    const parts = BUILDERS[cfg.kind](cfg);
+    const body = parts.body;
+    root.add(body);
+    if (parts.legs) parts.legs.forEach(l => root.add(l));
     root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-    root.scale.setScalar(cfg.height * 1.18);
     root.userData.name = cfg.name;
-    return { root, body, arms, legs, head, torso };
+    return {
+      root, body, arms: parts.arms || [], legs: parts.legs || [],
+      head: body.children[0], torso: body.children[0],
+      top: parts.top || 1.2, baseY: 0
+    };
   }
 
   const walkers = PEOPLE.map((cfg, i) => {
@@ -657,11 +827,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
         // 걷기 사이클
         w.phase += dt * 9.5;
         const s = Math.sin(w.phase);
-        w.legs[0].rotation.x = s * 0.55;
-        w.legs[1].rotation.x = -s * 0.55;
-        w.arms[0].rotation.x = -s * 0.45;
-        w.arms[1].rotation.x = s * 0.45;
-        w.body.position.y = 0.44 + Math.abs(Math.cos(w.phase)) * 0.035;
+        if (w.legs.length > 1) { w.legs[0].rotation.x = s * 0.55; w.legs[1].rotation.x = -s * 0.55; }
+        if (w.arms.length > 1) { w.arms[0].rotation.x = -s * 0.45; w.arms[1].rotation.x = s * 0.45; }
+        w.body.position.y = w.baseY + Math.abs(Math.cos(w.phase)) * 0.032;
         w.body.rotation.z = s * 0.035;
         if (k >= 1) nextSegment(w);
       }
@@ -669,16 +837,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
         // 서 있을 때: 호흡 + 가끔 두리번
         w.phase += dt * 1.6;
         const b = Math.sin(w.phase) * 0.5 + 0.5;
-        w.body.position.y = 0.44 + b * 0.012;
+        w.body.position.y = w.baseY + b * 0.012;
         w.body.rotation.z *= 0.9;
-        w.legs[0].rotation.x *= 0.86; w.legs[1].rotation.x *= 0.86;
-        w.arms[0].rotation.x *= 0.86; w.arms[1].rotation.x *= 0.86;
+        if (w.legs.length > 1) { w.legs[0].rotation.x *= 0.86; w.legs[1].rotation.x *= 0.86; }
+        if (w.arms.length > 1) { w.arms[0].rotation.x *= 0.86; w.arms[1].rotation.x *= 0.86; }
         w.root.rotation.y += Math.sin(t * 0.5 + w.phase) * 0.0012;
         w.bar.style.width = '0%';
       }
     }
     // 이름표(HTML) 투영
-    tmpV.set(w.root.position.x, 1.62 * w.cfg.height, w.root.position.z);
+    tmpV.set(w.root.position.x, w.top + 0.24, w.root.position.z);
     tmpV.project(camera);
     const inFront = tmpV.z < 1;
     const sx = (tmpV.x * 0.5 + 0.5) * host.clientWidth;
