@@ -551,8 +551,12 @@ JS_TEXT = JS_TEXT + """
     });
     elClose.addEventListener('click', function(e){ e.stopPropagation(); hide(); });
     elGo.addEventListener('click', function(e){ e.stopPropagation(); if (goFn) goFn(); hide(); });
+    var host3d = $('#office3d');
     document.addEventListener('click', function(e){
-      if (open && !card.contains(e.target) && !wrap.contains(e.target)) hide();
+      if (!open) return;
+      if (card.contains(e.target) || wrap.contains(e.target)) return;
+      if (host3d && host3d.contains(e.target)) return;   // 3D 캔버스 클릭은 카드가 직접 연다
+      hide();
     });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && open) hide(); });
     $$('.pin').forEach(function(pin){ pin.addEventListener('click', hide); });
