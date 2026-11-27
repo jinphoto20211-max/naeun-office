@@ -57,10 +57,10 @@ PEOPLE = [
     ("노랑",     "meeting", "norang.png",   "",       "체험단 접수|설문 마감",        [1, 2, 3]),
     ("진분홍",   "meeting", "pink.png",     "",       "응모 정리|레뷰 확인",          [2, 3, 4]),
     ("막내",     "meeting", "maknae.png",   "",       "핫딜헌터|해피방 중계",         [3, 4, 5]),
-    ("하크",     "lounge",  "hark.png",     "",       "해피방 감지|협업 건 처리",     [15, 14]),
-    ("부이",     "lounge",  "vooy.png",     "",       "협업 건 정리|중계 확인",       [16, 17]),
-    ("큐",       "lounge",  "q.png",        "",       "회의 준비|일정 확인",          [11, 12]),
-    ("키링",     "lounge",  "keyring.png",  "",       "알림 정리|예약 확인",          [13, 14]),
+    ("하크",     "lounge",  "hark.png",     "",       "해피방 감지|협업 건 처리",     [15, 17]),
+    ("부이",     "lounge",  "vooy.png",     "",       "협업 건 정리|중계 확인",       [16, 14]),
+    ("큐",       "lounge",  "q.png",        "",       "회의 준비|일정 확인",          [11, 13]),
+    ("키링",     "lounge",  "keyring.png",  "",       "알림 정리|예약 확인",          [13, 12]),
 ]
 
 
@@ -192,7 +192,7 @@ CSS_TEXT = """  .office-stage{--chH:14.8cqw; container-type:inline-size}
   }
   @media (max-width:560px){
     .office-stage{--chH:16.8cqw}
-    .walker .nametag{padding:2px 5px 2px 4px; gap:3px; font-size:8.6px}
+    .walker .nametag{padding:2px 5px 2px 4px; gap:2.5px; font-size:8px; box-shadow:0 1px 4px rgba(90,65,45,.22)}
     .walker-shadow{filter:none}
     .walker-bubble{display:none}
     .pin{font-size:8.5px; padding:3.5px 7px; gap:4px}
