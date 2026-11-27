@@ -121,7 +121,7 @@ STAGE = """<div class="office-stage" id="officeStage">
 
 STAGE_TEXT = "      <!-- OFFICE-STAGE:START -->\n" + STAGE + "\n      <!-- OFFICE-STAGE:END -->"
 
-CSS_TEXT = """  .office-stage{--chH:15.4cqw; container-type:inline-size}
+CSS_TEXT = """  .office-stage{--chH:14.8cqw; container-type:inline-size}
   .office-zoom{overflow:hidden}
   .office-room{display:block; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none}
   .office-actors{position:absolute; inset:0; z-index:1}
@@ -174,6 +174,10 @@ CSS_TEXT = """  .office-stage{--chH:15.4cqw; container-type:inline-size}
     box-shadow:0 5px 14px rgba(90,65,45,.20);
   }
   .walker-bubble.show{opacity:1; transform:translate(-50%,-4px) scale(1)}
+  /* 구역 핀은 벽 쪽으로 (캐릭터·이름표와 겹치지 않게) */
+  .pin-meeting{left:13%; top:36%}
+  .pin-command{left:50%; top:20%}
+  .pin-lounge{left:87%; top:40%}
   /* 구역 스포트라이트 — 다른 구역 캐릭터는 물러난다 */
   .office-stage.focus-meeting .walker:not([data-space="meeting"]),
   .office-stage.focus-command .walker:not([data-space="command"]),
@@ -182,14 +186,20 @@ CSS_TEXT = """  .office-stage{--chH:15.4cqw; container-type:inline-size}
   .office-stage.focus-command .walker:not([data-space="command"]) .nametag,
   .office-stage.focus-lounge .walker:not([data-space="lounge"]) .nametag{opacity:.55}
   @media (max-width:720px){
-    .office-stage{--chH:16.4cqw}
+    .office-stage{--chH:16cqw}
     .walker-bubble{font-size:8.5px; padding:2px 6px}
+    .pin{font-size:11px; padding:5px 9px; gap:4px}
   }
   @media (max-width:560px){
-    .office-stage{--chH:17.6cqw}
-    .walker .nametag{padding:2px 6px 2px 5px; gap:3px; font-size:9px}
+    .office-stage{--chH:16.8cqw}
+    .walker .nametag{padding:2px 5px 2px 4px; gap:3px; font-size:8.6px}
     .walker-shadow{filter:none}
     .walker-bubble{display:none}
+    .pin{font-size:8.5px; padding:3.5px 7px; gap:4px}
+    .pin .pin-dot{width:6px; height:6px}
+    .pin-command{left:50%; top:22%}
+    .pin-meeting{left:12%; top:37%}
+    .pin-lounge{left:86%; top:41%}
   }
   @media (prefers-reduced-motion: reduce){
     .walker, .walker-inner{transition:none}
