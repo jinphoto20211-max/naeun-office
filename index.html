@@ -3312,12 +3312,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 캐릭터별 몸 만들기 ─────────────────────────────────── */
   function makeTri(cfg) {                       // 큐 · 부이
     const body = new THREE.Group();
-    const pts = [[-0.52, -0.5], [0.52, -0.5], [0, 0.52]];
-    const geo = claySlab(roundShape(pts, 0.22), 0.44, 0.13, 9, 30);
+    const pts = [[-0.5, -0.46], [0.5, -0.46], [0, 0.5]];
+    const geo = claySlab(roundShape(pts, 0.28), 0.46, 0.075, 8, 34);
     add(body, geo, clay(cfg.color, { roughness: 0.86 }), 0, 0.64, 0);
     if (cfg.name === '큐') {
-      bigEye(body, -0.16, 0.68, 0.3, 0.16, 0.078);
-      bigEye(body, 0.16, 0.68, 0.3, 0.16, 0.078);
+      bigEye(body, -0.155, 0.66, 0.27, 0.16, 0.078);
+      bigEye(body, 0.155, 0.66, 0.27, 0.16, 0.078);
     } else {
       dotEye(body, -0.155, 0.64, 0.32, 0.058);
       dotEye(body, 0.155, 0.64, 0.32, 0.058);
@@ -3330,11 +3330,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
   function makeDisc(cfg) {                      // 인스팅트: 아이보리 원반 + 세리프 I
     const body = new THREE.Group();
-    add(body, sph(0.5, 44), clay(cfg.color, { roughness: 0.88 }), 0, 0.52, 0).scale.set(1, 1, 0.38);
-    const ink = soft(0x2C2A28, { roughness: 0.55 });
-    add(body, clayBox(0.08, 0.3, 0.07, 2.2, 12), ink, 0, 0.52, 0.2);
-    add(body, clayBox(0.185, 0.062, 0.07, 2.2, 12), ink, 0, 0.69, 0.195);
-    add(body, clayBox(0.185, 0.062, 0.07, 2.2, 12), ink, 0, 0.35, 0.195);
+    const discGeo = cyl(0.5, 0.5, 0.34, 48);
+    discGeo.rotateX(Math.PI / 2);
+    add(body, discGeo, clay(cfg.color, { roughness: 0.86 }), 0, 0.52, 0);
+    const ink = soft(0x2C2A28, { roughness: 0.5 });
+    add(body, clayBox(0.072, 0.34, 0.05, 4.2, 14), ink, 0, 0.52, 0.155);
+    add(body, clayBox(0.155, 0.052, 0.05, 4.2, 14), ink, 0, 0.715, 0.152);
+    add(body, clayBox(0.155, 0.052, 0.05, 4.2, 14), ink, 0, 0.325, 0.152);
     return { body, arms: [], legs: [], top: 1.04 };
   }
 
@@ -3435,7 +3437,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
   function makeClover(cfg) {                    // 초록·노랑·연분홍·진분홍: 4엽 피클
     const body = new THREE.Group();
-    const geo = claySlab(cloverShape(0.205, 0.175), 0.24, 0.10, 8, 26);
+    const geo = claySlab(cloverShape(0.205, 0.175), 0.26, 0.075, 8, 26);
     add(body, geo, clay(cfg.color, { roughness: 0.9 }), 0, 0.42, 0);
     const eye = (x) => {
       const e = add(body, sph(0.048, 18), soft(0x1E1A18, { roughness: 0.34 }), x, 0.44, 0.215, false);
