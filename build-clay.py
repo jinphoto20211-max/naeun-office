@@ -77,7 +77,7 @@ NEW_PINS = '''          <button class="pin pin-meeting" type="button" data-space
           <!-- NAME-TAGS:END -->'''
 
 NEW_TAG_CSS = '''  /* ── 클레이 3D 이름표 배지 ── */
-  .office-stage{--tagF:clamp(9px, 1.06cqw, 11.5px); container-type:inline-size}
+  .office-stage{--tagF:clamp(9.5px, 1.16cqw, 12.5px); container-type:inline-size}
   .pin{z-index:900}
   .nametag{
     z-index:40; font-size:var(--tagF); max-width:44%;
