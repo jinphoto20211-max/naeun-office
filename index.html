@@ -784,12 +784,12 @@
   }
   .prop:hover .prop-tip, .prop:focus-visible .prop-tip, .prop.on .prop-tip{opacity:1; transform:translate(-50%,-128%) scale(1)}
   .prop-card{
-    position:absolute; left:50%; bottom:14px; transform:translate(-50%,10px); width:min(88%,420px); z-index:950;
-    padding:13px 15px 14px; border-radius:18px; background:rgba(255,253,249,.975); text-align:left;
-    box-shadow:0 14px 34px rgba(90,62,40,.30), inset 0 0 0 1px rgba(255,255,255,.9);
-    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+    position:fixed; left:0; top:0; width:min(86vw,360px); z-index:1200;
+    padding:13px 15px 14px; border-radius:18px; background:rgba(255,253,249,.98); text-align:left;
+    box-shadow:0 16px 38px rgba(90,62,40,.32), inset 0 0 0 1px rgba(255,255,255,.9);
+    opacity:0; pointer-events:none; transform:translateY(6px); transition:opacity .22s ease, transform .22s ease;
   }
-  .prop-card.open{opacity:1; transform:translate(-50%,0); pointer-events:auto}
+  .prop-card.open{opacity:1; transform:translateY(0); pointer-events:auto}
   .prop-card-top{display:flex; align-items:center; justify-content:space-between; gap:10px}
   .prop-card-top b{font-size:13.5px; font-weight:800; letter-spacing:-.3px; color:#443830}
   .prop-card-x{border:0; background:none; font-size:12px; color:#9C8B7E; padding:2px 5px; cursor:pointer; line-height:1}
@@ -801,7 +801,7 @@
   .prop-card-go[hidden]{display:none}
   @media (max-width:720px){
     .prop-tip{font-size:9.5px; padding:2px 7px}
-    .prop-card{width:min(92%,360px); bottom:10px; padding:11px 13px 12px}
+    .prop-card{width:min(88vw,340px); padding:11px 13px 12px}
     .prop-card-top b{font-size:12.5px}
     .prop-card p{font-size:10.8px}
     .prop-card-go{font-size:10.5px; padding:6px 11px}
@@ -2047,18 +2047,33 @@
                  body: function(){ return '개인 책상 네 자리 — 오늘 남은 큐 18건(리뷰·후기 4 · 미결 14).'; },
                  go:'작업실 열기', act: function(){ selectTab('work'); } }
     };
+    var curNode = null;
+    function place(node){
+      var r = node.getBoundingClientRect();
+      var w = card.offsetWidth || 320, h = card.offsetHeight || 96;
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var left = r.left + r.width / 2 - w / 2;
+      left = Math.max(10, Math.min(vw - w - 10, left));
+      var top = r.top - h - 12;
+      if (top < 10) top = Math.min(vh - h - 10, r.bottom + 12);
+      card.style.left = Math.round(left) + 'px';
+      card.style.top = Math.round(top) + 'px';
+    }
     function show(pid, node){
       var d = DEF[pid]; if (!d) return;
-      open = pid; goFn = d.act;
+      open = pid; goFn = d.act; curNode = node;
       elTitle.textContent = d.title;
       elBody.textContent = (typeof d.body === 'function') ? d.body() : d.body;
       if (d.go && d.act){ elGo.hidden = false; elGo.textContent = d.go; } else { elGo.hidden = true; }
       card.hidden = false;
-      requestAnimationFrame(function(){ card.classList.add('open'); });
+      place(node);
+      requestAnimationFrame(function(){ place(node); card.classList.add('open'); });
       $$('.prop', wrap).forEach(function(p){ p.classList.toggle('on', p === node); });
     }
+    window.addEventListener('scroll', function(){ if (curNode && open) place(curNode); }, { passive:true });
+    window.addEventListener('resize', function(){ if (curNode && open) place(curNode); });
     function hide(){
-      card.classList.remove('open'); card.hidden = true; open = null; goFn = null;
+      card.classList.remove('open'); card.hidden = true; open = null; goFn = null; curNode = null;
       $$('.prop', wrap).forEach(function(p){ p.classList.remove('on'); });
     }
     $$('.prop', wrap).forEach(function(p){
