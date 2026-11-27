@@ -2628,16 +2628,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.06;
+  renderer.toneMappingExposure = 1.0;
 
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-10, 10, 10, -10, 0.1, 200);
 
   /* ── 팔레트 (레퍼런스: 크림 벽 + 허니 우드 + 세이지) ───────── */
   const C = {
-    wall: 0xEFE1CA, wallTrim: 0xE2CFB2, wallBase: 0xE6D4B8,
+    wall: 0xEDDEC6, wallTrim: 0xDCC7A6, wallBase: 0xE3CFB0,
     floor: 0xC89B68, floorDark: 0xB0854F, floorLight: 0xD6AE7C,
-    stone: 0xCBC4B8, stoneDark: 0xB9B1A3,
+    stone: 0xC2BAAC, stoneDark: 0xB0A89A,
     wood: 0xB9825A, woodDark: 0x94633F, woodLight: 0xD0A374,
     dark: 0x4B3A31, white: 0xFFF9F0, cream: 0xF8EEDE,
     sage: 0xA9BFA6, sageDark: 0x8FA98C, pink: 0xE9AEB2, coral: 0xE9A78F,
@@ -2896,7 +2896,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   }
 
   /* ── 조명: 따뜻한 스튜디오 바운스 ───────────────────────── */
-  scene.add(new THREE.HemisphereLight(0xFFF6E9, 0xD9C4A6, 1.0));
+  scene.add(new THREE.HemisphereLight(0xFFF6E9, 0xD6BF9F, 0.92));
   const sun = new THREE.DirectionalLight(0xFFE8CE, 1.45);
   sun.position.set(-6.2, 11.5, 8.2);
   sun.castShadow = true;
@@ -3100,7 +3100,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 라운지: 소파 · 러그 · 커피 테이블 · 스탠드 ─────────── */
   const rug = add(room, clayBox(4.6, 0.08, 3.6, 2.4, 22), M.rug, 3.9, FLOOR_Y + 0.04, -3.0);
   rug.castShadow = false;
-  const rug2 = add(room, clayBox(4.4, 0.07, 3.4, 2.4, 22), fabricMat(0xF6ECDB, { bumpScale: 0.022 }), -4.0, FLOOR_Y + 0.035, -0.8);
+  const rug2 = add(room, clayBox(4.0, 0.07, 3.2, 2.4, 22), fabricMat(0xF3E6D0, { bumpScale: 0.022 }), -4.0, FLOOR_Y + 0.035, -0.8);
   rug2.castShadow = false;
 
   const sofa = group(4.35, -4.35, 0.07);
@@ -3164,8 +3164,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 화이트보드 ─────────────────────────────────────────── */
   const board = group(-4.6, -6.7);
   board.userData.prop = 'board';
-  add(board, clayBox(2.8, 1.62, 0.12, 3.4, 18), M.cream, 0, 1.78, 0);
-  add(board, clayBox(2.56, 1.4, 0.06, 3.2, 16), clayMat(0xFDFBF4, { roughness: 0.7 }), 0, 1.78, 0.08, false);
+  add(board, clayBox(2.8, 1.62, 0.12, 5.0, 18), M.cream, 0, 1.78, 0);
+  add(board, clayBox(2.56, 1.4, 0.06, 5.0, 16), clayMat(0xFDFBF4, { roughness: 0.7 }), 0, 1.78, 0.08, false);
   add(board, clayBox(0.72, 0.06, 0.03, 3, 10), clayMat(0xE8899A), -0.55, 2.14, 0.12, false);
   add(board, clayBox(1.12, 0.05, 0.03, 3, 10), clayMat(0x8FB8DE), -0.2, 1.96, 0.12, false);
   add(board, clayBox(0.94, 0.05, 0.03, 3, 10), clayMat(0x7FC197), 0.15, 1.8, 0.12, false);
@@ -3313,7 +3313,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   function makeTri(cfg) {                       // 큐 · 부이
     const body = new THREE.Group();
     const pts = [[-0.52, -0.5], [0.52, -0.5], [0, 0.52]];
-    const geo = pillow(claySlab(roundShape(pts, 0.22), 0.44, 0.13, 9, 30), 1.32, 1.28, 0.05);
+    const geo = claySlab(roundShape(pts, 0.22), 0.44, 0.13, 9, 30);
     add(body, geo, clay(cfg.color, { roughness: 0.86 }), 0, 0.64, 0);
     if (cfg.name === '큐') {
       bigEye(body, -0.16, 0.68, 0.3, 0.16, 0.078);
@@ -3332,9 +3332,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const body = new THREE.Group();
     add(body, sph(0.5, 44), clay(cfg.color, { roughness: 0.88 }), 0, 0.52, 0).scale.set(1, 1, 0.38);
     const ink = soft(0x2C2A28, { roughness: 0.55 });
-    add(body, clayBox(0.08, 0.3, 0.06, 2.2, 12), ink, 0, 0.52, 0.15);
-    add(body, clayBox(0.185, 0.06, 0.06, 2.2, 12), ink, 0, 0.69, 0.15);
-    add(body, clayBox(0.185, 0.06, 0.06, 2.2, 12), ink, 0, 0.35, 0.15);
+    add(body, clayBox(0.08, 0.3, 0.07, 2.2, 12), ink, 0, 0.52, 0.2);
+    add(body, clayBox(0.185, 0.062, 0.07, 2.2, 12), ink, 0, 0.69, 0.195);
+    add(body, clayBox(0.185, 0.062, 0.07, 2.2, 12), ink, 0, 0.35, 0.195);
     return { body, arms: [], legs: [], top: 1.04 };
   }
 
@@ -3344,16 +3344,16 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const light = clay(0xC8B2EA);
     add(body, sph(0.34, 30), purple, 0, 0.42, 0).scale.set(1.02, 1.04, 0.94);
     add(body, sph(0.31, 32), purple, 0, 0.8, 0).scale.set(1.1, 0.96, 0.96);
-    add(body, sph(0.21, 30), light, 0, 0.71, 0.14).scale.set(1.42, 0.74, 0.78);
+    add(body, sph(0.21, 30), light, 0, 0.70, 0.11).scale.set(1.44, 0.72, 0.62);
     cheek(body, -0.26, 0.68, 0.19, 0.095, 0xF39BB8);
     cheek(body, 0.26, 0.68, 0.19, 0.095, 0xF39BB8);
     dotEye(body, -0.125, 0.9, 0.235, 0.045);
     dotEye(body, 0.125, 0.9, 0.235, 0.045);
-    add(body, sph(0.024, 12), soft(0x7E6A9A, { roughness: 0.7 }), -0.055, 0.8, 0.33, false);
-    add(body, sph(0.024, 12), soft(0x7E6A9A, { roughness: 0.7 }), 0.055, 0.8, 0.33, false);
-    add(body, sph(0.115, 24), soft(0x6E2B45, { roughness: 0.55 }), 0, 0.66, 0.25, false).scale.set(1.18, 0.9, 0.55);
-    add(body, sph(0.07, 18), soft(0xEC7C9B, { roughness: 0.7 }), 0, 0.625, 0.3, false).scale.set(1.1, 0.6, 0.5);
-    add(body, clayBox(0.05, 0.06, 0.03, 2, 10), soft(0xFFFCF3, { roughness: 0.4 }), 0.045, 0.7, 0.305, false);
+    add(body, sph(0.024, 12), soft(0x7E6A9A, { roughness: 0.7 }), -0.055, 0.79, 0.29, false);
+    add(body, sph(0.024, 12), soft(0x7E6A9A, { roughness: 0.7 }), 0.055, 0.79, 0.29, false);
+    add(body, sph(0.115, 24), soft(0x6E2B45, { roughness: 0.55 }), 0, 0.655, 0.255, false).scale.set(1.2, 0.92, 0.5);
+    add(body, sph(0.07, 18), soft(0xEC7C9B, { roughness: 0.7 }), 0, 0.622, 0.3, false).scale.set(1.1, 0.6, 0.45);
+    add(body, clayBox(0.05, 0.06, 0.03, 2, 10), soft(0xFFFCF3, { roughness: 0.4 }), 0.045, 0.7, 0.315, false);
     [-0.22, 0.22].forEach(x => {
       add(body, sph(0.1, 20), purple, x, 1.02, -0.02).scale.set(1, 1, 0.8);
       add(body, sph(0.062, 16), soft(0xF6A9C6, { roughness: 0.85 }), x, 1.02, 0.045, false).scale.set(1, 1, 0.5);
@@ -3378,13 +3378,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const body = new THREE.Group();
     const cream = clay(cfg.color);
     add(body, sph(0.37, 32), cream, 0, 0.46, 0).scale.set(1.0, 1.18, 0.9);
-    add(body, sph(0.31, 32), cream, 0, 0.85, 0).scale.set(1.03, 1.0, 0.96);
-    add(body, sph(0.235, 28), clay(0xF9E1C2, { roughness: 0.88 }), 0, 0.85, 0.18).scale.set(1.06, 1.02, 0.44);
-    dotEye(body, -0.09, 0.875, 0.38, 0.03);
-    dotEye(body, 0.09, 0.875, 0.38, 0.03);
-    smileArc(body, 0, 0.82, 0.42, 0.045, 0.011, 0x3A2C22, true);
-    cheek(body, -0.155, 0.82, 0.37, 0.05, 0xF3B0AE);
-    cheek(body, 0.155, 0.82, 0.37, 0.05, 0xF3B0AE);
+    add(body, sph(0.31, 32), cream, 0, 0.85, 0).scale.set(1.03, 1.0, 0.9);
+    add(body, sph(0.235, 28), clay(0xF9E1C2, { roughness: 0.88 }), 0, 0.85, 0.2).scale.set(1.06, 1.02, 0.5);
+    dotEye(body, -0.09, 0.875, 0.33, 0.03);
+    dotEye(body, 0.09, 0.875, 0.33, 0.03);
+    smileArc(body, 0, 0.82, 0.355, 0.045, 0.011, 0x3A2C22, true);
+    cheek(body, -0.155, 0.82, 0.315, 0.05, 0xF3B0AE);
+    cheek(body, 0.155, 0.82, 0.315, 0.05, 0xF3B0AE);
     add(body, sph(0.07, 14), clay(0xE4D4B7), 0, 1.14, -0.02, false).scale.set(1, 0.7, 1);
     const arms = [-1, 1].map(side => {
       const arm = new THREE.Group();
@@ -3409,9 +3409,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     add(body, sph(0.4, 34), cream, 0, 0.44, 0).scale.set(1.06, 0.94, 0.86);
     add(body, sph(0.36, 32), cream, 0, 0.68, 0).scale.set(1.08, 0.86, 0.88);
     [-1, 1].forEach(side => {
-      const ear = add(body, new THREE.ConeGeometry(0.14, 0.24, 26), cream, side * 0.235, 0.92, -0.02);
-      ear.rotation.z = side * -0.16;
-      add(body, sph(0.05, 14), cream, side * 0.272, 1.01, -0.02, false);
+      const ear = add(body, new THREE.ConeGeometry(0.155, 0.26, 26), cream, side * 0.235, 0.88, -0.02);
+      ear.rotation.z = side * -0.2;
+      ear.scale.set(1, 1, 0.78);
     });
     smileArc(body, -0.135, 0.62, 0.33, 0.058, 0.016, 0x2A2320, false);
     smileArc(body, 0.135, 0.62, 0.33, 0.058, 0.016, 0x2A2320, false);
@@ -3435,12 +3435,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 
   function makeClover(cfg) {                    // 초록·노랑·연분홍·진분홍: 4엽 피클
     const body = new THREE.Group();
-    const geo = pillow(claySlab(cloverShape(0.23, 0.155), 0.26, 0.135, 9, 24), 1.0, 1.0, 0.05);
-    add(body, geo, clay(cfg.color, { roughness: 0.9 }), 0, 0.47, 0);
+    const geo = claySlab(cloverShape(0.205, 0.175), 0.24, 0.10, 8, 26);
+    add(body, geo, clay(cfg.color, { roughness: 0.9 }), 0, 0.42, 0);
     const eye = (x) => {
-      const e = add(body, sph(0.045, 18), soft(0x1E1A18, { roughness: 0.34 }), x, 0.485, 0.235, false);
-      e.scale.set(0.92, 1.55, 0.55);
-      add(body, sph(0.012, 8), soft(0xFFFFFF, { roughness: 0.3 }), x - 0.014, 0.545, 0.28, false)
+      const e = add(body, sph(0.048, 18), soft(0x1E1A18, { roughness: 0.34 }), x, 0.44, 0.215, false);
+      e.scale.set(0.92, 1.55, 0.7);
+      add(body, sph(0.013, 8), soft(0xFFFFFF, { roughness: 0.3 }), x - 0.015, 0.505, 0.25, false)
         .scale.set(1, 1, 0.5);
     };
     eye(-0.085); eye(0.085);
@@ -3450,7 +3450,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   function makeSquircle(cfg) {                  // 하크: 검정 스퀘클 + 흰 부채꼴
     const body = new THREE.Group();
     const s = roundShape([[-0.36, -0.36], [0.36, -0.36], [0.36, 0.36], [-0.36, 0.36]], 0.24);
-    const geo = pillow(claySlab(s, 0.26, 0.115, 9, 26), 0.95, 0.95, 0.045);
+    const geo = claySlab(s, 0.26, 0.115, 9, 26);
     add(body, geo, clay(cfg.color, { roughness: 0.8 }), 0, 0.48, 0);
     const f = new THREE.Shape();
     f.moveTo(-0.21, -0.01);
@@ -3460,7 +3460,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     f.bezierCurveTo(-0.04, -0.19, -0.15, -0.09, -0.21, -0.01);
     const fg = new THREE.ExtrudeGeometry(f, { depth: 0.07, bevelEnabled: true, bevelThickness: 0.035, bevelSize: 0.035, bevelSegments: 6, curveSegments: 26 });
     fg.center();
-    const fan = add(body, fg, clay(0xFBFBF8, { roughness: 0.55 }), 0.01, 0.49, 0.17);
+    const fan = add(body, fg, clay(0xFBFBF8, { roughness: 0.55 }), 0.01, 0.49, 0.215);
     fan.rotation.z = -0.08;
     return { body, arms: [], legs: [], top: 1.0 };
   }
