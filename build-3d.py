@@ -37,17 +37,29 @@ CSS = """  /* OFFICE3D-CSS:START */
   .stage-3d .office-room,.stage-3d .office-props,.stage-3d .office-actors{display:none}
   .stage-3d .office-overlay{z-index:6}
   .o3d-pills{position:absolute; inset:0; pointer-events:none; overflow:hidden}
-  .o3d-pill{
+  .o3d-tag{
     position:absolute; left:0; top:0; display:inline-flex; align-items:center; gap:5px;
-    padding:3px 9px 3px 7px; border-radius:999px; background:rgba(255,255,255,.95);
+    padding:3px 9px 3px 7px; border-radius:999px; background:rgba(255,253,248,.96);
     border:1px solid rgba(255,255,255,.98); color:#3F342D; font-size:10.5px; font-weight:800;
     letter-spacing:-.2px; white-space:nowrap; line-height:1.25;
-    box-shadow:0 3px 10px rgba(90,65,45,.20); transition:opacity .2s ease; will-change:transform;
+    box-shadow:0 4px 12px rgba(90,65,45,.22); opacity:0; transition:opacity .2s ease; will-change:transform;
   }
-  .o3d-pill.dim{opacity:.15 !important}
-  .o3d-dot{width:6px; height:6px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 2px rgba(34,197,94,.22); flex:0 0 auto}
-  .o3d-prog{display:inline-block; width:26px; height:3px; border-radius:2px; background:rgba(120,96,74,.18); overflow:hidden}
-  .o3d-prog > i{display:block; height:100%; width:0%; background:#7FC197; border-radius:2px; transition:width .18s linear}
+  .o3d-tag.on{opacity:1}
+  .o3d-tag span{font-weight:700; font-size:9.5px; color:#8C7A6C; letter-spacing:-.1px}
+  .o3d-tagdot{width:6px; height:6px; border-radius:50%; background:#7FC197; box-shadow:0 0 0 2px rgba(127,193,151,.25); flex:0 0 auto}
+  /* 3D 판에서는 구역 핀을 작고 은은한 미니 태그로 */
+  .stage-3d .office-overlay .pin{
+    font-size:9px; font-weight:700; padding:2px 7px 2px 6px; gap:3px;
+    background:rgba(255,251,244,.72); border-color:rgba(255,255,255,.5); color:#7B6858;
+    box-shadow:0 2px 7px rgba(90,65,45,.10); opacity:.68; animation:none;
+  }
+  .stage-3d .office-overlay .pin .pin-dot{width:5px; height:5px; box-shadow:0 0 0 1.5px rgba(255,255,255,.45)}
+  .stage-3d .office-overlay .pin::after{display:none}
+  .stage-3d .office-overlay .pin:hover{opacity:1; background:rgba(255,253,248,.96)}
+  .stage-3d .office-overlay .pin[aria-pressed="true"]{
+    background:rgba(255,255,255,.92); color:#5C4A3E; border-color:rgba(230,160,170,.55);
+    box-shadow:0 3px 10px rgba(90,65,45,.15); opacity:.95;
+  }
   .o3d-tip{
     position:absolute; left:0; top:0; transform:translate(-50%,-150%); z-index:8; pointer-events:none;
     padding:3px 9px; border-radius:999px; background:rgba(52,40,32,.92); color:#FFF8EF;
@@ -70,14 +82,17 @@ CSS = """  /* OFFICE3D-CSS:START */
   .o3d-chip:hover{background:rgba(240,224,206,.7); transform:translateY(-1px)}
   .o3d-chip.on{background:#FBE8E9; border-color:#E6A0AA}
   @media (max-width:720px){
-    .o3d-pill{font-size:9.5px; padding:2px 7px 2px 6px}
+    .o3d-tag{font-size:9.5px; padding:2px 7px 2px 6px}
+    .o3d-tag span{font-size:8.8px}
+    .stage-3d .office-overlay .pin{font-size:8px; padding:2px 6px 2px 5px}
     .o3d-chip{font-size:9.5px; padding:2px 8px 2px 3px}
     .o3d-chip img{width:19px; height:19px}
     .o3d-bar{bottom:6px; gap:4px; padding:5px 8px}
   }
   @media (max-width:560px){
-    .o3d-pill{font-size:8.8px; padding:2px 6px 2px 5px; gap:4px}
-    .o3d-prog{width:22px; height:2.5px}
+    .o3d-tag{font-size:8.8px; padding:2px 6px 2px 5px; gap:4px}
+    .o3d-tag span{font-size:8.2px}
+    .stage-3d .office-overlay .pin{font-size:7.6px; padding:1.5px 5px; gap:3px}
     .o3d-chip span{display:none}
     .o3d-chip{padding:2px}
   }
