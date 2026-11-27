@@ -2698,7 +2698,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     }
     const t = new THREE.CanvasTexture(c);
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(2.6, 2.6);
+    t.repeat.set(3.6, 3.6);
     t.anisotropy = 4;
     t.colorSpace = THREE.SRGBColorSpace;
     return t;
@@ -2948,9 +2948,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   wallZ.receiveShadow = wallX.receiveShadow = true;
   [wallZ, wallX].forEach((w, i) => {
     const capW = i === 0 ? R * 2 + 1.5 : WALL_T + 0.24;
-    const capD = i === 0 ? WALL_T + 0.24 : R * 2 + 1.5;
+    const capD = i === 0 ? WALL_T + 0.24 : R * 2 + 1.5 - WALL_T;
     const x = i === 0 ? 0 : -R - WALL_T / 2 + 0.06;
-    const z = i === 0 ? -R - WALL_T / 2 + 0.06 : 0;
+    const z = i === 0 ? -R - WALL_T / 2 + 0.06 : (WALL_T + 0.24) / 2;
     add(room, clayBox(capW, 0.2, capD, 4.4, 20), M.wallTrim, x, WALL_H + 0.02, z);
     add(room, clayBox(capW - 0.06, 0.46, capD - 0.06, 4.4, 20), M.wallBase, x, 0.28, z);
   });
@@ -3175,12 +3175,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   /* ── 창문 (따뜻한 채광) ─────────────────────────────────── */
   const win = group(4.2, -6.72);
   win.userData.prop = 'window';
-  add(win, clayBox(2.6, 2.0, 0.14, 3.4, 18), M.cream, 0, 1.94, 0);
-  add(win, clayBox(2.36, 1.76, 0.08, 3.2, 16), new THREE.MeshStandardMaterial({
-    color: 0xFFEDD2, emissive: 0xFFD9A8, emissiveIntensity: 0.55, roughness: 0.5
-  }), 0, 1.94, 0.08, false);
-  add(win, clayBox(0.09, 1.76, 0.05, 3, 10), M.cream, 0, 1.94, 0.13);
-  add(win, clayBox(2.36, 0.09, 0.05, 3, 10), M.cream, 0, 1.94, 0.13);
+  add(win, clayBox(2.6, 2.0, 0.16, 5.6, 20), M.cream, 0, 1.94, 0);
+  add(win, clayBox(2.3, 1.7, 0.06, 5.6, 16), new THREE.MeshStandardMaterial({
+    color: 0xFFE6C0, emissive: 0xFFCE92, emissiveIntensity: 0.5, roughness: 0.45
+  }), 0, 1.94, 0.075, false);
+  add(win, clayBox(0.09, 1.7, 0.05, 5, 10), M.cream, 0, 1.94, 0.11);
+  add(win, clayBox(2.3, 0.09, 0.05, 5, 10), M.cream, 0, 1.94, 0.11);
   add(win, clayBox(2.8, 0.14, 0.26, 3, 14), M.woodLight, 0, 0.9, 0.02);
   const winLight = new THREE.PointLight(0xFFE2B8, 4.5, 7, 2);
   winLight.position.set(0, 1.9, 0.6);
