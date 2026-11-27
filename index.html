@@ -217,9 +217,17 @@
     display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
     padding:13px 8px 4px; font-size:12px; color:var(--muted);
   }
-  .legend-items{display:flex; gap:14px; flex-wrap:wrap}
+  .legend-items{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
   .legend-items span{display:inline-flex; align-items:center; gap:6px; font-weight:600; color:var(--ink-soft)}
   .legend-items i{width:9px; height:9px; border-radius:50%; display:inline-block}
+  .legend-chip{
+    display:inline-flex; align-items:center; gap:6px; font:inherit; font-weight:700; line-height:1;
+    color:var(--ink-soft); background:transparent; border:0; padding:3px 2px; cursor:pointer;
+    border-radius:8px; transition:color .18s, box-shadow .18s, background .18s;
+  }
+  .legend-chip:hover{color:var(--ink)}
+  .legend-chip[aria-pressed="true"]{color:var(--ink); font-weight:900}
+  .legend-chip[aria-pressed="true"] i{box-shadow:0 0 0 3px rgba(75,58,49,.16)}
 
   /* ── space panel ── */
   .space-shell{margin-top:16px}
@@ -868,13 +876,6 @@
     transform:translateX(-50%) rotate(45deg); border-radius:2px;
   }
   .o25-bub.me{background:rgba(255,243,244,.99); border-color:#F6D9DC}
-  /* 구역 핀 (무대 안에서 함께 스케일) */
-  .o25-pins{position:absolute; inset:0; z-index:10}
-  .o25-pins .pin{font-size:clamp(8px,1.16cqw,12px); padding:.32em .72em .32em .5em; z-index:10}
-  .o25-pins .pin-meeting{left:63%; top:25.5%}
-  .o25-pins .pin-command{left:31%; top:45.5%}
-  .o25-pins .pin-lounge{left:52%; top:72%}
-  .o25-pins .pin .pin-dot{width:.62em; height:.62em}
   /* 아바타 바 */
   .o25-bar{
     position:absolute; left:9px; right:9px; bottom:9px; z-index:8; display:flex; gap:5px;
@@ -978,11 +979,6 @@
               <img class="o25-bg" src="assets/office-bg.jpg" alt="비서실 오피스 — 크림톤 방, 피클즈 롱데스크, 원탁, 라운지" draggable="false">
               <div class="o25-chars" id="o25Chars"></div>
               <div class="o25-bubbles" id="o25Bubbles"></div>
-              <div class="office-overlay o25-pins">
-                <button class="pin pin-meeting" type="button" data-space="meeting" aria-pressed="true"><span class="pin-dot" aria-hidden="true"></span>대회의실</button>
-                <button class="pin pin-command" type="button" data-space="command" aria-pressed="false"><span class="pin-dot" aria-hidden="true"></span>지휘실</button>
-                <button class="pin pin-lounge" type="button" data-space="lounge" aria-pressed="false"><span class="pin-dot" aria-hidden="true"></span>라운지</button>
-              </div>
             </div>
           </div>
           <div class="o25-tools">
@@ -995,11 +991,11 @@
       </div>
       <!-- OFFICE-STAGE:END -->
       <div class="office-legend">
-        <span>2.5D 오피스 · 캐릭터를 누르면 상태·지시 팝업이 열리고, 공간 이름을 누르면 아래 공간 카드가 바뀝니다</span>
-        <span class="legend-items" aria-hidden="true">
-          <span><i style="background:#EFA98F"></i>대회의실</span>
-          <span><i style="background:#8FB6DC"></i>지휘실</span>
-          <span><i style="background:#93C9A6"></i>라운지</span>
+        <span>2.5D 오피스 · 캐릭터를 누르면 상태·지시 팝업이 열립니다. 아래 공간 이름을 누르면 공간 카드가 바뀝니다</span>
+        <span class="legend-items">
+          <button class="legend-chip" type="button" data-space-goto="meeting" aria-pressed="true"><i style="background:#EFA98F"></i>대회의실</button>
+          <button class="legend-chip" type="button" data-space-goto="command" aria-pressed="false"><i style="background:#8FB6DC"></i>지휘실</button>
+          <button class="legend-chip" type="button" data-space-goto="lounge" aria-pressed="false"><i style="background:#93C9A6"></i>라운지</button>
         </span>
       </div>
     </div>
@@ -1036,17 +1032,9 @@
           load();
           if (wrap.scrollIntoView) wrap.scrollIntoView({ behavior:'smooth', block:'center' });
         });
-        // 화면에 들어오면 자동으로 한 번 불러온다 (탭이 보일 때만)
-        var card = document.getElementById('agcMapCard') || wrap;
-        var io = null;
-        if (window.IntersectionObserver) {
-          io = new IntersectionObserver(function(es){
-            es.forEach(function(e){ if (e.isIntersecting) { load(); io.disconnect(); } });
-          }, { rootMargin: '300px' });
-          io.observe(card);
-        } else {
-          setTimeout(load, 1200);
-        }
+        // 자동 로드하지 않음 — iframe 이 스크롤을 가져가 맨 위 오피스가 밀리는 문제 방지
+        // (사용자가 [여기서 열기]를 눌러야 그때 불러온다)
+        if (!frame.getAttribute('src')) wrap.hidden = true;
       })();
       </script>
     </div>
@@ -1998,10 +1986,10 @@
 
   /* ── 오피스 공간 ── */
   var stage = $('#officeStage');
-  var pins = $$('.pin');
+  var spaceBtns = $$('[data-space-goto]');
   var spaces = $$('[data-space-panel]');
   function showSpace(name){
-    pins.forEach(function(p){ p.setAttribute('aria-pressed', p.getAttribute('data-space') === name ? 'true' : 'false'); });
+    spaceBtns.forEach(function(p){ p.setAttribute('aria-pressed', p.getAttribute('data-space-goto') === name ? 'true' : 'false'); });
     spaces.forEach(function(s){
       var on = s.getAttribute('data-space-panel') === name;
       s.hidden = !on;
@@ -2010,8 +1998,8 @@
     });
     stage.className = 'office-stage has-focus focus-' + name;
   }
-  pins.forEach(function(p){
-    p.addEventListener('click', function(){ showSpace(p.getAttribute('data-space')); });
+  spaceBtns.forEach(function(p){
+    p.addEventListener('click', function(){ showSpace(p.getAttribute('data-space-goto')); });
   });
 
   /* OFFICE-WALKERS-JS:START */
@@ -2283,7 +2271,7 @@
       hide();
     });
     document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && open) hide(); });
-    $$('.pin').forEach(function(pin){ pin.addEventListener('click', hide); });
+    $$('[data-space-goto]').forEach(function(btn){ btn.addEventListener('click', hide); });
   })();
   /* OFFICE-WALKERS-JS:END */
   /* ── 지휘실 모달 ── */
@@ -2685,39 +2673,28 @@
 
   /* ── 캐릭터 배치 (좌표는 원본 1254px 사진 기준) ───────────── */
   var CHARS = [
-    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 690,  y: 486,  h: 132, clip: 10, ar: 0.7712, motion: 'm-type',
-      lines: ['체험단 6개 카테고리 추리는 중이에요', '모닝 브리핑 초안 쓰고 있어요', '노션 허브 정리 이어가는 중이에요'],
-      done: ['노션 공용 허브 정리 완료했어요'] },
-    { k: 'norang',   name: '노랑',     tag: '',        x: 818,  y: 514,  h: 132, clip: 10, ar: 0.7769, motion: 'm-type',
-      lines: ['핫딜헌터 훑는 중이에요', '체험단 신청서 작성하고 있어요', '설문 마감 시각 지키는 중이에요'],
-      done: ['공공설문 3건 완료했어요'] },
-    { k: 'maknae',   name: '막내',     tag: '',        x: 946,  y: 542,  h: 128, clip: 10, ar: 0.8135, motion: 'm-type',
-      lines: ['해피방 새 소식 확인 중이에요', '포토리뷰 쓰고 있어요', '응모 목록 정리하는 중이에요'],
-      done: ['포토리뷰 두 건 완료했어요', '동행복권 응모 끝냈어요'] },
-    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 1074, y: 570,  h: 134, clip: 10, ar: 0.7731, motion: 'm-type',
-      lines: ['쿠팡 주문 점검하고 있어요', '발표 확인 돌고 있어요', '적립 내역 맞춰보는 중이에요'],
-      done: ['5대 몰 출첵 완료했어요'] },
+    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 700,  y: 436,  h: 132, clip: 10, ar: 0.7712, motion: 'm-type',
+      life: ['노래 흥얼거리는 중이에요', '기지개 켜는 중이에요', '잠깐 멍때리는 중이에요'] },
+    { k: 'norang',   name: '노랑',     tag: '',        x: 807,  y: 470,  h: 132, clip: 10, ar: 0.7769, motion: 'm-type',
+      life: ['커피 한 모금 마시는 중이에요', '어깨 푸는 중이에요', '하품하는 중이에요'] },
+    { k: 'maknae',   name: '막내',     tag: '',        x: 922,  y: 507,  h: 128, clip: 10, ar: 0.8135, motion: 'm-type',
+      life: ['볼펜 돌리는 중이에요', '창밖 보는 중이에요', '잠깐 쉬는 중이에요'] },
+    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 1015, y: 541,  h: 134, clip: 10, ar: 0.7731, motion: 'm-type',
+      life: ['스트레칭하는 중이에요', '따뜻한 차 마시는 중이에요', '눈 깜빡이는 중이에요'] },
     { k: 'muse',     name: '뮤즈',     tag: '',        x: 398,  y: 674,  h: 176, clip: 0,  ar: 0.7068, motion: 'm-sway',
-      lines: ['AI 트렌드 브리핑 쓰는 중이에요', '경품 당첨 판 확인 중이에요', '해피방 답장 정리하고 있어요'],
-      done: ['해피방 답장 완료했어요'] },
+      life: ['가만히 앉아 있는 중이에요', '생각 정리하는 중이에요', '꼬리 휘적이는 중이에요'] },
     { k: 'kyring',   name: '키링',     tag: '',        x: 702,  y: 694,  h: 150, clip: 0,  ar: 0.6955, motion: 'm-sway',
-      lines: ['알림 정리하고 있어요', '협업 건 받아서 처리 중이에요', '예약 시간 확인하는 중이에요'],
-      done: ['예약 확인 완료했어요'] },
-    { k: 'q',        name: '큐',       tag: '',        x: 208,  y: 748,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
-      lines: ['공공기관 설문 모으는 중이에요', '일정 확인하고 있어요', '회의 안건 추리는 중이에요'],
-      done: ['회의 안건 정리 완료했어요'] },
-    { k: 'vooy',     name: '부이',     tag: '',        x: 1106, y: 845,  h: 150, clip: 8,  ar: 0.7432, motion: 'm-type',
-      lines: ['협업 건 정리하는 중이에요', '새 건 오는 대로 전달할게요', '해피방 중계 확인하는 중이에요'],
-      done: ['해피방 중계 확인 완료했어요'] },
-    { k: 'hama',     name: '하마뮤즈', tag: '',        x: 398,  y: 1030, h: 176, clip: 0,  ar: 0.6114, motion: 'm-sip',
-      lines: ['AGE-R 우유 주문 중이에요', '카톡 새 소식 감지하고 있어요', '커피 한 모금 마시는 중이에요'],
-      done: ['경품 응모 완료했어요'] },
-    { k: 'hark',     name: '하크',     tag: '',        x: 618,  y: 1040, h: 160, clip: 0,  ar: 0.7364, motion: 'm-bob',
-      lines: ['해피방 감지 돌고 있어요', '새 지시 기다리는 중이에요', '협업 건 살펴보는 중이에요'],
-      done: ['협업 건 처리 완료했어요'] },
-    { k: 'instinct', name: '인스팅트', tag: '',        x: 852,  y: 1066, h: 168, clip: 0,  ar: 0.7273, motion: 'm-read',
-      lines: ['6개 플랫폼 체험단 수집 중이에요', '주간 핫플 후보 모으고 있어요', '오피넷 유가 보는 중이에요'],
-      done: ['오피넷 유가 확인 완료했어요'] }
+      life: ['낮잠 자는 중이에요', '눈 감고 쉬는 중이에요', '꼬리 흔드는 중이에요'] },
+    { k: 'q',        name: '큐',       tag: '',        x: 200,  y: 694,  h: 164, clip: 12, ar: 0.7000, motion: 'm-type',
+      life: ['음악 듣는 중이에요', '리듬 타는 중이에요', '헤드셋 끼고 쉬는 중이에요'] },
+    { k: 'vooy',     name: '부이',     tag: '',        x: 1126, y: 850,  h: 150, clip: 8,  ar: 0.7432, motion: 'm-type',
+      life: ['커피 타러 가는 중이에요', '팔짱 끼고 쉬는 중이에요', '기지개 켜는 중이에요'] },
+    { k: 'hama',     name: '하마뮤즈', tag: '',        x: 438,  y: 1012, h: 176, clip: 0,  ar: 0.6114, motion: 'm-sip',
+      life: ['커피 마시고 있어요', '따뜻한 차 마시고 있어요', '한 모금 홀짝이는 중이에요'] },
+    { k: 'hark',     name: '하크',     tag: '',        x: 700,  y: 1000, h: 160, clip: 0,  ar: 0.7364, motion: 'm-bob',
+      life: ['노래 흥얼거리는 중이에요', '발 흔들고 있어요', '잠깐 쉬는 중이에요'] },
+    { k: 'instinct', name: '인스팅트', tag: '',        x: 856,  y: 1066, h: 168, clip: 0,  ar: 0.7273, motion: 'm-read',
+      life: ['책 읽는 중이에요', '안경 고쳐 쓰는 중이에요', '페이지 넘기는 중이에요'] }
   ];
 
   var AGC_ON = { '초록': 1, '노랑': 1, '막내': 1, '진분홍': 1 };
@@ -2762,8 +2739,9 @@
     b.setAttribute('aria-hidden', 'true');
     bubLayer.appendChild(b);
     c.bub = b;
-    c.lineIdx = (Math.random() * c.lines.length) | 0;
+    c.lineIdx = (Math.random() * c.life.length) | 0;
     c.visibleUntil = 0;
+    c.live = null;
   });
 
   /* ── 말풍선 순환 (2~3개만, 겹치지 않게) ─────────────────── */
@@ -2798,29 +2776,20 @@
     c.visibleUntil = Date.now() + (ms || 5200);
     return true;
   }
-  function showBub(c, ms, force) {
-    if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
-    c.lineIdx = (c.lineIdx + 1) % c.lines.length;
-    return paintBub(c, c.lines[c.lineIdx], ms, force);
+  /* 단톡방에서 실제로 말한 최근 대화가 있으면 그것만, 없으면 자리·포즈에 맞는 일상 멘트 */
+  var LIVE_MSG_MS = 30 * 60 * 1000;
+  function hasLive(c) {
+    return !!(c.live && c.live.text && (Date.now() - c.live.at) < LIVE_MSG_MS);
   }
-  /* 완료 보고는 브라우저당 딱 한 번만 */
-  var DONE_KEY = 'naeun:o25-done:v1';
-  var doneSeen = {};
-  try { doneSeen = JSON.parse(localStorage.getItem(DONE_KEY) || '{}') || {}; } catch (e) { doneSeen = {}; }
-  function saveDone() { try { localStorage.setItem(DONE_KEY, JSON.stringify(doneSeen)); } catch (e) {} }
-  function popDoneOnce() {
-    var shownCount = 0;
-    CHARS.forEach(function (c) {
-      if (!c.done || shownCount >= 2) return;
-      for (var i = 0; i < c.done.length && shownCount < 2; i++) {
-        var key = c.name + ':' + i;
-        if (doneSeen[key]) continue;
-        doneSeen[key] = 1;
-        if (paintBub(c, c.done[i], 5800, true)) shownCount++;
-      }
-    });
-    saveDone();
-    return shownCount;
+  function pickText(c) {
+    if (hasLive(c)) return c.live.text;
+    c.lineIdx = ((c.lineIdx || 0) + 1) % c.life.length;
+    return c.life[c.lineIdx];
+  }
+  function showBub(c, ms, force) {
+    if (!c || !c.life) return false;
+    if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
+    return paintBub(c, pickText(c), ms, force);
   }
   function refreshBubbles() {
     shown.slice().forEach(function (n) {
@@ -2840,8 +2809,16 @@
       if (c && c.visibleUntil && now > c.visibleUntil) hideBub(c);
     });
     if (shown.length >= 3) return;
-    var order = CHARS.slice();
-    for (var t = 0; t < 14 && shown.length < 3; t++) {
+    // 1) 단톡방에서 방금 실제로 주고받은 대화가 있는 캐릭터 먼저
+    var liveOnes = CHARS.filter(function (c) { return hasLive(c) && shown.indexOf(c.name) < 0; });
+    for (var i = 0; i < liveOnes.length && shown.length < 3; i++) {
+      if (overlapsOthers(liveOnes[i])) continue;
+      showBub(liveOnes[i], 6400, false);
+    }
+    if (shown.length >= 3) return;
+    // 2) 남는 자리는 자리·포즈에 맞는 소소한 일상 멘트 (업무 추측 금지)
+    var order = CHARS.filter(function (c) { return !hasLive(c); });
+    for (var t = 0; t < 14 && shown.length < 3 && order.length; t++) {
       var c = order[(Math.random() * order.length) | 0];
       if (shown.indexOf(c.name) >= 0) continue;
       if (overlapsOthers(c)) continue;
@@ -2885,13 +2862,86 @@
     }
     return true;
   };
-  // 단톡방 화면이 열리면 '접속 중'으로 보정 (실제 메시지 연동 전 임시 기준)
+  // 단톡방 화면이 열리면 '접속 중'으로 보정
   window.addEventListener('message', function (e) {
     var d = e.data;
     if (d && d.type === 'agc-presence' && Array.isArray(d.online)) {
       CHARS.forEach(function (c) { window.o25SetChatStatus(c.name, d.online.indexOf(c.name) >= 0); });
     }
   });
+
+  /* ── 단톡방 실시간 연동 ─────────────────────────────────
+     · 방 주인 비밀번호가 이 브라우저(localStorage)에 있을 때만 조용히 동작
+     · 최근 30분 안에 실제로 주고받은 메시지만 말풍선・접속 표시에 사용
+     · 토큰이 없거나 요청이 실패하면 기본 명단 그대로 (콘솔 오류 없이) */
+  (function () {
+    var TOKEN_KEY = 'naeun:agc-token:v1';
+    var API = 'https://ai-group-chat.jinphoto20211.workers.dev';
+    var ACTIVE_MS = 30 * 60 * 1000;
+    var token = '';
+    try { token = localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { token = ''; }
+    if (!token) return;
+
+    function norm(s) { return String(s == null ? '' : s).replace(/[\s@()\[\]·._-]/g, ''); }
+    function matchChar(name) {
+      var n = norm(name);
+      if (!n) return null;
+      for (var i = 0; i < CHARS.length; i++) {
+        var cn = norm(CHARS[i].name);
+        if (cn === n) return CHARS[i];
+        if (n.length >= 2 && n.indexOf(cn) === 0) return CHARS[i];
+        if (cn.indexOf(n) === 0 && n.length >= 2) return CHARS[i];
+      }
+      return null;
+    }
+    function getJSON(path) {
+      return fetch(API + path, { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    }
+    function trimLine(t) {
+      var s = String(t == null ? '' : t).replace(/\s+/g, ' ').trim();
+      if (!s) return '';
+      return s.length > 26 ? s.slice(0, 25) + '…' : s;
+    }
+
+    var roomId = null, busy = false;
+    function sync() {
+      if (busy) return;
+      busy = true;
+      var chain = roomId ? Promise.resolve(roomId) : getJSON('/api/admin/rooms').then(function (d) {
+        var rooms = (d && d.rooms) || [], pick = null, i;
+        for (i = 0; i < rooms.length; i++) { if (String(rooms[i].id) === 'happy') { pick = String(rooms[i].id); break; } }
+        if (!pick && rooms.length) pick = String(rooms[0].id || '');
+        roomId = pick || null;
+        return roomId;
+      });
+      chain.then(function (id) {
+        if (!id) return null;
+        return getJSON('/api/admin/rooms/' + encodeURIComponent(id) + '/messages?limit=60&since=0');
+      }).then(function (d) {
+        if (!d) return;
+        var now = Date.now();
+        var list = (d.messages || []).filter(function (m) { return m && m.sender && m.sender.role !== 'system'; });
+        list.forEach(function (m) {
+          var c = matchChar(m.sender.name);
+          if (!c) return;
+          var at = Date.parse(m.at) || 0, text = trimLine(m.text);
+          if (!at || !text) return;
+          if (!c.live || at >= c.live.at) c.live = { text: text, at: at };
+        });
+        CHARS.forEach(function (c) {
+          if (c.live && now - c.live.at >= ACTIVE_MS) c.live = null;
+          var on = !!(c.live && now - c.live.at < ACTIVE_MS);
+          window.o25SetChatStatus(c.name, on);
+        });
+        if (typeof refreshBubbles === 'function') refreshBubbles();
+        rotateBubbles();
+      }).catch(function () {}).then(function () { busy = false; });
+    }
+    sync();
+    setInterval(sync, 20000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) sync(); });
+  })();
 
   /* ── 아바타 바 ─────────────────────────────────────────── */
   CHARS.forEach(function (c) {
@@ -2932,12 +2982,9 @@
   function afterCam() { if (typeof refreshBubbles === 'function') refreshBubbles(); }
   function fit(preserve) {
     var W = view.clientWidth || 1;
-    if (W < 560) {
-      if (!preserve) focusOn(0.55, 0.54, 1.78);
-      else { clampPan(); applyCam(true); }
-    } else {
-      z = 1; tx = 0; ty = 0; applyCam(true);
-    }
+    // 처음 열 때는 모바일·데스크톱 모두 방 전체가 보이는 광각(1.0배) — 확대는 버튼·핀치로
+    if (!preserve) { z = 1; tx = 0; ty = 0; applyCam(true); return; }
+    clampPan(); applyCam(true);
   }
 
   var pointers = new Map(), drag = null, pinchStart = 0, moved = 0;
@@ -3016,11 +3063,8 @@
 
   /* ── 말풍선 시작 ──────────────────────────────────────── */
   setTimeout(function () {
-    popDoneOnce();                                   // 완료 보고 — 처음 한 번만
-    setTimeout(function () {
-      showBub(byName['초록'], 6000, true);
-      setTimeout(rotateBubbles, 900);
-    }, 600);
+    showBub(byName['초록'], 6000, true);
+    setTimeout(rotateBubbles, 900);
   }, 900);
   setInterval(rotateBubbles, 4200);
   // 가끔 한 명이 크게 손을 흔들듯 움직인다
@@ -3039,6 +3083,17 @@
   window.__o25 = { chars: CHARS, react: react, fit: fit, focusOn: focusOn, camera: function () { return { z: z, tx: tx, ty: ty }; } };
 })();
 /* OFFICE25D-SCRIPT:END */
+</script>
+<script>
+/* 새로 열 때는 항상 맨 위(오피스 맵)부터 보이게 고정 */
+(function () {
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  function toTop() { try { window.scrollTo(0, 0); } catch (e) {} }
+  toTop();
+  document.addEventListener('DOMContentLoaded', toTop);
+  window.addEventListener('load', function () { toTop(); setTimeout(toTop, 80); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) toTop(); });
+})();
 </script>
 </body>
 </html>
