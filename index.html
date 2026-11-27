@@ -2984,9 +2984,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
   wallFrame(-R + 0.05, 2.2, 2.1, 0.9, 0.72, Math.PI / 2, 0xD8C6A6);
 
   // 벽시계 · 벽걸이 달력 · 미니 액자
-  wallClock(room, 0.62, 2.78, -R + 0.07, 0.26);
+  wallClock(room, 0.62, 2.78, -R + 0.07, 0.3);
   wallCalendar(room, 1.62, 2.5, -R + 0.07, 0.5, 0.6);
-  wallFrame(2.4, 2.02, -R + 0.05, 0.42, 0.48, 0, 0xE7D3BE);
+  wallFrame(2.4, 2.02, -R + 0.05, 0.42, 0.48, 0, 0xA9BFA6);
 
   // 왼쪽 벽 미니 선반 + 소품
   (function wallShelf() {
@@ -3216,10 +3216,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     const c = new THREE.Group(); c.position.set(x, y, z);
     add(c, sph(r, 22), M.cream, 0, 0, 0).scale.set(1, 1, 0.3);
     add(c, sph(r * 0.84, 20), clayMat(0xFFFDF6, { roughness: 0.7 }), 0, 0, r * 0.11, false).scale.set(1, 1, 0.3);
-    add(c, clayBox(r * 0.07, r * 0.42, 0.016, 3, 8), M.dark, 0, r * 0.15, r * 0.26, false);
-    const mm = add(c, clayBox(r * 0.05, r * 0.58, 0.016, 3, 8), M.dark, r * 0.11, r * 0.19, r * 0.27, false);
+    add(c, clayBox(r * 0.07, r * 0.42, 0.016, 3, 8), M.dark, 0, r * 0.15, r * 0.42, false);
+    const mm = add(c, clayBox(r * 0.05, r * 0.58, 0.016, 3, 8), M.dark, r * 0.1, r * 0.18, r * 0.43, false);
     mm.rotation.z = -0.62;
-    add(c, sph(r * 0.06, 8), clayMat(0xE9AEB2, { roughness: 0.7 }), 0, 0, r * 0.3, false);
+    add(c, sph(r * 0.06, 8), clayMat(0xE9AEB2, { roughness: 0.7 }), 0, 0, r * 0.46, false);
     g.add(c); return c;
   }
   function wallCalendar(g, x, y, z, w, h) {
