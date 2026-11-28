@@ -21,10 +21,12 @@
     `MALL_STAMP_TOTAL`·`POINT_ITEMS`·`LOTTO_*`·`MISSIONS` 상수에서 만들어집니다.
   - 트래커 카드의 **[진행]·[패스]·[리마인드]** 버튼도 `acts()` 가 생성합니다.
   - `TRACKER-PANEL` 안에 `<script>window.TRACKER_DATA = {...}</script>` 를 함께 넣습니다.
-    오피스 맵 상단 **한 줄 브리핑**(`#todayBriefBar` ← `TRACKER_DATA.brief`)과
+    오피스 맵 상단 **두 칸 브리핑**(`#todayBriefBar` ← `TRACKER_DATA.brief`)과
     오피스 카드 아래 **핵심 3건 카드**(`#handCard` ← `TRACKER_DATA.handoff`)가 이 데이터를 읽습니다.
     → 브리핑·손필요 항목을 고칠 때는 `index.html`이 아니라 `build-tracker.py`의
-      `BRIEF_*`·`HANDOFF` 를 고치고 다시 실행하세요.
+      `BRIEF_LINES`(왼쪽 일정 칸, 한 줄에 하나) · `BRIEF_WEATHER_ICON`/`BRIEF_WEATHER_TEMP`/
+      `BRIEF_WEATHER_TIP`(오른쪽 날씨 칸) · `HANDOFF` 를 고치고 다시 실행하세요.
+      (Apple Weather 출처 표기는 글자로 붙입니다 — `&#xF8FF;` 는 안드로이드에서 깨져 쓰지 않습니다.)
   - 실행은 `python3 build-tracker.py` (마커 사이만 교체, 나머지 화면은 건드리지 않음)
 - `build-walkers.py`, `build-clay.py`, `build-people.py` — 이전 2D/3D 실험용 생성기(지금 화면에는 미사용)
 - `assets/office-bg-v3.mp4` — 지금 쓰는 오피스 배경 영상 (1280×720·38초·H.264 High yuv420p·faststart·약 2.2MB)
