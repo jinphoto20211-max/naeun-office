@@ -3363,8 +3363,9 @@
     c.visibleUntil = Date.now() + (ms || 5200);
     return true;
   }
-  /* 단톡방에서 실제로 말한 최근 대화가 있으면 그것만, 없으면 자리·포즈에 맞는 일상 멘트 */
-  var LIVE_MSG_MS = 30 * 60 * 1000;
+  /* 단톡방에서 실제로 말한 최근 대화가 있으면 그것만, 없으면 자리·포즈에 맞는 일상 멘트
+     · 말풍선에 실제 대화를 띄우는 시간 = 1분 (접속/온라인 판정은 아래 ACTIVE_MS 30분 그대로) */
+  var LIVE_MSG_MS = 60 * 1000;
   function hasLive(c) {
     return !!(c.live && c.live.text && (Date.now() - c.live.at) < LIVE_MSG_MS);
   }
@@ -3562,8 +3563,12 @@
       CHARS.forEach(function (c) {
         if (!firstSync && c.latestChatAt > c.seenChatAt) reactToChat(c);
         c.seenChatAt = c.latestChatAt;
-        if (c.live && now - c.live.at >= ACTIVE_MS) c.live = null;
-        var recent = !!(c.live && now - c.live.at < ACTIVE_MS);
+        if (c.live && now - c.live.at >= LIVE_MSG_MS) c.live = null;
+        /* recent = '최근에 실제로 말했는가' — 말풍선 유지시간(LIVE_MSG_MS 1분)과 분리해
+           접속 판정은 ACTIVE_MS(30분) 기준 그대로. c.live 는 1분이면 지워지므로
+           마지막 발언 시각(latestChatAt)으로 판단한다. */
+        var lastChatAt = Math.max(c.latestChatAt || 0, (c.live && c.live.at) || 0);
+        var recent = !!(lastChatAt && now - lastChatAt < ACTIVE_MS);
         var on;
         if (found && member[c.name]) {
           /* 명단을 정상 수신했으면 실제 판정만 — 기본값(AGC_DEFAULT)은 섞지 않는다 */
