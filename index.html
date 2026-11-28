@@ -869,9 +869,14 @@
   .o25-chr .o25-body{position:relative}
   .o25-chr .o25-body video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 5px 6px rgba(92,62,42,.16))}
   .o25-chr .o25-body.video-ready img{visibility:hidden}
-  .o25-motion-preview{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 12px;flex-wrap:wrap;font-size:12px;color:#6d5a50}
-  .o25-motion-preview button{border:1px solid #ddc6bc;border-radius:999px;background:#fff;padding:6px 12px;color:#66544a;cursor:pointer;font:inherit}
-  .o25-motion-preview button[aria-pressed="true"]{background:#d98999;border-color:#d98999;color:#fff}
+  .o25-chatter-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 12px 0;flex-wrap:wrap;font-size:12px;color:#6d5a50}
+  .o25-chatter-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid #ddc6bc;border-radius:999px;background:#fff;padding:6px 7px 6px 13px;color:#66544a;cursor:pointer;font:inherit;font-weight:800;line-height:1.2;transition:background .18s ease,border-color .18s ease,color .18s ease,transform .12s ease}
+  .o25-chatter-toggle b{font-size:10.5px;letter-spacing:.5px;padding:3px 7px;border-radius:999px;background:#efe3dd;color:#9a8377}
+  .o25-chatter-toggle[aria-pressed="true"]{background:#d98999;border-color:#d98999;color:#fff;box-shadow:0 3px 10px rgba(217,137,153,.3)}
+  .o25-chatter-toggle[aria-pressed="true"] b{background:rgba(255,255,255,.3);color:#fff}
+  .o25-chatter-toggle:active{transform:scale(.97)}
+  .o25-chatter-hint{font-size:11.5px;color:#8a7468}
+  @media (max-width:520px){.o25-chatter-bar{padding:8px 8px 0;gap:6px}.o25-chatter-hint{font-size:10.5px}}
 
   .o25-chr.face-right .o25-body img{transform:perspective(900px) rotateY(18deg); transform-origin:50% 55%}
   .o25-chr:hover img{filter:drop-shadow(0 8px 12px rgba(92,62,42,.26)) brightness(1.04)}
@@ -1058,10 +1063,9 @@
         </div>
       </div>
       <!-- OFFICE-STAGE:END -->
-          <div class="o25-motion-preview" aria-label="별큐 모션 미리보기">
-            <span>별큐 모션 미리보기</span>
-            <button type="button" data-lounge-mode="resting" aria-pressed="true">쉬는 모습</button>
-            <button type="button" data-lounge-mode="working" aria-pressed="false">일하는 모습</button>
+          <div class="o25-chatter-bar" aria-label="수다모드 설정">
+            <button class="o25-chatter-toggle" id="o25ChatterToggle" type="button" aria-pressed="true" aria-label="수다모드 켜짐 — 누르면 끕니다(실제 대화 말풍선만)">수다모드 <b>ON</b></button>
+            <span class="o25-chatter-hint" id="o25ChatterHint">일상 대화 + 실제 대화 말풍선</span>
           </div>
       <div class="office-legend">
         <span>2.5D 오피스 · 캐릭터를 누르면 상태·지시 팝업이 열립니다. 아래 공간 이름을 누르면 공간 카드가 바뀝니다</span>
@@ -2875,6 +2879,8 @@
         var video = document.createElement('video');
         video.muted = true; video.defaultMuted = true; video.loop = true;
         video.autoplay = true; video.playsInline = true; video.preload = 'auto';
+        video.className = 'o25-vid';
+        video.setAttribute('data-mode', 'resting');
         video.setAttribute('aria-hidden', 'true');
         video.src = 'assets/lounge-motion/' + c.k + '-resting.webm';
         video.addEventListener('loadeddata', function () { body.classList.add('video-ready'); });
@@ -2899,26 +2905,109 @@
     c.seenChatAt = 0;
   });
 
-  // 이 전환은 실제 업무 상태를 추측하지 않는 미리보기 전용 조작이다.
-  Array.prototype.forEach.call(document.querySelectorAll('[data-lounge-mode]'), function (button) {
-    button.addEventListener('click', function () {
-      var mode = button.getAttribute('data-lounge-mode');
-      Array.prototype.forEach.call(document.querySelectorAll('[data-lounge-mode]'), function (b) {
-        b.setAttribute('aria-pressed', b === button ? 'true' : 'false');
-      });
-      CHARS.forEach(function (c) {
-        [c.el, c.frontOverlay, c.feetOverlay].filter(Boolean).forEach(function (layer) {
-          var video = layer.querySelector('video');
-          if (!video) return;
-          video.parentNode.classList.remove('video-ready');
-          video.src = 'assets/lounge-motion/' + c.k + '-' + mode + '.webm';
-          video.load();
-          var promise = video.play();
-          if (promise && promise.catch) promise.catch(function () {});
-        });
-      });
+  /* ── 라운지 영상 — 실제 활동 상태에 맞춰 '일하는 모습' ↔ '쉬는 모습' 자동 전환 ──
+     · working  = 최근 10분 안에 실제 단톡방 메시지를 남겼거나, 방금 불려서 응답한 경우
+     · resting  = 그 외(대기·휴식). 단톡방 '온라인' 점만으로 일하는 척하지 않는다.
+     · 동선 이동 모션은 이번 범위 밖(추후 작업) — 손대지 않는다. */
+  var MOTION_WORK_MS = 10 * 60 * 1000;
+  var LOUNGE_KEYS = ['muse', 'kyring', 'hama', 'hark', 'instinct'];
+  function isWorking(c) { return !!(c && c.workUntil && Date.now() < c.workUntil); }
+  function markWorking(c, untilMs) {
+    if (!c || LOUNGE_KEYS.indexOf(c.k) < 0) return;
+    var until = untilMs || (Date.now() + MOTION_WORK_MS);
+    if (until > (c.workUntil || 0)) { c.workUntil = until; paintMotion(c); }
+  }
+  function swapLayerMotion(layer, c, mode) {
+    var body = layer.querySelector('.o25-body');
+    if (!body) return;
+    var cur = layer.querySelector('video.o25-vid');
+    if (cur && cur.getAttribute('data-mode') === mode) return;
+    var nv = document.createElement('video');
+    nv.className = 'o25-vid';
+    nv.setAttribute('data-mode', mode);
+    nv.muted = true; nv.defaultMuted = true; nv.loop = true;
+    nv.autoplay = true; nv.playsInline = true; nv.preload = 'auto';
+    nv.setAttribute('aria-hidden', 'true');
+    nv.style.opacity = '0';
+    nv.style.transition = 'opacity .4s ease';
+    nv.src = 'assets/lounge-motion/' + c.k + '-' + mode + '.webm';
+    body.appendChild(nv);
+    // 새 영상이 실제로 그려진 뒤에 캐주기 — 스프라이트로 깜빡이지 않게 크로스페이드
+    nv.addEventListener('loadeddata', function () {
+      body.classList.add('video-ready');
+      nv.style.opacity = '1';
+      if (cur) {
+        cur.style.transition = 'opacity .4s ease';
+        cur.style.opacity = '0';
+        setTimeout(function () { try { cur.pause(); } catch (e) {} cur.remove(); }, 480);
+      }
     });
-  });
+    nv.addEventListener('error', function () {
+      if (cur) { cur.style.opacity = ''; body.classList.add('video-ready'); }
+      nv.remove();
+    });
+    var p = nv.play();
+    if (p && p.catch) p.catch(function () { if (!cur) body.classList.remove('video-ready'); });
+  }
+  function paintMotion(c) {
+    if (!c || LOUNGE_KEYS.indexOf(c.k) < 0) return;
+    var mode = isWorking(c) ? 'working' : 'resting';
+    if (c.motionMode === mode) return;
+    c.motionMode = mode;
+    [c.el, c.frontOverlay, c.feetOverlay].filter(Boolean).forEach(function (layer) { swapLayerMotion(layer, c, mode); });
+  }
+  function refreshMotions() { CHARS.forEach(paintMotion); }
+  window.o25RefreshMotions = refreshMotions;
+
+  /* ── 실제 대화 한 줄 반영(단톡방·외부 창구용) ───────────── */
+  function noteChat(c, text, atMs) {
+    if (!c || !c.life) return false;
+    var s = String(text == null ? '' : text).replace(/\s+/g, ' ').trim();
+    if (!s) return false;
+    if (s.length > 26) s = s.slice(0, 25) + '…';
+    var now = Date.now();
+    var at = (atMs && !isNaN(atMs)) ? Math.min(atMs, now) : now;
+    if (!c.live || at >= c.live.at) c.live = { text: s, at: at };
+    if (at > (c.latestChatAt || 0)) c.latestChatAt = at;
+    if (now - at < MOTION_WORK_MS) markWorking(c, at + MOTION_WORK_MS);
+    return true;
+  }
+  window.o25ChatLine = function (name, text, atIso) {
+    var c = byName[name];
+    if (!c) return false;
+    var ok = noteChat(c, text, atIso ? Date.parse(atIso) : 0);
+    if (ok) { reactToChat(c); rotateBubbles(); }
+    return ok;
+  };
+  setInterval(refreshMotions, 30000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) refreshMotions(); });
+
+  /* ── 수다모드 ON / OFF ────────────────────────────────
+     · ON  = 실제 대화 말풍선 + 랜덤 일상 대화 말풍선 (지금까지 모습)
+     · OFF = 실제 대화(단톡방 메시지) 말풍선만 — 일상 멘트는 띄우지 않는다. */
+  var CHATTER_KEY = 'naeun-office:chatter:v1';
+  var chatterOn = true;
+  try { chatterOn = (localStorage.getItem(CHATTER_KEY) || '1') !== '0'; } catch (e) { chatterOn = true; }
+  var chatterBtn = document.getElementById('o25ChatterToggle');
+  var chatterHint = document.getElementById('o25ChatterHint');
+  function paintChatter() {
+    if (chatterBtn) {
+      chatterBtn.setAttribute('aria-pressed', chatterOn ? 'true' : 'false');
+      chatterBtn.setAttribute('aria-label', '수다모드 ' + (chatterOn ? '켜짐 — 누르면 끕니다(실제 대화 말풍선만)' : '꺼짐 — 누르면 켭니다(일상 대화 말풍선도 표시)'));
+      var b = chatterBtn.querySelector('b');
+      if (b) b.textContent = chatterOn ? 'ON' : 'OFF';
+    }
+    if (chatterHint) chatterHint.textContent = chatterOn ? '일상 대화 + 실제 대화 말풍선' : '실제 대화 말풍선만';
+  }
+  function setChatter(on) {
+    chatterOn = !!on;
+    try { localStorage.setItem(CHATTER_KEY, chatterOn ? '1' : '0'); } catch (e) {}
+    paintChatter();
+    if (!chatterOn) CHARS.forEach(function (c) { if (!hasLive(c)) hideBub(c); });
+    rotateBubbles();
+  }
+  if (chatterBtn) chatterBtn.addEventListener('click', function () { setChatter(!chatterOn); });
+  paintChatter();
 
   /* ── 의자 동작: 앉은 상태를 기본으로, 한 번에 한 명만 천천히 일어났다 앉는다 ── */
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -3033,6 +3122,7 @@
   }
   function showBub(c, ms, force) {
     if (!c || !c.life) return false;
+    if (!chatterOn && !hasLive(c)) return false;   // 수다모드 OFF — 실제 대화만
     if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
     return paintBub(c, pickText(c), ms, force);
   }
@@ -3061,7 +3151,9 @@
       showBub(liveOnes[i], 6400, false);
     }
     if (shown.length >= 3) return;
-    // 2) 남는 자리는 자리·포즈에 맞는 소소한 일상 멘트 (업무 추측 금지)
+    // 2) 수다모드 OFF면 여기서 멈춤 — 실제 대화 말풍선만 보여준다
+    if (!chatterOn) return;
+    // 3) 남는 자리는 자리·포즈에 맞는 소소한 일상 멘트 (업무 추측 금지)
     var order = CHARS.filter(function (c) { return !hasLive(c); });
     for (var t = 0; t < 14 && shown.length < 3 && order.length; t++) {
       var c = order[(Math.random() * order.length) | 0];
@@ -3082,6 +3174,7 @@
     setTimeout(function () { c.bub.classList.remove('me'); }, 6400);
     setTimeout(function () { if (lastPicked === c) c.el.classList.remove('on'); }, 2600);
     lastPicked = c;
+    markWorking(c, Date.now() + 90000);   // 방금 불려서 응답 중 — 잠깐 일하는 모습
     if (typeof window.openMember === 'function') window.openMember(c.name);
     var chip = barEl.querySelector('[data-chip="' + c.name + '"]');
     if (chip) {
@@ -3177,8 +3270,7 @@
           if (!c) return;
           var at = Date.parse(m.at) || 0, text = trimLine(m.text);
           if (!at || !text) return;
-          if (at > c.latestChatAt) c.latestChatAt = at;
-          if (!c.live || at >= c.live.at) c.live = { text: text, at: at };
+          noteChat(c, text, at);
         });
       }
       var member = {}, found = 0;
@@ -3202,6 +3294,7 @@
       });
       firstSync = false;
       if (typeof refreshBubbles === 'function') refreshBubbles();
+      refreshMotions();
       rotateBubbles();
     }
     function sync() {
