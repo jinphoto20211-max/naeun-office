@@ -1040,7 +1040,7 @@ def build(path):
         _, post = rest.split("<!-- TRACKER-PANEL:END -->", 1)
         html = pre + "<!-- TRACKER-PANEL:START -->\n" + body + "\n    <!-- TRACKER-PANEL:END -->" + post
     else:
-        anchor = "  <!-- ═══ 스크랩 ═══ -->"
+        anchor = "  <!-- ═══ 작업실 ═══ -->"
         if anchor not in html:
             raise SystemExit("panel anchor not found")
         html = html.replace(anchor, (PANEL_TMPL % body) + anchor, 1)
