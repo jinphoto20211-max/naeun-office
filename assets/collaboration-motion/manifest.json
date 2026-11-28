@@ -6,7 +6,11 @@
     "position": "character center"
   },
   "background_reference": "previews/office-background-4x3.png",
-  "route_reference_image": "user-provided 36153.png",
+  "route_reference_image": "user-provided 36155.png",
+  "seat_alignment": "Aligned each start/return center to the original scene's character silhouette; route via/target points retained.",
+  "start_pose_reference": "user-provided 36227.jpg",
+  "walking_pose_reference": "user-provided 36228.jpg",
+  "start_pose_note": "StarCue uses the seated sprite for start/return holds and the walking sprite while moving; crown and wink are preserved in both.",
   "format": "VP9 WebM with transparent alpha; character sprite only",
   "playback": {
     "fps": 12,
@@ -20,11 +24,13 @@
       "key": "q",
       "display": "큐 · 파란 세모",
       "sprite": "assets/chars/q.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-q.webm",
       "start_center_px": [
-        735,
-        694
+        750,
+        663
       ],
       "outbound_via_px": [
         [
@@ -66,11 +72,13 @@
       "key": "starcue",
       "display": "별큐 · 왕관 쓴 윙크 노란 별",
       "sprite": "assets/chars/starcue.png",
+      "start_return_pose_sprite": "assets/chars/starcue-seated.png",
+      "walking_pose_sprite": "assets/chars/starcue-walking.png",
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-starcue.webm",
       "start_center_px": [
-        673,
-        860
+        658,
+        856
       ],
       "outbound_via_px": [
         [
@@ -112,11 +120,13 @@
       "key": "chorok",
       "display": "초록 · 노트북 자리",
       "sprite": "assets/chars/chorok.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-chorok.webm",
       "start_center_px": [
-        1238,
-        457
+        1242,
+        458
       ],
       "outbound_via_px": [
         [
@@ -166,24 +176,30 @@
       "key": "norang",
       "display": "노랑 · 일반 노랑 캐릭터",
       "sprite": "assets/chars/norang.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-norang.webm",
       "start_center_px": [
-        1390,
-        510
+        1388,
+        539
       ],
       "outbound_via_px": [
         [
-          1350,
-          640
+          1330,
+          660
         ],
         [
-          1450,
-          740
+          1360,
+          760
         ],
         [
-          1500,
-          850
+          1420,
+          820
+        ],
+        [
+          1490,
+          870
         ]
       ],
       "target_center_px": [
@@ -210,29 +226,39 @@
           810
         ]
       ],
-      "route_adjustment": "중앙 테이블 동쪽의 열린 바닥으로 우회"
+      "route_adjustment": "좌석에서 빠져나온 뒤 중앙 회의 테이블 동쪽 열린 통로를 지나 목표점으로 접근"
     },
     {
       "key": "xeye",
       "display": "연분홍 X-eye",
       "sprite": "assets/chars/instinct.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [
         "assets/lounge-motion/instinct-working.webm",
         "assets/lounge-motion/instinct-resting.webm"
       ],
       "collaboration_clip": "assets/collaboration-motion/collab-xeye.webm",
       "start_center_px": [
-        1481,
-        591
+        1476,
+        590
       ],
       "outbound_via_px": [
         [
-          1450,
-          730
+          1370,
+          700
+        ],
+        [
+          1370,
+          820
+        ],
+        [
+          1420,
+          890
         ],
         [
           1470,
-          830
+          910
         ]
       ],
       "target_center_px": [
@@ -259,26 +285,32 @@
           930
         ]
       ],
-      "route_adjustment": ""
+      "route_adjustment": "노트북 행에서 서쪽으로 이탈한 뒤 회의 테이블 동쪽 통로를 따라 목표점으로 접근"
     },
     {
       "key": "jinpink",
       "display": "진분홍",
       "sprite": "assets/chars/jinpink.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-jinpink.webm",
       "start_center_px": [
-        1631,
-        667
+        1632,
+        674
       ],
       "outbound_via_px": [
         [
-          1590,
-          760
+          1600,
+          790
         ],
         [
-          1530,
-          850
+          1460,
+          820
+        ],
+        [
+          1450,
+          900
         ]
       ],
       "target_center_px": [
@@ -305,17 +337,19 @@
           930
         ]
       ],
-      "route_adjustment": ""
+      "route_adjustment": "좌석에서 노트북 행 끝 열린 바닥으로 빠져나온 뒤 오른쪽 데스크 서쪽 통로로 우회"
     },
     {
       "key": "vooy-pink-triangle",
       "display": "부이 · 분홍 세모",
       "sprite": "assets/chars/maknae.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-vooy-pink-triangle.webm",
       "start_center_px": [
-        1686,
-        891
+        1690,
+        887
       ],
       "outbound_via_px": [
         [
@@ -357,11 +391,13 @@
       "key": "muse-white",
       "display": "뮤즈 · 옆의 하얀 캐릭터",
       "sprite": "assets/chars/vooy.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [],
       "collaboration_clip": "assets/collaboration-motion/collab-muse-white.webm",
       "start_center_px": [
-        1015,
-        768
+        1009,
+        811
       ],
       "outbound_via_px": [
         [
@@ -407,14 +443,16 @@
       "key": "kyring-cat",
       "display": "키링 · 흰 고양이",
       "sprite": "assets/chars/muse.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [
         "assets/lounge-motion/muse-working.webm",
         "assets/lounge-motion/muse-resting.webm"
       ],
       "collaboration_clip": "assets/collaboration-motion/collab-kyring-cat.webm",
       "start_center_px": [
-        1222,
-        770
+        1195,
+        761
       ],
       "outbound_via_px": [
         [
@@ -460,14 +498,16 @@
       "key": "hama",
       "display": "하마뮤즈 · 커피 든 보라 하마",
       "sprite": "assets/chars/hama.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [
         "assets/lounge-motion/hama-working.webm",
         "assets/lounge-motion/hama-resting.webm"
       ],
       "collaboration_clip": "assets/collaboration-motion/collab-hama.webm",
       "start_center_px": [
-        1000,
-        1187
+        964,
+        1171
       ],
       "outbound_via_px": [
         [
@@ -509,14 +549,16 @@
       "key": "hark",
       "display": "하크 · 검정 캐릭터",
       "sprite": "assets/chars/hark.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [
         "assets/lounge-motion/hark-working.webm",
         "assets/lounge-motion/hark-resting.webm"
       ],
       "collaboration_clip": "assets/collaboration-motion/collab-hark.webm",
       "start_center_px": [
-        1154,
-        1164
+        1158,
+        1149
       ],
       "outbound_via_px": [
         [
@@ -562,14 +604,16 @@
       "key": "instinct-i",
       "display": "인스팅트 · I 캐릭터",
       "sprite": "assets/chars/kyring.png",
+      "start_return_pose_sprite": null,
+      "walking_pose_sprite": null,
       "existing_work_rest_clips": [
         "assets/lounge-motion/kyring-working.webm",
         "assets/lounge-motion/kyring-resting.webm"
       ],
       "collaboration_clip": "assets/collaboration-motion/collab-instinct-i.webm",
       "start_center_px": [
-        1293,
-        1195
+        1249,
+        1211
       ],
       "outbound_via_px": [
         [

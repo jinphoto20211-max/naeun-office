@@ -30,23 +30,23 @@ END_HOLD = 0.45
 CLIP_SECONDS = START_HOLD + OUTBOUND + COLLAB_HOLD + RETURN + END_HOLD
 
 # Route positions are character-center coordinates on the supplied 2368 x 1776 image.
-# The two adjusted routes keep their start/return seats and avoid the fixed white-cat seat.
+# Seat centers match the original scene; some via points were refined around furniture while keeping targets.
 ROUTES = [
     {
         "key": "q", "display": "큐 · 파란 세모", "sprite": "q",
-        "seat": [735, 694], "via": [[800, 730], [835, 785]], "target": [860, 810],
+        "seat": [750, 663], "via": [[800, 730], [835, 785]], "target": [860, 810],
         "original": [[735, 694], [800, 730], [835, 785], [860, 810]],
         "group": "StarCue",
     },
     {
         "key": "starcue", "display": "별큐 · 왕관 쓴 윙크 노란 별", "sprite": "starcue",
-        "seat": [673, 860], "via": [[640, 950], [760, 1020]], "target": [860, 1030],
+        "seat": [658, 856], "via": [[640, 950], [760, 1020]], "target": [860, 1030],
         "original": [[673, 860], [770, 900], [880, 925], [1030, 930]],
         "group": "큐",
     },
     {
         "key": "chorok", "display": "초록 · 노트북 자리", "sprite": "chorok",
-        "seat": [1238, 457],
+        "seat": [1242, 458],
         "via": [[1180, 610], [1080, 650], [900, 650], [840, 820]],
         "target": [820, 1020],
         "original": [[1238, 457], [1180, 610], [1150, 720], [1150, 810]],
@@ -55,56 +55,58 @@ ROUTES = [
     },
     {
         "key": "norang", "display": "노랑 · 일반 노랑 캐릭터", "sprite": "norang",
-        "seat": [1390, 510], "via": [[1350, 640], [1450, 740], [1500, 850]], "target": [1510, 930],
+        "seat": [1388, 539], "via": [[1330, 660], [1360, 760], [1420, 820], [1490, 870]], "target": [1510, 930],
         "original": [[1390, 510], [1350, 640], [1315, 730], [1300, 810]],
         "group": "노트북 행",
-        "route_adjustment": "중앙 테이블 동쪽의 열린 바닥으로 우회",
+        "route_adjustment": "좌석에서 빠져나온 뒤 중앙 회의 테이블 동쪽 열린 통로를 지나 목표점으로 접근",
     },
     {
         "key": "xeye", "display": "연분홍 X-eye", "sprite": "instinct",
-        "seat": [1481, 591], "via": [[1450, 730], [1470, 830]], "target": [1500, 930],
+        "seat": [1476, 590], "via": [[1370, 700], [1370, 820], [1420, 890], [1470, 910]], "target": [1500, 930],
         "original": [[1481, 591], [1435, 730], [1400, 830], [1410, 930]],
         "group": "노트북 행",
+        "route_adjustment": "노트북 행에서 서쪽으로 이탈한 뒤 회의 테이블 동쪽 통로를 따라 목표점으로 접근",
     },
     {
         "key": "jinpink", "display": "진분홍", "sprite": "jinpink",
-        "seat": [1631, 667], "via": [[1590, 760], [1530, 850]], "target": [1490, 950],
+        "seat": [1632, 674], "via": [[1600, 790], [1460, 820], [1450, 900]], "target": [1490, 950],
         "original": [[1631, 667], [1590, 760], [1560, 845], [1570, 930]],
         "group": "노트북 행",
+        "route_adjustment": "좌석에서 노트북 행 끝 열린 바닥으로 빠져나온 뒤 오른쪽 데스크 서쪽 통로로 우회",
     },
     {
         "key": "vooy-pink-triangle", "display": "부이 · 분홍 세모", "sprite": "maknae",
-        "seat": [1686, 891], "via": [[1720, 920], [1740, 950]], "target": [1750, 970],
+        "seat": [1690, 887], "via": [[1720, 920], [1740, 950]], "target": [1750, 970],
         "original": [[1686, 891], [1720, 920], [1740, 950], [1750, 970]],
         "group": "데스크톱 업무 행",
     },
     {
         "key": "muse-white", "display": "뮤즈 · 옆의 하얀 캐릭터", "sprite": "vooy",
-        "seat": [1015, 768], "via": [[920, 800], [840, 900], [800, 990]], "target": [780, 1060],
+        "seat": [1009, 811], "via": [[920, 800], [840, 900], [800, 990]], "target": [780, 1060],
         "original": [[1015, 768], [965, 820], [920, 875], [900, 930]],
         "group": "라운지 허들",
     },
     {
         "key": "kyring-cat", "display": "키링 · 흰 고양이", "sprite": "muse",
-        "seat": [1222, 770], "via": [[1320, 780], [1420, 880], [1470, 970]], "target": [1480, 1020],
+        "seat": [1195, 761], "via": [[1320, 780], [1420, 880], [1470, 970]], "target": [1480, 1020],
         "original": [[1222, 770], [1280, 820], [1330, 875], [1360, 930]],
         "group": "라운지 허들",
     },
     {
         "key": "hama", "display": "하마뮤즈 · 커피 든 보라 하마", "sprite": "hama",
-        "seat": [1000, 1187], "via": [[950, 1195], [910, 1220]], "target": [880, 1240],
+        "seat": [964, 1171], "via": [[950, 1195], [910, 1220]], "target": [880, 1240],
         "original": [[1000, 1187], [950, 1195], [910, 1220], [880, 1240]],
         "group": "라운지 허들",
     },
     {
         "key": "hark", "display": "하크 · 검정 캐릭터", "sprite": "hark",
-        "seat": [1154, 1164], "via": [[1080, 1080], [1000, 1000], [930, 950]], "target": [900, 930],
+        "seat": [1158, 1149], "via": [[1080, 1080], [1000, 1000], [930, 950]], "target": [900, 930],
         "original": [[1154, 1164], [1150, 1230], [1150, 1300], [1150, 1370]],
         "group": "라운지 허들",
     },
     {
         "key": "instinct-i", "display": "인스팅트 · I 캐릭터", "sprite": "kyring",
-        "seat": [1293, 1195], "via": [[1380, 1120], [1460, 1050], [1540, 1000]], "target": [1600, 980],
+        "seat": [1249, 1211], "via": [[1380, 1120], [1460, 1050], [1540, 1000]], "target": [1600, 980],
         "original": [[1293, 1195], [1350, 1205], [1400, 1225], [1440, 1240]],
         "group": "라운지 허들",
     },
@@ -162,12 +164,52 @@ def load_sprites() -> dict[str, Image.Image]:
         image = image.crop(bbox)
         if key == "starcue":
             extrema = image.getchannel("A").getextrema()
-            coverage = sum(1 for v in image.getchannel("A").getdata() if v > 8) / (image.width * image.height)
+            coverage = np.count_nonzero(np.asarray(image.getchannel("A")) > 8) / (image.width * image.height)
             if extrema[0] != 0 or extrema[1] < 200 or coverage > 0.94:
                 raise ValueError("StarCue must be a true transparent cutout; refusing a background-filled sprite")
         width = max(1, round(image.width * CHAR_HEIGHT / image.height))
         result[key] = image.resize((width, CHAR_HEIGHT), Image.Resampling.LANCZOS)
+    seated_path = ROOT / "assets" / "chars" / "starcue-seated.png"
+    if not seated_path.exists():
+        raise FileNotFoundError(f"Missing StarCue seated start-pose sprite: {seated_path}")
+    image = Image.open(seated_path).convert("RGBA")
+    bbox = image.getchannel("A").getbbox()
+    if not bbox:
+        raise ValueError("StarCue seated sprite has no opaque subject")
+    image = image.crop(bbox)
+    alpha = image.getchannel("A")
+    coverage = np.count_nonzero(np.asarray(alpha) > 8) / (image.width * image.height)
+    if alpha.getextrema()[0] != 0 or alpha.getextrema()[1] < 200 or coverage > 0.94:
+        raise ValueError("StarCue seated sprite must be a true transparent cutout")
+    width = max(1, round(image.width * CHAR_HEIGHT / image.height))
+    result["starcue-seated"] = image.resize((width, CHAR_HEIGHT), Image.Resampling.LANCZOS)
+    walking_path = ROOT / "assets" / "chars" / "starcue-walking.png"
+    if not walking_path.exists():
+        raise FileNotFoundError(f"Missing StarCue walking-pose sprite: {walking_path}")
+    image = Image.open(walking_path).convert("RGBA")
+    bbox = image.getchannel("A").getbbox()
+    if not bbox:
+        raise ValueError("StarCue walking sprite has no opaque subject")
+    image = image.crop(bbox)
+    alpha = image.getchannel("A")
+    coverage = np.count_nonzero(np.asarray(alpha) > 8) / (image.width * image.height)
+    if alpha.getextrema()[0] != 0 or alpha.getextrema()[1] < 200 or coverage > 0.94:
+        raise ValueError("StarCue walking sprite must be a true transparent cutout")
+    width = max(1, round(image.width * CHAR_HEIGHT / image.height))
+    result["starcue-walking"] = image.resize((width, CHAR_HEIGHT), Image.Resampling.LANCZOS)
     return result
+
+
+def sprite_for(route: dict, sprites: dict[str, Image.Image], elapsed: float | None) -> Image.Image:
+    if route["key"] == "starcue":
+        if elapsed is None or elapsed <= START_HOLD or elapsed >= CLIP_SECONDS - END_HOLD:
+            return sprites["starcue-seated"]
+        walking = START_HOLD < elapsed < START_HOLD + OUTBOUND or (
+            START_HOLD + OUTBOUND + COLLAB_HOLD < elapsed < CLIP_SECONDS - END_HOLD
+        )
+        if walking:
+            return sprites["starcue-walking"]
+    return sprites[route["sprite"]]
 
 
 def draw_center(canvas: Image.Image, sprite: Image.Image, position: tuple[float, float]) -> None:
@@ -182,7 +224,7 @@ def render_alpha_frame(route: dict, sprites: dict[str, Image.Image], elapsed: fl
     x, y = route_position(route, elapsed)
     if walking:
         y -= 1.5 * (1 + math.cos(2 * math.pi * elapsed * 2.3)) / 2
-    draw_center(frame, sprites[route["sprite"]], (x, y))
+    draw_center(frame, sprite_for(route, sprites, elapsed), (x, y))
     return frame
 
 
@@ -211,7 +253,7 @@ def scene_base(background: Image.Image, sprites: dict[str, Image.Image], omit_ke
     for route in ROUTES:
         if route["key"] == omit_key:
             continue
-        draw_center(base, sprites[route["sprite"]], tuple(route["seat"]))
+        draw_center(base, sprite_for(route, sprites, None), tuple(route["seat"]))
     return base
 
 
@@ -238,7 +280,7 @@ def write_preview(background: Image.Image, sprites: dict[str, Image.Image], outd
                 walking = START_HOLD < t < START_HOLD + OUTBOUND or START_HOLD + OUTBOUND + COLLAB_HOLD < t < CLIP_SECONDS - END_HOLD
                 if walking:
                     pos = (pos[0], pos[1] - 1.5 * (1 + math.cos(2 * math.pi * t * 2.3)) / 2)
-                draw_center(frame, sprites[route["sprite"]], pos)
+                draw_center(frame, sprite_for(route, sprites, t), pos)
                 small = frame.convert("RGB").resize(scale, Image.Resampling.LANCZOS)
                 assert proc.stdin is not None
                 proc.stdin.write(small.tobytes())
@@ -292,6 +334,8 @@ def write_manifest(outdir: Path) -> None:
         points = route_points(route)
         entries.append({
             "key": route["key"], "display": route["display"], "sprite": f"assets/chars/{route['sprite']}.png",
+            "start_return_pose_sprite": "assets/chars/starcue-seated.png" if route["key"] == "starcue" else None,
+            "walking_pose_sprite": "assets/chars/starcue-walking.png" if route["key"] == "starcue" else None,
             "existing_work_rest_clips": existing,
             "collaboration_clip": f"assets/collaboration-motion/collab-{route['key']}.webm",
             "start_center_px": list(points[0]), "outbound_via_px": [list(p) for p in points[1:-1]],
@@ -303,7 +347,11 @@ def write_manifest(outdir: Path) -> None:
     data = {
         "canvas": {"width": WIDTH, "height": HEIGHT, "coordinate_origin": "top-left", "position": "character center"},
         "background_reference": "previews/office-background-4x3.png",
-        "route_reference_image": "user-provided 36153.png",
+        "route_reference_image": "user-provided 36155.png",
+        "seat_alignment": "Aligned each start/return center to the original scene's character silhouette; route via/target points retained.",
+        "start_pose_reference": "user-provided 36227.jpg",
+        "walking_pose_reference": "user-provided 36228.jpg",
+        "start_pose_note": "StarCue uses the seated sprite for start/return holds and the walking sprite while moving; crown and wink are preserved in both.",
         "format": "VP9 WebM with transparent alpha; character sprite only",
         "playback": {"fps": FPS, "duration_seconds": round(CLIP_SECONDS, 2), "start_hold": START_HOLD, "collaboration_hold": COLLAB_HOLD},
         "sequential_preview": "previews/collaboration-sequence.mp4",
@@ -314,7 +362,7 @@ def write_manifest(outdir: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--background", default="/home/ubuntu/upload/6tXLmltxYsEjpR8rI4ZBLG/36216.png")
+    parser.add_argument("--background", default=str(ROOT / "previews" / "office-background-4x3.png"))
     parser.add_argument("--skip-webm", action="store_true")
     parser.add_argument("--skip-preview", action="store_true")
     args = parser.parse_args()
@@ -325,7 +373,9 @@ def main() -> None:
     preview_dir = ROOT / "previews"
     assets_dir.mkdir(parents=True, exist_ok=True)
     preview_dir.mkdir(parents=True, exist_ok=True)
-    background.save(preview_dir / "office-background-4x3.png", optimize=True)
+    background_path = preview_dir / "office-background-4x3.png"
+    if Path(args.background).resolve() != background_path.resolve():
+        background.save(background_path, optimize=True)
     validate(ROUTES)
     sprites = load_sprites()
     if not args.skip_webm:

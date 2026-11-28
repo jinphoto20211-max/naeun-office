@@ -19,7 +19,12 @@
 | 하크 · 검정 캐릭터 | `assets/lounge-motion/hark-working.webm`, `assets/lounge-motion/hark-resting.webm` | `assets/collaboration-motion/collab-hark.webm` |
 | 인스팅트 · I 캐릭터 | `assets/lounge-motion/kyring-working.webm`, `assets/lounge-motion/kyring-resting.webm` | `assets/collaboration-motion/collab-instinct-i.webm` |
 
-기존 업무·휴식 클립은 재생성하거나 수정하지 않았습니다. 배경 없는 원본 경로, 좌표, 사용 스프라이트, 기존/추가 모션 매핑은 `assets/collaboration-motion/manifest.json`에 기록됩니다. 좌석과 장애물을 피하도록 일부 제안 경로를 조정했으며, 원래 제안 경로도 매니페스트에 남겼습니다.
+기존 업무·휴식 클립은 재생성하거나 수정하지 않았습니다. 배경 없는 원본 경로, 좌표, 사용 스프라이트, 기존/추가 모션 매핑은 `assets/collaboration-motion/manifest.json`에 기록됩니다. 12개 경로를 배경에 겹쳐 확인하고, 책상·회의 테이블·카운터·좌석을 가로지르는 것으로 보인 일부 경유점을 열린 바닥 쪽으로 조정했습니다. 시작 좌석에서 나오는 첫 구간과 지정된 도착점에 접근하는 마지막 구간은 원래 위치가 가구와 가까워 짧은 예외가 있을 수 있으며, 이전 제안 경로도 매니페스트에 남겼습니다.
+
+## 원본 위치 보정
+
+사용자가 제공한 원본 장면(36155.png)과 캐릭터 없는 배경을 대조해 12명의 시작·복귀 좌석 중심을 다시 맞췄습니다. 캐릭터-스프라이트 매핑과 좌석·도착점은 유지하고, 가구를 피해 갈 수 있도록 일부 경유점만 다시 배치했습니다.
+별큐는 36227.jpg 참고의 앉은 스프라이트를 시작·복귀 정지 구간에, 36228.jpg 참고의 걷는 스프라이트를 이동 구간에 사용합니다. 두 자세 모두 왕관과 윙크를 유지하며, 별도 투명 캐릭터 컷아웃으로 렌더링합니다.
 
 ## 미리보기
 
