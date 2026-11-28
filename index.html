@@ -3054,7 +3054,7 @@
     }
     el.style.setProperty('--sd', (Math.random() * 2.4).toFixed(2) + 's');
     el.style.setProperty('--dur', (c.motion === 'm-type' ? (1.1 + Math.random() * 0.55) : (4.8 + Math.random() * 2.0)).toFixed(2) + 's');
-    el.addEventListener('click', function (e) { e.stopPropagation(); react(c); });
+    el.addEventListener('click', function (e) { e.stopPropagation(); if (moved > 8) return; react(c); });
     el.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); react(c); }
     });
@@ -3642,7 +3642,9 @@
   var pointers = new Map(), drag = null, pinchStart = 0, moved = 0;
   view.addEventListener('pointerdown', function (e) {
     if (e.target.closest('.o25-bar') || e.target.closest('.o25-tool')) return;
-    view.setPointerCapture(e.pointerId);
+    /* 캐릭터를 누를 때는 포인터를 붙잡지 않는다 — 붙잡으면 mouseup 이 view 로 가서
+       click 이 캐릭터에 도착하지 않아 상태·지시 팝업이 열리지 않는다. */
+    if (!e.target.closest('.o25-chr')) view.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pointers.size === 1) { drag = { x: e.clientX, y: e.clientY }; moved = 0; view.classList.add('dragging'); }
     if (pointers.size === 2) pinchStart = pinchDist();
@@ -3680,6 +3682,8 @@
   }
   view.addEventListener('pointerup', endPointer);
   view.addEventListener('pointercancel', endPointer);
+  window.addEventListener('pointerup', endPointer);
+  window.addEventListener('pointercancel', endPointer);
   function pinchDist() {
     var p = [...pointers.values()];
     if (p.length < 2) return 0;
