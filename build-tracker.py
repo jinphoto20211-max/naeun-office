@@ -946,6 +946,9 @@ RESET_CSS = """
   .hub-reset-i.nodate{background:#FBF9F5; border-style:dashed}
   .hub-reset-v.nodate{color:var(--muted); font-weight:700; letter-spacing:-.2px}
   .hub-reset-d.unknown{background:#F1EDE6; border:1px dashed #D8C7B4; color:#7A6656}
+  @media (max-width:900px){
+    .hub-reset-i{flex:1 1 100%}
+  }
 """
 
 NAV_BTN = ('    <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" '
