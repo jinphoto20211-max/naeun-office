@@ -195,7 +195,11 @@ VIDEO_RESETS = [
 #   (11/28 이슬비 3~10°C·강수 58% → 밤 맑음 / 11/29 맑음 0~8°C·강수 0%)
 BRIEF_DATE = "2026-11-28"
 BRIEF_LABEL = "11/28(토)"
-BRIEF_WEATHER = "대구 이슬비 3~10°C → 밤 맑음 · 내일 맑음 0~8°C"
+# 오른쪽 날씨 칸 — 위 줄: 날씨 기호 + 기온 / 아래 줄: 짧은 행동 팁 (Apple Weather 출처는 화면에서 붙임)
+BRIEF_WEATHER_ICON = "☀️"
+BRIEF_WEATHER_TEMP = "3~10°C"
+BRIEF_WEATHER_TIP = "밤 맑음 · 내일 0~8°C"
+# 왼쪽 칸 — 오늘 일정·할 일 (한 줄에 하나씩)
 BRIEF_LINES = [
     "22~24시 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증",
     "내일(11/29) 펀드 시험 — 아침 응원 메시지 준비",
@@ -428,8 +432,12 @@ def tracker_data_js():
         "brief": {
             "date": BRIEF_DATE,
             "label": BRIEF_LABEL,
-            "weather": BRIEF_WEATHER,
             "items": BRIEF_LINES,
+            "weather": {
+                "icon": BRIEF_WEATHER_ICON,
+                "temp": BRIEF_WEATHER_TEMP,
+                "tip": BRIEF_WEATHER_TIP,
+            },
         },
         "handoff": [
             {"id": i, "owner": w, "title": t, "need": n, "mins": m,
