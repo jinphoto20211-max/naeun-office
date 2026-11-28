@@ -118,7 +118,7 @@
   .office-stage{
     position:relative; border-radius:20px; overflow:hidden; background:#F3E9D9;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.6), inset 0 10px 30px rgba(120,88,58,.06);
-    aspect-ratio:1/1;
+    aspect-ratio:4/3;
   }
   .office-zoom{position:absolute; inset:0; transform-origin:50% 50%; transition:transform .75s cubic-bezier(.2,.8,.2,1)}
   .office-zoom > img{display:block; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none}
@@ -842,13 +842,13 @@
   /* OFFICE-WALKERS-CSS:END */
   /* OFFICE25D-CSS:START */
   .office-card{padding:14px}
-  .office-stage{aspect-ratio:1/1; overflow:hidden; background:#2A2320}
+  .office-stage{aspect-ratio:4/3; overflow:hidden; background:#2A2320}
   .o25{position:absolute; inset:0; overflow:hidden; border-radius:20px; background:#241E1C; container-type:inline-size}
   .o25-view{position:absolute; inset:0; overflow:hidden; touch-action:pan-y; cursor:grab; -webkit-tap-highlight-color:transparent}
   .o25-view.dragging{cursor:grabbing}
   .o25-stage{position:absolute; left:0; top:0; width:100%; height:100%; transform-origin:0 0; will-change:transform; transition:transform .5s cubic-bezier(.22,.8,.28,1)}
   .o25-still .o25-stage{transition:none}
-  .o25-bg{position:absolute; inset:0; width:100%; height:100%; display:block; user-select:none; -webkit-user-drag:none; -webkit-touch-callout:none}
+  .o25-bg{position:absolute; inset:0; width:100%; height:100%; display:block; object-fit:cover; user-select:none; -webkit-user-drag:none; -webkit-touch-callout:none}
   .o25-chars{position:absolute; inset:0; z-index:1}
   .o25-coffee-fg{position:absolute; left:33.493%; top:47.687%; width:30.303%; height:13.397%; z-index:2;
     display:block; pointer-events:none; user-select:none; -webkit-user-drag:none}
@@ -864,6 +864,22 @@
   .o25-stand-layer .o25-chr{pointer-events:auto}
   .o25-stand-layer .o25-head-pop,.o25-stand-layer .o25-desk-pop{pointer-events:none!important; z-index:260!important}
   .o25-chr{position:absolute; will-change:transform; cursor:pointer; -webkit-tap-highlight-color:transparent}
+  /* 배경 그림에 캐릭터가 이미 그려진 모드 — 개별 그림/영상은 감추고 투명 클릭 영역만 남긴다 */
+  .o25-bare .o25-fg,
+  .o25-bare .o25-laptop-arms-fg,
+  .o25-bare .o25-coffee-fg,
+  .o25-bare .o25-static-chair{display:none !important}
+  .o25-bare .o25-chr{transform:translateX(-50%); border-radius:16px}
+  .o25-bare .o25-chr .o25-body{display:none !important}
+  .o25-bare .o25-chr::before{
+    content:""; position:absolute; inset:-6%; border-radius:16px; opacity:0; transition:opacity .22s ease;
+    background:radial-gradient(closest-side, rgba(255,246,222,.42), rgba(255,226,170,.18) 62%, rgba(255,226,170,0) 100%);
+    box-shadow:inset 0 0 0 1.5px rgba(255,248,230,.55);
+  }
+  .o25-bare .o25-chr:hover::before,
+  .o25-bare .o25-chr:focus-visible::before,
+  .o25-bare .o25-chr.on::before{opacity:1}
+  .o25-bare .o25-chr:focus-visible{outline:none}
   .o25-body{display:block; width:100%; height:100%; transform-origin:50% 100%; will-change:transform}
   .o25-chr img{display:block; width:100%; height:100%; filter:drop-shadow(0 5px 6px rgba(92,62,42,.16)); transition:filter .22s ease}
   .o25-chr .o25-body{position:relative}
@@ -925,7 +941,7 @@
   /* 말풍선 */
   .o25-bubbles{position:absolute; inset:0; pointer-events:none; z-index:20; overflow:visible}
   .o25-bub{
-    position:absolute; transform:translate(-50%,-100%) scale(.82); transform-origin:50% 100%;
+    position:absolute; transform:translate(-50%,-100%) scale(calc(.82 * var(--bz,1))); transform-origin:50% 100%;
     opacity:0; transition:opacity .28s ease, transform .36s cubic-bezier(.2,.9,.3,1.25);
     max-width:60cqw; padding:.42em .72em .44em; border-radius:13px;
     background:rgba(255,253,248,.97); border:1px solid rgba(255,255,255,.92);
@@ -933,7 +949,7 @@
     color:#43362E; text-align:center; white-space:nowrap;
     box-shadow:0 7px 18px rgba(90,60,40,.20), 0 1px 2px rgba(90,60,40,.10);
   }
-  .o25-bub.on{opacity:1; transform:translate(-50%,-100%) scale(1)}
+  .o25-bub.on{opacity:1; transform:translate(-50%,-100%) scale(var(--bz,1))}
   .o25-bub-t{display:flex; align-items:center; justify-content:center; gap:.42em; font-weight:800}
   .o25-bub-dot{width:.52em; height:.52em; border-radius:50%; background:#C2B8AE; flex:0 0 auto; box-shadow:0 0 0 .16em rgba(194,184,174,.22)}
   .o25-bub-dot.on{background:#22c55e; box-shadow:0 0 0 .16em rgba(34,197,94,.20)}
@@ -1011,7 +1027,7 @@
       <button class="cmd-btn" id="openCmdTop" type="button">💬 지휘실에서 지시하기</button>
     </div>
     <div class="chips">
-      <span class="chip live" id="statusChip"><span class="dot" id="statusDot" aria-hidden="true"></span><span id="statusChipText">비서 10명 · 온라인 6 · 대기 4</span></span>
+      <span class="chip live" id="statusChip"><span class="dot" id="statusDot" aria-hidden="true"></span><span id="statusChipText">비서 13명 · 단톡방 연결 대기</span></span>
       <span class="chip clock-chip" id="clockChip" aria-live="off">오늘</span>
       <span class="chip" id="oiChip" title="막내의 분신 — 별도 인원이 아니라 텔레그램 중계 창구입니다">🥒 오이 · 막내 분신 · 텔레그램 중계</span>
     </div>
@@ -1032,7 +1048,7 @@
     <div class="section-head">
       <div>
         <h2>오피스 맵</h2>
-        <p>대회의실 · 지휘실 · 라운지, 세 공간에 열한 명의 비서가 살아 움직입니다. (막내 분신 오이는 텔레그램에서 중계)</p>
+        <p>AI 비서 오피스에 열세 명의 비서가 둥지를 틀고 있어요. 캐릭터를 누르면 상태·지시 팝업이 열립니다. (막내 분신 오이는 텔레그램에서 중계)</p>
       </div>
       <button class="cmd-btn" id="openCmdMap" type="button">💬 지휘실에서 지시하기</button>
     </div>
@@ -1040,10 +1056,10 @@
     <div class="card office-card">
       <!-- OFFICE-STAGE:START -->
       <div class="office-stage" id="officeStage">
-        <div class="o25" id="o25">
+        <div class="o25 o25-bare" id="o25">
           <div class="o25-view" id="o25View">
             <div class="o25-stage" id="o25Stage">
-              <img class="o25-bg" src="assets/office-bg.jpg" alt="비서실 오피스 — 크림톤 방, 피클즈 롱데스크, 원탁, 라운지" draggable="false">
+              <img class="o25-bg" src="assets/office-bg-v2.jpg?v=20261128b" alt="AI 비서 오피스 — 열세 명의 비서가 책상·원탁·라운지에 앉아 있는 오피스" draggable="false">
               <div class="o25-chars" id="o25Chars"></div>
               <img class="o25-coffee-fg" src="assets/coffee-table-fg.webp" alt="" aria-hidden="true" draggable="false">
               <img class="o25-fg" src="assets/office-fg.png?v=20261128" alt="" aria-hidden="true" draggable="false">
@@ -1068,12 +1084,7 @@
             <span class="o25-chatter-hint" id="o25ChatterHint">일상 대화 + 실제 대화 말풍선</span>
           </div>
       <div class="office-legend">
-        <span>2.5D 오피스 · 캐릭터를 누르면 상태·지시 팝업이 열립니다. 아래 공간 이름을 누르면 공간 카드가 바뀝니다</span>
-        <span class="legend-items">
-          <button class="legend-chip" type="button" data-space-goto="meeting" aria-pressed="true"><i style="background:#EFA98F"></i>대회의실</button>
-          <button class="legend-chip" type="button" data-space-goto="command" aria-pressed="false"><i style="background:#8FB6DC"></i>지휘실</button>
-          <button class="legend-chip" type="button" data-space-goto="lounge" aria-pressed="false"><i style="background:#93C9A6"></i>라운지</button>
-        </span>
+        <span>2.5D 오피스 · 캐릭터를 누르면 상태·지시 팝업이 열립니다. 지도는 끌어서 이동, 두 손가락(또는 오른쪽 위 ⊞ ⊟ ⤢)으로 확대·축소할 수 있어요.</span>
       </div>
     </div>
 
@@ -1622,13 +1633,13 @@
     <div class="section-head">
       <div>
         <h2>비서현황</h2>
-        <p>피클 단톡방(<b>해피방</b>)에 입주한 비서 <b id="rosterTotal">11</b>명의 담당 영역입니다. 단톡방에서 새로 감지된 멤버는 카드가 저절로 생기고, 오이는 막내의 분신으로 텔레그램 중계를 맡아 별도 인원에 넣지 않았습니다.</p>
+        <p>피클 단톡방(<b>해피방</b>)에 입주한 비서 <b id="rosterTotal">13</b>명의 담당 영역입니다. 단톡방에서 새로 감지된 멤버는 카드가 저절로 생기고, 오이는 막내의 분신으로 텔레그램 중계를 맡아 별도 인원에 넣지 않았습니다.</p>
       </div>
     </div>
 
     <p class="mini-note" style="margin:-4px 2px 12px" id="rosterFeed" aria-live="polite">상태 배지는 피클 단톡방 접속 상태를 20초마다 다시 확인해 그대로 보여줍니다. <span id="rosterFeedState">아직 단톡방에 연결되지 않아 모두 오프라인으로 표시합니다.</span></p>
     <div class="filters" role="group" aria-label="담당 영역 필터">
-      <button class="filter" type="button" data-filter="all" aria-pressed="true">전체 11</button>
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">전체 13</button>
       <button class="filter" type="button" data-filter="control" aria-pressed="false">관제·브리핑</button>
       <button class="filter" type="button" data-filter="review" aria-pressed="false">체험단·리뷰</button>
       <button class="filter" type="button" data-filter="deal" aria-pressed="false">핫딜·쇼핑</button>
@@ -1829,6 +1840,44 @@
         <div class="agent-foot">
           <div class="area-tags"><span class="area-tag">협업</span></div>
           <button class="ask" type="button" data-ask="큐">지시하기 →</button>
+        </div>
+      </article>
+
+      <article class="agent" data-member="큐(별)" data-areas="relay">
+        <div class="agent-top">
+          <div class="agent-av" style="background:#FBF4DC" aria-hidden="true"><img src="assets/chars/q_star.png" alt=""></div>
+          <div style="flex:1 1 auto; min-width:0">
+            <div class="agent-name"><b>큐(별)</b><span class="handle">StarCue · 해피방</span></div>
+            <p class="agent-role">별 모양 큐 · 해피방 협업 멤버</p>
+          </div>
+          <button class="status idle" type="button" data-status-btn="큐(별)" data-s="idle" aria-label="큐(별) · 단톡방 접속 상태">대기</button>
+        </div>
+        <ul>
+          <li>피클 단톡방(happy 방)에 상주</li>
+          <li>왼쪽 아래 책상 자리에서 대기</li>
+        </ul>
+        <div class="agent-foot">
+          <div class="area-tags"><span class="area-tag">협업</span></div>
+          <button class="ask" type="button" data-ask="큐(별)">지시하기 →</button>
+        </div>
+      </article>
+
+      <article class="agent" data-member="큐(하트)" data-areas="relay">
+        <div class="agent-top">
+          <div class="agent-av" style="background:#FBE7E8" aria-hidden="true"><img src="assets/chars/q_heart.png" alt=""></div>
+          <div style="flex:1 1 auto; min-width:0">
+            <div class="agent-name"><b>큐(하트)</b><span class="handle">HeartCue · 해피방</span></div>
+            <p class="agent-role">하트 모양 큐 · 해피방 협업 멤버</p>
+          </div>
+          <button class="status idle" type="button" data-status-btn="큐(하트)" data-s="idle" aria-label="큐(하트) · 단톡방 접속 상태">대기</button>
+        </div>
+        <ul>
+          <li>피클 단톡방(happy 방)에 상주</li>
+          <li>왼쪽 위 책상 자리에서 대기</li>
+        </ul>
+        <div class="agent-foot">
+          <div class="area-tags"><span class="area-tag">협업</span></div>
+          <button class="ask" type="button" data-ask="큐(하트)">지시하기 →</button>
         </div>
       </article>
 
@@ -2520,6 +2569,10 @@
       duties:['해피방에서 협업 건을 받아 처리'] },
     { name:'큐', img:'data:image/png;base64,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', handle:'해피방', role:'해피방 협업 멤버', status:'idle',
       duties:['공공기관 설문 건을 모아 전달'] },
+    { name:'큐(별)', img:'assets/chars/q_star.png', handle:'StarCue · 해피방', role:'별 모양 큐 · 해피방 협업 멤버', status:'idle',
+      duties:['피클 단톡방(happy 방)에 상주','말풍선·아바타 색으로 접속 상태 표시','영상 주간 한도 12/28(월) 09:20 초기화'] },
+    { name:'큐(하트)', img:'assets/chars/q_heart.png', handle:'HeartCue · 해피방', role:'하트 모양 큐 · 해피방 협업 멤버', status:'idle',
+      duties:['피클 단톡방(happy 방)에 상주','말풍선·아바타 색으로 접속 상태 표시','영상 주간 한도 12/09(수) 20:22 초기화'] },
     { name:'키링', img:'data:image/png;base64,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', handle:'해피방', role:'해피방 협업 멤버', status:'idle',
       duties:['해피방에서 협업 건을 받아 처리'] },
     { name:'오이', emoji:'🥒', handle:'막내 분신 · 텔레그램 중계', role:'막내의 분신 — 해피방 메시지 중계·감지 (인원에 미포함)', status:'online', support:true,
@@ -2561,7 +2614,7 @@
     '연분홍':'막내','막내피클':'막내','연분홍이':'막내',
     '진분홍이':'진분홍','분홍이':'진분홍',
     '하마':'하마뮤즈','하마보스':'하마뮤즈','뮤즈이':'뮤즈',
-    '키링이':'키링','부이봇':'부이','큐브':'큐','인스팅트ai':'인스팅트'
+    '키링이':'키링','부이봇':'부이','큐브':'큐','별큐':'큐(별)','하트큐':'큐(하트)','인스팅트ai':'인스팅트'
   };
   function findRosterCard(raw){
     var k = rosNorm(raw), i, t;
@@ -2897,7 +2950,9 @@
 /* OFFICE25D-SCRIPT:START */
 (function () {
   "use strict";
-  var BASE = 1254;                                  // 원본 사진 기준 좌표계
+  var BASE = 1254;                                  // 옛 스프라이트 좌표계 (SPRITES=true 로 되살릴 때만 씀)
+  var BASE_W = 1448, BASE_H = 1086;                 // 새 오피스 사진(4:3) 기준 좌표계
+  var SPRITES = false;                              // false = 배경 그림 속 캐릭터만 쓰고 말풍선·클릭만 얹는다
   var stageRoot = document.getElementById('o25');
   var view = document.getElementById('o25View');
   var stageEl = document.getElementById('o25Stage');
@@ -2907,29 +2962,49 @@
   var barEl = document.getElementById('o25Bar');
   if (!stageRoot || !view || !stageEl || !charLayer || !standLayer || !bubLayer) return;
 
-  /* ── 캐릭터 배치 (좌표는 원본 1254px 사진 기준) ───────────── */
+  /* ── 캐릭터 배치 ──────────────────────────────────────────
+     새 오피스 사진(1448×1086) 안에서 캐릭터가 실제로 앉아 있는 자리를 재서 넣었다.
+     · cx, cy  : 클릭 영역의 중심 (사진 픽셀)
+     · hw, hh  : 클릭 영역 크기 (사진 픽셀)
+     · bx, by  : 말풍선 꼬리가 닿는 자리 = 머리 위 (사진 픽셀)
+     옛 스프라이트용 x·y·h·ar·clip 는 SPRITES=true 로 되살릴 때만 쓴다. */
   var CHARS = [
-    { k: 'chorok',   name: '초록',     tag: '(메인)', x: 696.125, y: 459.5, h: 118.75, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/chorok', ar: 0.844211, motion: 'm-seated',
+    { k: 'chorok',   name: '초록',     tag: '(메인)', cx: 749, cy: 295, hw: 76, hh: 92, bx: 749, by: 248,
+      x: 696.125, y: 459.5, h: 118.75, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/chorok', ar: 0.844211, motion: 'm-seated',
       life: ['노래 흥얼거리는 중이에요', '기지개 켜는 중이에요', '잠깐 멍때리는 중이에요'] },
-    { k: 'norang',   name: '노랑',     tag: '',        x: 798, y: 499, h: 125.75, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/norang', ar: 0.922465, motion: 'm-seated',
+    { k: 'norang',   name: '노랑',     tag: '',        cx: 838, cy: 330, hw: 82, hh: 86, bx: 838, by: 288,
+      x: 798, y: 499, h: 125.75, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/norang', ar: 0.922465, motion: 'm-seated',
       life: ['커피 한 모금 마시는 중이에요', '어깨 푸는 중이에요', '하품하는 중이에요'] },
-    { k: 'maknae',   name: '막내',     tag: '',        x: 900.5, y: 536, h: 124, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/maknae', ar: 0.939516, motion: 'm-seated',
+    { k: 'maknae',   name: '막내',     tag: '',        cx: 901, cy: 355, hw: 86, hh: 92, bx: 901, by: 308,
+      x: 900.5, y: 536, h: 124, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/maknae', ar: 0.939516, motion: 'm-seated',
       life: ['볼펜 돌리는 중이에요', '창밖 보는 중이에요', '잠깐 쉬는 중이에요'] },
-    { k: 'jinpink',  name: '진분홍',   tag: '',        x: 1012.625, y: 575.25, h: 127.5, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/jinpink', ar: 0.880392, motion: 'm-seated',
+    { k: 'jinpink',  name: '진분홍',   tag: '',        cx: 996, cy: 412, hw: 84, hh: 88, bx: 996, by: 368,
+      x: 1012.625, y: 575.25, h: 127.5, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/jinpink', ar: 0.880392, motion: 'm-seated',
       life: ['스트레칭하는 중이에요', '따뜻한 차 마시는 중이에요', '눈 깜빡이는 중이에요'] },
-    { k: 'muse',     name: '뮤즈',     tag: '',        x: 422,  y: 682,  h: 176, clip: 0,  ar: 0.9659, motion: 'm-sway',
+    { k: 'muse',     name: '뮤즈',     tag: '',        cx: 617, cy: 472, hw: 94, hh: 114, bx: 617, by: 414,
+      x: 422,  y: 682,  h: 176, clip: 0,  ar: 0.9659, motion: 'm-sway',
       life: ['가만히 앉아 있는 중이에요', '생각 정리하는 중이에요', '꼬리 휘적이는 중이에요'] },
-    { k: 'kyring',   name: '키링',     tag: '',        x: 710,  y: 650,  h: 150, clip: 0,  ar: 0.7682, motion: 'm-sway',
+    { k: 'kyring',   name: '키링',     tag: '',        cx: 729, cy: 468, hw: 94, hh: 98, bx: 729, by: 419,
+      x: 710,  y: 650,  h: 150, clip: 0,  ar: 0.7682, motion: 'm-sway',
       life: ['낮잠 자는 중이에요', '눈 감고 쉬는 중이에요', '꼬리 흔드는 중이에요'] },
-    { k: 'q',        name: '큐',       tag: '',        x: 190,  y: 700,  h: 200, clip: 0,  alwaysSeated: true, faceRight: true, seatedReference: true, sprite: 'seated_final/q_laptop_pose_v2', ar: 0.75, motion: 'm-type',
-      life: ['음악 듣는 중이에요', '리듬 타는 중이에요', '헤드셋 끼고 쉬는 중이에요'] },
-    { k: 'vooy',     name: '부이',     tag: '',        x: 1120, y: 900,  h: 120, clip: 0,  alwaysSeated: true, seatedReference: true, front: true, ar: 0.7432, motion: 'm-type',
+    { k: 'vooy',     name: '부이',     tag: '',        cx: 453, cy: 412, hw: 92, hh: 142, bx: 453, by: 339,
+      x: 1120, y: 900,  h: 120, clip: 0,  alwaysSeated: true, seatedReference: true, front: true, ar: 0.7432, motion: 'm-type',
       life: ['커피 타러 가는 중이에요', '팔짱 끼고 쉬는 중이에요', '기지개 켜는 중이에요'] },
-    { k: 'hama',     name: '하마뮤즈', tag: '',        x: 438,  y: 1012, h: 176, clip: 0,  ar: 0.6432, motion: 'm-sip',
+    { k: 'q_heart',  name: '큐(하트)', tag: '',        cx: 231, cy: 532, hw: 100, hh: 112, bx: 231, by: 474,
+      life: ['모니터 보는 중이에요', '왕관 고쳐 쓰는 중이에요', '잠깐 쉬는 중이에요'] },
+    { k: 'q_star',   name: '큐(별)',   tag: '',        cx: 385, cy: 578, hw: 112, hh: 108, bx: 385, by: 522,
+      life: ['타자 치는 중이에요', '왕관 반짝이는 중이에요', '기지개 켜는 중이에요'] },
+    { k: 'q',        name: '큐',       tag: '',        cx: 1030, cy: 547, hw: 82, hh: 102, bx: 1030, by: 495,
+      x: 190,  y: 700,  h: 200, clip: 0,  alwaysSeated: true, faceRight: true, seatedReference: true, sprite: 'seated_final/q_laptop_pose_v2', ar: 0.75, motion: 'm-type',
+      life: ['음악 듣는 중이에요', '리듬 타는 중이에요', '헤드셋 끼고 쉬는 중이에요'] },
+    { k: 'hama',     name: '하마뮤즈', tag: '',        cx: 590, cy: 712, hw: 92, hh: 132, bx: 590, by: 644,
+      x: 438,  y: 1012, h: 176, clip: 0,  ar: 0.6432, motion: 'm-sip',
       life: ['커피 마시고 있어요', '따뜻한 차 마시고 있어요', '한 모금 홀짝이는 중이에요'] },
-    { k: 'hark',     name: '하크',     tag: '',        x: 700,  y: 1000, h: 160, clip: 0,  ar: 0.7432, motion: 'm-bob',
+    { k: 'hark',     name: '하크',     tag: '',        cx: 731, cy: 731, hw: 72, hh: 132, bx: 731, by: 662,
+      x: 700,  y: 1000, h: 160, clip: 0,  ar: 0.7432, motion: 'm-bob',
       life: ['노래 흥얼거리는 중이에요', '발 흔들고 있어요', '잠깐 쉬는 중이에요'] },
-    { k: 'instinct', name: '인스팅트', tag: '',        x: 856,  y: 1066, h: 168, clip: 0,  ar: 0.7432, motion: 'm-read',
+    { k: 'instinct', name: '인스팅트', tag: '',        cx: 795, cy: 742, hw: 78, hh: 122, bx: 795, by: 679,
+      x: 856,  y: 1066, h: 168, clip: 0,  ar: 0.7432, motion: 'm-read',
       life: ['책 읽는 중이에요', '안경 고쳐 쓰는 중이에요', '페이지 넘기는 중이에요'] }
   ];
 
@@ -2942,10 +3017,12 @@
   CHARS.forEach(function (c) { byName[c.name] = c; });
 
   /* ── 캐릭터 DOM ─────────────────────────────────────────── */
+  function pctX(px) { return (px / BASE_W * 100).toFixed(3) + '%'; }
+  function pctY(px) { return (px / BASE_H * 100).toFixed(3) + '%'; }
   CHARS.forEach(function (c) {
-    var hc = c.h * (1 - c.clip / 100);
+    var hc = (c.h || 0) * (1 - (c.clip || 0) / 100);
     var bubbleY = c.deskSeat ? (c.y - hc - c.h * 0.23) : (c.y - c.h * 0.99);
-    var w = c.h * c.ar;
+    var w = (c.h || 0) * (c.ar || 1);
     var el = document.createElement('div');
     el.className = 'o25-chr ' + (c.motion || 'm-bob');
     if (c.clip || c.deskSeat) el.classList.add('desk-seat');
@@ -2957,23 +3034,33 @@
     el.setAttribute('tabindex', '0');
     el.setAttribute('aria-label', c.name + ' 상세 보기');
     el.setAttribute('title', c.name + ' 상세 보기');
-    el.style.left = (c.x / BASE * 100).toFixed(3) + '%';
-    el.style.top = ((c.y - hc) / BASE * 100).toFixed(3) + '%';
-    el.style.height = (c.h / BASE * 100).toFixed(3) + '%';
-    el.style.width = (w / BASE * 100).toFixed(3) + '%';
-    el.style.clipPath = 'inset(0 0 ' + c.clip + '% 0)';
-    el.style.transformOrigin = '50% ' + (100 - c.clip) + '%';
-    el.style.zIndex = String(20 + Math.round(c.y / 10));
+    if (SPRITES) {
+      el.style.left = (c.x / BASE * 100).toFixed(3) + '%';
+      el.style.top = ((c.y - hc) / BASE * 100).toFixed(3) + '%';
+      el.style.height = (c.h / BASE * 100).toFixed(3) + '%';
+      el.style.width = (w / BASE * 100).toFixed(3) + '%';
+      el.style.clipPath = 'inset(0 0 ' + c.clip + '% 0)';
+      el.style.transformOrigin = '50% ' + (100 - c.clip) + '%';
+      el.style.zIndex = String(20 + Math.round(c.y / 10));
+      el.innerHTML = '<span class="o25-body"><img src="assets/chars/' + (c.sprite || c.k) + '.png" alt="' + c.name + '" draggable="false" loading="lazy" decoding="async"></span>';
+    } else {
+      // 배경 그림 속 캐릭터 위에 투명 클릭 영역만 (손가락으로 누를 수 있게 조금 넓힘)
+      var hw = Math.max(80, c.hw * 1.14), hh = Math.max(88, c.hh * 1.08);
+      el.style.left = pctX(c.cx);
+      el.style.top = pctY(c.cy - hh / 2);
+      el.style.width = pctX(hw);
+      el.style.height = pctY(hh);
+      el.style.zIndex = String(20 + Math.round(c.cy / 10));
+    }
     el.style.setProperty('--sd', (Math.random() * 2.4).toFixed(2) + 's');
     el.style.setProperty('--dur', (c.motion === 'm-type' ? (1.1 + Math.random() * 0.55) : (4.8 + Math.random() * 2.0)).toFixed(2) + 's');
-    el.innerHTML = '<span class="o25-body"><img src="assets/chars/' + (c.sprite || c.k) + '.png" alt="' + c.name + '" draggable="false" loading="lazy" decoding="async"></span>';
     el.addEventListener('click', function (e) { e.stopPropagation(); react(c); });
     el.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); react(c); }
     });
     (c.front ? standLayer : charLayer).appendChild(el);
     c.el = el;
-    if (c.k === 'kyring' || c.k === 'vooy') {
+    if (SPRITES && (c.k === 'kyring' || c.k === 'vooy')) {
       var head = el.cloneNode(true);
       head.classList.add(c.k === 'kyring' ? 'o25-head-pop' : 'o25-desk-pop');
       head.setAttribute('aria-hidden', 'true');
@@ -3007,7 +3094,7 @@
     }
 
     // 별큐의 투명 영상은 기본 스프라이트를 백업으로 유지하며 각 레이어에 표시한다.
-    if (['muse','kyring','hama','hark','instinct'].indexOf(c.k) >= 0 &&
+    if (SPRITES && ['muse','kyring','hama','hark','instinct'].indexOf(c.k) >= 0 &&
         !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       [c.el, c.frontOverlay, c.feetOverlay].filter(Boolean).forEach(function (layer) {
         var body = layer.querySelector('.o25-body');
@@ -3028,8 +3115,8 @@
 
     var b = document.createElement('div');
     b.className = 'o25-bub';
-    b.style.left = (c.x / BASE * 100).toFixed(3) + '%';
-    b.style.top = (bubbleY / BASE * 100).toFixed(3) + '%';
+    b.style.left = SPRITES ? (c.x / BASE * 100).toFixed(3) + '%' : pctX(c.bx);
+    b.style.top = SPRITES ? (bubbleY / BASE * 100).toFixed(3) + '%' : pctY(c.by);
     b.setAttribute('aria-hidden', 'true');
     bubLayer.appendChild(b);
     c.bub = b;
@@ -3169,7 +3256,7 @@
     }
   }
   function scheduleSeatMotion(c, delay) {
-    if (reduceMotion) return;
+    if (!SPRITES || reduceMotion) return;
     clearTimeout(c.poseTimer);
     c.poseTimer = setTimeout(function () {
       if (document.hidden || !view.offsetParent || poseBusy || (typeof hasLive === 'function' && hasLive(c))) {
@@ -3187,7 +3274,7 @@
   }
   var laptopActions = ['activity-type','activity-sip','activity-page','activity-blink'];
   function scheduleLaptopActivity(c, delay) {
-    if (reduceMotion || !c.seatedReference || !c.el) return;
+    if (!SPRITES || reduceMotion || !c.seatedReference || !c.el) return;
     clearTimeout(c.activityTimer);
     c.activityTimer = setTimeout(function () {
       if (document.hidden || !view.offsetParent) { scheduleLaptopActivity(c, 3000 + Math.random() * 4000); return; }
@@ -3199,6 +3286,7 @@
     }, delay);
   }
   CHARS.forEach(function (c, i) {
+    if (!SPRITES) return;                        // 배경 그림 모드 — 자세·모션 예약 없음
     if (reduceMotion) { setPose(c, false); return; }
     setTimeout(function () {
       setPose(c, false);
@@ -3216,33 +3304,50 @@
     c.chatTimer = setTimeout(function () { c.el.classList.remove('chatting'); }, 1900);
   }
 
-  /* ── 말풍선 순환 (2~3개만, 겹치지 않게) ─────────────────── */
+  /* ── 말풍선 순환 (한 번에 3개까지, 실제 크기로 겹침을 막는다) ─────────── */
   var shown = [];
-  function overlapsOthers(c) {
+  function bubScale() { return 1 / z; }            // 확대해도 말풍선은 화면에서 같은 크기
+  function placeBub(c) {
+    var SW = stageEl.clientWidth || 1, SH = stageEl.clientHeight || 1;
+    var W = view.clientWidth || 1, H = view.clientHeight || 1;
+    var bz = bubScale();
+    var bw = (c.bub.offsetWidth || 84) * bz;
+    var bh = (c.bub.offsetHeight || 22) * bz;
+    var visL = (-tx) / z, visR = (W - tx) / z, visT = (-ty) / z, visB = (H - ty) / z;
+    var ax, ay;
+    if (SPRITES) {
+      ax = c.x / BASE * SW;
+      ay = (c.y - c.h * 0.99) / BASE * SH;
+    } else {
+      ax = c.bx / BASE_W * SW;
+      ay = c.by / BASE_H * SH;
+    }
+    if (ax < visL - 8 || ax > visR + 8 || ay > visB + 8) return null;   // 캐릭터가 화면 밖
+    var t = ay - bh, b = ay;
+    if (t < visT + 2) return null;                                       // 말풍선 윗부분이 잘림
+    var l = ax - bw / 2, r = ax + bw / 2;
+    var minL = visL + 4, maxR = visR - 4;
+    if (r - l > maxR - minL) { l = minL; r = maxR; }
+    else if (l < minL) { r += minL - l; l = minL; }
+    else if (r > maxR) { l -= r - maxR; r = maxR; }
+    c.bub.style.left = (((l + r) / 2) / SW * 100).toFixed(3) + '%';
+    c.bub.style.top = (ay / SH * 100).toFixed(3) + '%';
+    return { l: l, r: r, t: t, b: b };
+  }
+  function clashesWith(rect) {
     for (var i = 0; i < shown.length; i++) {
-      var o = byName[shown[i]];
-      if (!o) continue;
-      if (Math.abs(o.x - c.x) < 118 && Math.abs(o.y - c.y) < 130) return true;
+      var o = byName[shown[i]], r2 = o && o.bubRect;
+      if (!r2) continue;
+      if (rect.l < r2.r + 4 && rect.r > r2.l - 4 && rect.t < r2.b + 6 && rect.b > r2.t - 6) return true;
     }
     return false;
   }
-  function bubPlace(c) {
-    var stageW = stageEl.clientWidth || 1, stageH = stageEl.clientHeight || 1;
-    var W = view.clientWidth || 1, H = view.clientHeight || 1;
-    var visL = (-tx) / z, visR = (W - tx) / z, visT = (-ty) / z, visB = (H - ty) / z;
-    var cx = c.x / BASE * stageW, cy = (c.y - c.h * 0.99) / BASE * stageH;
-    if (cx < visL - 10 || cx > visR + 10 || cy < visT - 8 || cy > visB + 8) return false;
-    var bw = c.bub.offsetWidth || 90;
-    var minX = visL + bw / 2 + 5, maxX = visR - bw / 2 - 5;
-    var lx = (minX > maxX) ? (visL + visR) / 2 : Math.max(minX, Math.min(maxX, cx));
-    c.bub.style.left = (lx / stageW * 100).toFixed(3) + '%';
-    c.bub.style.top = (cy / stageH * 100).toFixed(3) + '%';
-    return true;
-  }
   function paintBub(c, text, ms, force) {
-    if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
     c.bub.innerHTML = '<b class="o25-bub-t">' + statusDot(c.name) + '<span>' + text + '</span></b>';
-    if (!bubPlace(c)) return false;
+    var rect = placeBub(c);
+    if (!rect) return false;
+    if (!force && clashesWith(rect)) return false;
+    c.bubRect = rect;
     if (shown.indexOf(c.name) < 0) shown.push(c.name);
     c.bub.classList.add('on');
     c.visibleUntil = Date.now() + (ms || 5200);
@@ -3261,17 +3366,21 @@
   function showBub(c, ms, force) {
     if (!c || !c.life) return false;
     if (!chatterOn && !hasLive(c)) return false;   // 수다모드 OFF — 실제 대화만
-    if (!force && overlapsOthers(c) && shown.indexOf(c.name) < 0) return false;
     return paintBub(c, pickText(c), ms, force);
   }
   function refreshBubbles() {
     shown.slice().forEach(function (n) {
       var c = byName[n];
-      if (c) { if (!bubPlace(c)) { c.bub.classList.remove('on'); } else { c.bub.classList.add('on'); } }
+      if (!c) return;
+      var rect = placeBub(c);
+      if (!rect) { hideBub(c); return; }
+      c.bubRect = rect;
+      c.bub.classList.add('on');
     });
   }
   function hideBub(c) {
     c.bub.classList.remove('on');
+    c.bubRect = null;
     var i = shown.indexOf(c.name);
     if (i >= 0) shown.splice(i, 1);
   }
@@ -3285,7 +3394,6 @@
     // 1) 단톡방에서 방금 실제로 주고받은 대화가 있는 캐릭터 먼저
     var liveOnes = CHARS.filter(function (c) { return hasLive(c) && shown.indexOf(c.name) < 0; });
     for (var i = 0; i < liveOnes.length && shown.length < 3; i++) {
-      if (overlapsOthers(liveOnes[i])) continue;
       showBub(liveOnes[i], 6400, false);
     }
     if (shown.length >= 3) return;
@@ -3293,10 +3401,9 @@
     if (!chatterOn) return;
     // 3) 남는 자리는 자리·포즈에 맞는 소소한 일상 멘트 (업무 추측 금지)
     var order = CHARS.filter(function (c) { return !hasLive(c); });
-    for (var t = 0; t < 14 && shown.length < 3 && order.length; t++) {
+    for (var t = 0; t < 18 && shown.length < 3 && order.length; t++) {
       var c = order[(Math.random() * order.length) | 0];
       if (shown.indexOf(c.name) >= 0) continue;
-      if (overlapsOthers(c)) continue;
       showBub(c, 5200 + Math.random() * 1200);
     }
   }
@@ -3305,7 +3412,7 @@
   var lastPicked = null;
   function react(c) {
     CHARS.forEach(function (o) { o.el.classList.remove('on'); });
-    if (!c.seatedReference) c.el.classList.add('on');
+    if (!SPRITES || !c.seatedReference) c.el.classList.add('on');
     hideBub(c);
     showBub(c, 6400, true);
     c.bub.classList.add('me');
@@ -3368,7 +3475,7 @@
       '막내피클': '막내', '막내이': '막내', '연분홍': '막내', '연분홍이': '막내',
       '진분홍이': '진분홍', '분홍이': '진분홍',
       '하마': '하마뮤즈', '하마보스': '하마뮤즈', '뮤즈이': '뮤즈',
-      '키링이': '키링', '큐브': '큐', '부이봇': '부이', '인스팅트ai': '인스팅트'
+      '키링이': '키링', '큐브': '큐', '별큐': '큐(별)', '하트큐': '큐(하트)', '부이봇': '부이', '인스팅트ai': '인스팅트'
     };
     function norm(s) { return String(s == null ? '' : s).replace(/[\s@()\[\]·._,|\\/-]/g, '').toLowerCase(); }
     function matchChar(name) {
@@ -3513,6 +3620,7 @@
   function applyCam(anim) {
     stageRoot.classList.toggle('o25-still', !anim);
     stageEl.style.transform = 'translate(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px) scale(' + z.toFixed(3) + ')';
+    if (bubLayer) bubLayer.style.setProperty('--bz', (1 / z).toFixed(4));   // 말풍선은 확대해도 글자 크기 유지
     afterCam();
   }
   function focusOn(fx, fy, nz) {
@@ -3613,7 +3721,7 @@
   setInterval(rotateBubbles, 4200);
   // 가끔 한 명이 크게 손을 흔들듯 움직인다
   setInterval(function () {
-    if (document.hidden) return;
+    if (!SPRITES || document.hidden) return;
     var pool = CHARS.filter(function (c) { return c.el && c.el.offsetParent !== null && !c.seatedReference && ['muse','kyring','hama','hark','instinct'].indexOf(c.k) < 0; });
     if (!pool.length) return;
     var c = pool[(Math.random() * pool.length) | 0];
