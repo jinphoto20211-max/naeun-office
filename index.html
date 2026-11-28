@@ -980,6 +980,12 @@
   .o25-chip img{width:21px; height:21px; object-fit:contain; object-position:top center; border-radius:50%; background:#FFF7EE}
   .o25-chip:hover{transform:translateY(-1px); box-shadow:0 5px 12px rgba(90,60,40,.14)}
   .o25-chip.on{background:#FBE8E9; border-color:#E6A0AA}
+  /* 열세 명이 한 줄에 다 들어가게 간격을 살짝 조인다(넓은 화면) */
+  @media (min-width:521px){
+    .o25-bar{gap:3px; padding:4px 6px}
+    .o25-chip{font-size:10px; padding:2px 7px 2px 3px; gap:3px}
+    .o25-chip img{width:20px; height:20px}
+  }
   /* 줌 도구 */
   .o25-tools{position:absolute; right:10px; top:10px; z-index:9; display:flex; flex-direction:column; gap:6px}
   .o25-tool{
