@@ -8,9 +8,24 @@
     케릭터를 누르면 팝업 없이 머리 위 말풍선으로 최근 단톡방 대화가 떠요. 1분 자동 말풍선·수다모드·
     확대/축소(`+`/`-`/`⤢`/핀치)는 그대로. 영상은 `muted playsinline autoplay loop` + `poster` 로
     모바일 자동재생을 보장하며, 첫 프레임 포스터가 `assets/office-bg-v3-poster.jpg` 입니다.
-  - 트래커: 체험단·설문·응모·상품권 집계와 노션 공용 허브 요약(맨 위 카드)
+  - 상단 헤더: 시계 + 원터치 `[↻ 새로고침]`(모바일 캐시 우회) + 「오늘 생활·하진이 한 줄 브리핑」
+  - 오피스 카드 아래: 「지금 내 손이 필요한 핵심 3건」 — [완료]·[패스]를 누르면 해피방 API
+    (`POST /api/admin/rooms/happy/messages`, 토큰 `localStorage: naeun:agc-token:v1`)로 담당 비서에게
+    지시를 보내고, 토큰이 없으면 지휘실 모달을 문구 프리필로 엽니다. 처리 상태는
+    `localStorage: naeun-office:handoff:v1` 에만 저장되고 [되돌리기]가 됩니다.
+  - 맨 아래(대회의실·단톡방 아래): 비서 접속 현황·오이 상태 줄과 「💬 지휘실에서 지시하기」 버튼
+  - 트래커: 적립·포인트 / 복권·예치금 / 미션 보드 + 체험단·설문·응모·상품권 집계와 노션 공용 허브 요약
   - 회의실: 오늘의 안건 + AI 단톡방(임베드/새 창) — 방 주인 비밀번호는 브라우저에만 저장
 - `build-tracker.py` — 트래커 탭 HTML/CSS 생성 (노션 기록 → 수치)
+  - 트래커 맨 위 **적립·포인트 / 복권·예치금 / 당첨 후 미션** 보드는 이 파일의
+    `MALL_STAMP_TOTAL`·`POINT_ITEMS`·`LOTTO_*`·`MISSIONS` 상수에서 만들어집니다.
+  - 트래커 카드의 **[진행]·[패스]·[리마인드]** 버튼도 `acts()` 가 생성합니다.
+  - `TRACKER-PANEL` 안에 `<script>window.TRACKER_DATA = {...}</script>` 를 함께 넣습니다.
+    오피스 맵 상단 **한 줄 브리핑**(`#todayBriefBar` ← `TRACKER_DATA.brief`)과
+    오피스 카드 아래 **핵심 3건 카드**(`#handCard` ← `TRACKER_DATA.handoff`)가 이 데이터를 읽습니다.
+    → 브리핑·손필요 항목을 고칠 때는 `index.html`이 아니라 `build-tracker.py`의
+      `BRIEF_*`·`HANDOFF` 를 고치고 다시 실행하세요.
+  - 실행은 `python3 build-tracker.py` (마커 사이만 교체, 나머지 화면은 건드리지 않음)
 - `build-walkers.py`, `build-clay.py`, `build-people.py` — 이전 2D/3D 실험용 생성기(지금 화면에는 미사용)
 - `assets/office-bg-v3.mp4` — 지금 쓰는 오피스 배경 영상 (1280×720·38초·H.264 High yuv420p·faststart·약 2.2MB)
 - `assets/office-bg-v3-poster.jpg` — 그 영상의 첫 프레임(로딩 중 빈 화면 방지)

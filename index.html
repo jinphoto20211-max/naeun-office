@@ -80,6 +80,7 @@
   .chips{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
   .chips .today-brief{flex:1 1 340px; margin:0}
   .chips-bottom{margin-top:14px; padding:0 2px}
+  .chips-bottom .cmd-btn{padding:9px 14px; font-size:12px; box-shadow:var(--shadow-sm)}
   .chip{
     display:inline-flex; align-items:center; gap:7px; padding:8px 14px; border-radius:999px;
     background:#FFFCF7; border:1px solid var(--line); font-size:12.5px; font-weight:600; color:var(--ink-soft);
@@ -778,7 +779,8 @@
     .sub{font-size:12px}
     .cmd-btn{width:100%; justify-content:center}
     .header-actions{display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px; width:100%}
-    .header-actions .btn-refresh{padding:9px 12px}
+    .header-actions .btn-refresh{padding:9px 12px; justify-self:end}
+    .chips-bottom .cmd-btn{width:auto; flex:1 1 160px}
     .chips .today-brief{flex:1 1 100%; padding:8px 12px; font-size:11.5px}
     .tb-text{white-space:normal; line-height:1.55}
     .hand-card{padding:16px}
@@ -1204,7 +1206,6 @@
       </div>
       <div class="header-actions">
         <button class="btn-refresh" id="reloadTop" type="button" title="모바일 브라우저 캐시를 건너뛰고 최신 화면을 바로 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button>
-        <button class="cmd-btn" id="openCmdTop" type="button">💬 지휘실에서 지시하기</button>
       </div>
     </div>
     <div class="chips">
@@ -1234,7 +1235,6 @@
         <h2>오피스 맵</h2>
         <p>AI 비서 오피스에 열세 명의 비서가 둥지를 틀고 있어요. 캐릭터를 누르면 그 비서의 최근 단톡방 대화가 머리 위 말풍선으로 떠요. (막내 분신 오이는 텔레그램에서 중계)</p>
       </div>
-      <button class="cmd-btn" id="openCmdMap" type="button">💬 지휘실에서 지시하기</button>
     </div>
 
     <div class="card office-card">
@@ -1447,6 +1447,7 @@
     <div class="chips chips-bottom" id="statusChipsBottom">
       <span class="chip live" id="statusChip"><span class="dot" id="statusDot" aria-hidden="true"></span><span id="statusChipText">비서 13명 · 단톡방 연결 대기</span></span>
       <span class="chip" id="oiChip" title="막내의 분신 — 별도 인원이 아니라 텔레그램 중계 창구입니다">🥒 오이 · 막내 분신 · 텔레그램 중계</span>
+      <button class="cmd-btn" id="openCmdBottom" type="button">💬 지휘실에서 지시하기</button>
     </div>
   </section>
 
@@ -2699,8 +2700,10 @@
     document.body.style.overflow = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
-  $('#openCmdTop').addEventListener('click', function(){ openModal('', null); });
-  $('#openCmdMap').addEventListener('click', function(){ openModal('', null); });
+  ['openCmdTop', 'openCmdMap', 'openCmdBottom'].forEach(function(id){
+    var b = document.getElementById(id);
+    if (b) b.addEventListener('click', function(){ openModal('', null); });
+  });
   $('#panelCmdMore').addEventListener('click', function(){
     openModal($('#panelCmdText').value, null);
   });
