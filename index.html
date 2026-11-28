@@ -13,10 +13,24 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="나은 비서실">
 <meta name="application-name" content="나은 비서실">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="나은 비서실">
+<meta property="og:title" content="나은 비서실">
+<meta property="og:description" content="피클즈 4인 &amp; 해피방 7총사가 함께하는 나은님 전용 오피스">
+<meta property="og:url" content="https://jinphoto20211-max.github.io/naeun-office/">
+<meta property="og:image" content="https://jinphoto20211-max.github.io/naeun-office/assets/app-icon.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta property="og:image:alt" content="분홍 클레이 매듭 아이콘">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jinphoto20211-max.github.io/naeun-office/assets/app-icon.png">
+<link rel="manifest" href="manifest.webmanifest?v=20261128i">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=20261128i">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/app-icon.png?v=20261128i">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png?v=20261128i">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png?v=20261128i">
+<link rel="shortcut icon" href="assets/favicon.png?v=20261128i">
 <title>나은 비서실</title>
 <style>
   *,*::before,*::after{box-sizing:border-box}
@@ -54,17 +68,10 @@
   .header{padding:22px 24px 20px; display:flex; flex-direction:column; gap:16px}
   .header-top{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap}
   .brand{display:flex; align-items:center; gap:14px; min-width:0}
-  .pickle-badge{
-    flex:0 0 auto; width:56px; height:56px; border-radius:19px;
-    display:grid; place-items:center; position:relative;
-    background:linear-gradient(145deg,#A9D8A7 0%,#79BE8B 45%,#4E9468 100%);
-    box-shadow:0 10px 22px rgba(78,148,104,.28), inset 0 -3px 6px rgba(46,94,64,.28), inset 0 3px 5px rgba(255,255,255,.45);
-    font-size:27px; font-weight:800; color:#fff; letter-spacing:-1px;
-    text-shadow:0 1px 2px rgba(46,94,64,.35);
-  }
-  .pickle-badge::after{
-    content:""; position:absolute; top:7px; left:8px; width:16px; height:9px;
-    border-radius:50%; background:rgba(255,255,255,.5); filter:blur(1px); transform:rotate(-24deg);
+  .brand-mark{
+    flex:0 0 auto; width:56px; height:56px; border-radius:16px; display:block;
+    object-fit:cover; object-position:center; background:#FBE8E9;
+    box-shadow:0 9px 20px rgba(214,116,155,.26), 0 2px 5px rgba(214,116,155,.16);
   }
   .brand-text{min-width:0}
   .brand-text h1{font-size:26px; font-weight:800; letter-spacing:-.6px; line-height:1.2}
@@ -1261,7 +1268,7 @@
   <header class="card header">
     <div class="header-top">
       <div class="brand">
-        <div class="pickle-badge" aria-hidden="true">ㅍ</div>
+        <img class="brand-mark" src="assets/brand-mark.png?v=20261128i" width="56" height="56" alt="" aria-hidden="true" decoding="async">
         <div class="brand-text">
           <h1>나은 비서실</h1>
           <p class="sub">나은님 전용 · 피클즈 4인 &amp; 해피방 7총사가 함께하는 오피스</p>

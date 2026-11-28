@@ -34,6 +34,14 @@
 - `assets/office-bg.jpg`, `assets/office-bg-v2.jpg` — 이전 정지 배경 (지금 화면에는 미사용)
 - `assets/office-fg.png` — 전경 가구(책상·노트북·원탁·모니터) 레이어 — 캐릭터 위에 겹쳐 책상·노트북을 뚫고 나오지 않게 함 (`build-fg.py` 로 재생성)
 - `assets/chars/*.png` — 11명 캐릭터 투명 스프라이트
+- **앱 아이콘(분홍 클레이 매듭)** — `build-icon.py` 가 원본 JPG 한 장에서 흰 여백을 걷어내고 다시 만듭니다.
+  - `assets/app-icon.png`(512, 모서리 투명) · `assets/icon-192.png` · `assets/brand-mark.png`(168 = 헤더 56px의 3배)
+  - `assets/favicon.png`(64) · `assets/apple-touch-icon.png`(180, 홈 화면용이라 모서리까지 분홍) ·
+    `assets/icon-512-maskable.png`(512, maskable용 full-bleed)
+  - 헤더 왼쪽 로고는 `index.html` 의 `<img class="brand-mark">`, 파비콘·홈 화면 아이콘은 `<head>` 링크와
+    `manifest.webmanifest` 가 `?v=20261128i` 로 캐시를 끊어 참조합니다. 아이콘을 바꿀 때는
+    `python3 build-icon.py <원본.jpg>` 실행 후 `?v=` 값만 올리면 됩니다(루트 `icon-192.png`·`icon-512.png`·
+    `apple-touch-icon.png`·`favicon.png` 는 예전 경로 호환용으로 같이 갱신됩니다).
 - `deploy.sh` — 커밋·푸시 후 Pages 반영 확인
 
 2.5D 스테이지의 마크업·CSS·JS는 `work` 스크립트로 주입된 상태이며, 좌표/말풍선 문구는
