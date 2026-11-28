@@ -861,7 +861,6 @@ PANEL_TMPL = """  <!-- ═══ 트래커 ═══ -->
         <h2>트래커</h2>
         <p>체험단 · 설문 · 응모 · 상품권까지, 실제 기록으로 센 숫자입니다.</p>
       </div>
-      <button class="cmd-btn" type="button" data-goto="work">작업실에서 보기</button>
     </div>
     <!-- TRACKER-PANEL:START -->
     %s
