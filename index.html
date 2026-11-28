@@ -959,6 +959,10 @@
     transform:translateX(-50%) rotate(45deg); border-radius:2px;
   }
   .o25-bub.me{background:rgba(255,243,244,.99); border-color:#F6D9DC}
+  @media (max-width:430px){
+    .o25-bub{font-size:clamp(8px,1.9cqw,10px); padding:.32em .58em .34em; border-radius:11px}
+    .o25-bub::after{width:7px; height:7px; bottom:-3.6px}
+  }
   /* 아바타 바 */
   .o25-bar{
     position:absolute; left:9px; right:9px; bottom:9px; z-index:8; display:flex; gap:5px;
@@ -1061,12 +1065,11 @@
             <div class="o25-stage" id="o25Stage">
               <img class="o25-bg" src="assets/office-bg-v2.jpg?v=20261128b" alt="AI 비서 오피스 — 열세 명의 비서가 책상·원탁·라운지에 앉아 있는 오피스" draggable="false">
               <div class="o25-chars" id="o25Chars"></div>
-              <img class="o25-coffee-fg" src="assets/coffee-table-fg.webp" alt="" aria-hidden="true" draggable="false">
-              <img class="o25-fg" src="assets/office-fg.png?v=20261128" alt="" aria-hidden="true" draggable="false">
-              <img class="o25-laptop-arms-fg" src="assets/chars/seated_from_reference/arms-overlay.png" alt="" aria-hidden="true" draggable="false">
-              <div class="o25-stand-layer" id="o25StandLayer">
-                <img class="o25-static-chair" src="assets/chars/vooy-chair.png" alt="" aria-hidden="true" draggable="false">
-              </div>
+              <!-- 옛 개별 스프라이트 전경 레이어 — 배경 그림 모드에서는 내려받지도 그리지도 않는다.
+                   SPRITES=true 로 되살릴 때 아래 네 장을 다시 넣는다:
+                   assets/coffee-table-fg.webp · assets/office-fg.png ·
+                   assets/chars/seated_from_reference/arms-overlay.png · assets/chars/vooy-chair.png -->
+              <div class="o25-stand-layer" id="o25StandLayer"></div>
               <div class="o25-bubbles" id="o25Bubbles"></div>
             </div>
           </div>
@@ -2961,6 +2964,7 @@
   var bubLayer = document.getElementById('o25Bubbles');
   var barEl = document.getElementById('o25Bar');
   if (!stageRoot || !view || !stageEl || !charLayer || !standLayer || !bubLayer) return;
+  stageRoot.classList.toggle('o25-bare', !SPRITES);   // SPRITES=true 면 예전 개별 그림 모드로
 
   /* ── 캐릭터 배치 ──────────────────────────────────────────
      새 오피스 사진(1448×1086) 안에서 캐릭터가 실제로 앉아 있는 자리를 재서 넣었다.
@@ -3385,23 +3389,24 @@
     if (i >= 0) shown.splice(i, 1);
   }
   function rotateBubbles() {
+    var maxBub = (view.clientWidth && view.clientWidth < 430) ? 2 : 3;   // 좁은 화면은 2개까지만
     var now = Date.now();
     shown.slice().forEach(function (n) {
       var c = byName[n];
       if (c && c.visibleUntil && now > c.visibleUntil) hideBub(c);
     });
-    if (shown.length >= 3) return;
+    if (shown.length >= maxBub) return;
     // 1) 단톡방에서 방금 실제로 주고받은 대화가 있는 캐릭터 먼저
     var liveOnes = CHARS.filter(function (c) { return hasLive(c) && shown.indexOf(c.name) < 0; });
-    for (var i = 0; i < liveOnes.length && shown.length < 3; i++) {
+    for (var i = 0; i < liveOnes.length && shown.length < maxBub; i++) {
       showBub(liveOnes[i], 6400, false);
     }
-    if (shown.length >= 3) return;
+    if (shown.length >= maxBub) return;
     // 2) 수다모드 OFF면 여기서 멈춤 — 실제 대화 말풍선만 보여준다
     if (!chatterOn) return;
     // 3) 남는 자리는 자리·포즈에 맞는 소소한 일상 멘트 (업무 추측 금지)
     var order = CHARS.filter(function (c) { return !hasLive(c); });
-    for (var t = 0; t < 18 && shown.length < 3 && order.length; t++) {
+    for (var t = 0; t < 18 && shown.length < maxBub && order.length; t++) {
       var c = order[(Math.random() * order.length) | 0];
       if (shown.indexOf(c.name) >= 0) continue;
       showBub(c, 5200 + Math.random() * 1200);
