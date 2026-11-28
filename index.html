@@ -118,7 +118,7 @@
   .office-stage{
     position:relative; border-radius:20px; overflow:hidden; background:#F3E9D9;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.6), inset 0 10px 30px rgba(120,88,58,.06);
-    aspect-ratio:1448 / 1086;
+    aspect-ratio:1280 / 720;
   }
   .office-zoom{position:absolute; inset:0; transform-origin:50% 50%; transition:transform .75s cubic-bezier(.2,.8,.2,1)}
   .office-zoom > img{display:block; width:100%; height:100%; object-fit:cover; user-select:none; -webkit-user-drag:none}
@@ -870,7 +870,7 @@
   /* OFFICE-WALKERS-CSS:END */
   /* OFFICE25D-CSS:START */
   .office-card{padding:14px}
-  .office-stage{aspect-ratio:1448 / 1086; overflow:hidden; background:#2A2320}
+  .office-stage{aspect-ratio:1280 / 720; overflow:hidden; background:#2A2320}
   .o25{position:absolute; inset:0; overflow:hidden; border-radius:20px; background:#241E1C; container-type:inline-size}
   .o25-view{position:absolute; inset:0; overflow:hidden; touch-action:pan-y; cursor:grab; -webkit-tap-highlight-color:transparent}
   .o25-view.dragging{cursor:grabbing}
@@ -1105,7 +1105,7 @@
         <div class="o25 o25-bare" id="o25">
           <div class="o25-view" id="o25View">
             <div class="o25-stage" id="o25Stage">
-              <img class="o25-bg" src="assets/office-bg-v2.jpg?v=20261128b" alt="AI 비서 오피스 — 열세 명의 비서가 책상·원탁·라운지에 앉아 있는 오피스" draggable="false">
+              <video class="o25-bg" id="o25BgVideo" src="assets/office-bg-v3.mp4?v=20261128c" poster="assets/office-bg-v3-poster.jpg?v=20261128c" autoplay loop muted playsinline preload="auto" disablepictureinpicture disableremoteplayback draggable="false" aria-label="AI 비서 오피스 — 열세 명의 비서가 책상·원탁·라운지에 앉아 움직이는 오피스 영상"></video>
               <div class="o25-chars" id="o25Chars"></div>
               <!-- 옛 개별 스프라이트 전경 레이어 — 배경 그림 모드에서는 내려받지도 그리지도 않는다.
                    SPRITES=true 로 되살릴 때 아래 네 장을 다시 넣는다:
@@ -3069,7 +3069,7 @@
 (function () {
   "use strict";
   var BASE = 1254;                                  // 옛 스프라이트 좌표계 (SPRITES=true 로 되살릴 때만 씀)
-  var BASE_W = 1448, BASE_H = 1086;                 // 새 오피스 사진(4:3) 기준 좌표계
+  var BASE_W = 1280, BASE_H = 720;                  // 새 오피스 영상(16:9) 기준 좌표계
   var SPRITES = false;                              // false = 배경 그림 속 캐릭터만 쓰고 말풍선·클릭만 얹는다
   var stageRoot = document.getElementById('o25');
   var view = document.getElementById('o25View');
@@ -3082,47 +3082,47 @@
   stageRoot.classList.toggle('o25-bare', !SPRITES);   // SPRITES=true 면 예전 개별 그림 모드로
 
   /* ── 캐릭터 배치 ──────────────────────────────────────────
-     새 오피스 사진(1448×1086) 안에서 캐릭터가 실제로 앉아 있는 자리를 재서 넣었다.
-     · cx, cy  : 클릭 영역의 중심 (사진 픽셀)
-     · hw, hh  : 클릭 영역 크기 (사진 픽셀)
-     · bx, by  : 말풍선 꼬리가 닿는 자리 = 머리 위 (사진 픽셀)
+     새 오피스 영상(1280×720) 프레임에서 캐릭터가 실제로 앉아 있는 자리를 재서 넣었다.
+     · cx, cy  : 클릭 영역의 중심 (영상 픽셀)
+     · hw, hh  : 클릭 영역 크기 (영상 픽셀)
+     · bx, by  : 말풍선 꼬리가 닿는 자리 = 머리 위 (영상 픽셀)
      옛 스프라이트용 x·y·h·ar·clip 는 SPRITES=true 로 되살릴 때만 쓴다. */
   var CHARS = [
-    { k: 'chorok',   name: '초록',     tag: '(메인)', cx: 749, cy: 295, hw: 76, hh: 92, bx: 749, by: 248,
+    { k: 'chorok',   name: '초록',     tag: '(메인)', cx: 661, cy: 133, hw: 30, hh: 36, bx: 661, by: 100,
       x: 696.125, y: 459.5, h: 118.75, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/chorok', ar: 0.844211, motion: 'm-seated',
       life: ['노래 흥얼거리는 중이에요', '기지개 켜는 중이에요', '잠깐 멍때리는 중이에요'] },
-    { k: 'norang',   name: '노랑',     tag: '',        cx: 838, cy: 330, hw: 82, hh: 86, bx: 838, by: 288,
+    { k: 'norang',   name: '노랑',     tag: '',        cx: 741, cy: 174, hw: 32, hh: 40, bx: 741, by: 139,
       x: 798, y: 499, h: 125.75, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/norang', ar: 0.922465, motion: 'm-seated',
       life: ['커피 한 모금 마시는 중이에요', '어깨 푸는 중이에요', '하품하는 중이에요'] },
-    { k: 'maknae',   name: '막내',     tag: '',        cx: 901, cy: 355, hw: 86, hh: 92, bx: 901, by: 308,
+    { k: 'maknae',   name: '막내',     tag: '',        cx: 797, cy: 210, hw: 32, hh: 44, bx: 797, by: 173,
       x: 900.5, y: 536, h: 124, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/maknae', ar: 0.939516, motion: 'm-seated',
       life: ['볼펜 돌리는 중이에요', '창밖 보는 중이에요', '잠깐 쉬는 중이에요'] },
-    { k: 'jinpink',  name: '진분홍',   tag: '',        cx: 996, cy: 412, hw: 84, hh: 88, bx: 996, by: 368,
+    { k: 'jinpink',  name: '진분홍',   tag: '',        cx: 887, cy: 253, hw: 34, hh: 44, bx: 887, by: 213,
       x: 1012.625, y: 575.25, h: 127.5, clip: 0, deskSeat: true, alwaysSeated: true, seatedReference: true, sprite: 'seated_from_reference/jinpink', ar: 0.880392, motion: 'm-seated',
       life: ['스트레칭하는 중이에요', '따뜻한 차 마시는 중이에요', '눈 깜빡이는 중이에요'] },
-    { k: 'muse',     name: '뮤즈',     tag: '',        cx: 617, cy: 472, hw: 94, hh: 114, bx: 617, by: 414,
+    { k: 'muse',     name: '뮤즈',     tag: '',        cx: 545, cy: 296, hw: 30, hh: 42, bx: 545, by: 255,
       x: 422,  y: 682,  h: 176, clip: 0,  ar: 0.9659, motion: 'm-sway',
       life: ['가만히 앉아 있는 중이에요', '생각 정리하는 중이에요', '꼬리 휘적이는 중이에요'] },
-    { k: 'kyring',   name: '키링',     tag: '',        cx: 729, cy: 468, hw: 94, hh: 98, bx: 729, by: 419,
+    { k: 'kyring',   name: '키링',     tag: '',        cx: 640, cy: 294, hw: 30, hh: 40, bx: 640, by: 253,
       x: 710,  y: 650,  h: 150, clip: 0,  ar: 0.7682, motion: 'm-sway',
       life: ['낮잠 자는 중이에요', '눈 감고 쉬는 중이에요', '꼬리 흔드는 중이에요'] },
-    { k: 'vooy',     name: '부이',     tag: '',        cx: 1030, cy: 547, hw: 82, hh: 102, bx: 1030, by: 495,
+    { k: 'vooy',     name: '부이',     tag: '',        cx: 909, cy: 352, hw: 27, hh: 38, bx: 909, by: 317,
       x: 1120, y: 900,  h: 120, clip: 0,  alwaysSeated: true, seatedReference: true, front: true, ar: 0.7432, motion: 'm-type',
       life: ['커피 타러 가는 중이에요', '팔짱 끼고 쉬는 중이에요', '기지개 켜는 중이에요'] },
-    { k: 'q_heart',  name: '큐(하트)', tag: '',        cx: 231, cy: 532, hw: 100, hh: 112, bx: 231, by: 474,
+    { k: 'q_heart',  name: '큐(하트)', tag: '',        cx: 205, cy: 345, hw: 42, hh: 47, bx: 205, by: 300,
       life: ['모니터 보는 중이에요', '왕관 고쳐 쓰는 중이에요', '잠깐 쉬는 중이에요'] },
-    { k: 'q_star',   name: '큐(별)',   tag: '',        cx: 385, cy: 578, hw: 112, hh: 108, bx: 385, by: 522,
+    { k: 'q_star',   name: '큐(별)',   tag: '',        cx: 345, cy: 371, hw: 41, hh: 45, bx: 345, by: 326,
       life: ['타자 치는 중이에요', '왕관 반짝이는 중이에요', '기지개 켜는 중이에요'] },
-    { k: 'q',        name: '큐',       tag: '',        cx: 453, cy: 412, hw: 92, hh: 142, bx: 453, by: 339,
+    { k: 'q',        name: '큐',       tag: '',        cx: 407, cy: 233, hw: 27, hh: 37, bx: 407, by: 196,
       x: 190,  y: 700,  h: 200, clip: 0,  alwaysSeated: true, faceRight: true, seatedReference: true, sprite: 'seated_final/q_laptop_pose_v2', ar: 0.75, motion: 'm-type',
       life: ['음악 듣는 중이에요', '리듬 타는 중이에요', '헤드셋 끼고 쉬는 중이에요'] },
-    { k: 'hama',     name: '하마뮤즈', tag: '',        cx: 590, cy: 712, hw: 92, hh: 132, bx: 590, by: 644,
+    { k: 'hama',     name: '하마뮤즈', tag: '',        cx: 524, cy: 514, hw: 36, hh: 46, bx: 524, by: 467,
       x: 438,  y: 1012, h: 176, clip: 0,  ar: 0.6432, motion: 'm-sip',
       life: ['커피 마시고 있어요', '따뜻한 차 마시고 있어요', '한 모금 홀짝이는 중이에요'] },
-    { k: 'hark',     name: '하크',     tag: '',        cx: 731, cy: 731, hw: 72, hh: 132, bx: 731, by: 662,
+    { k: 'hark',     name: '하크',     tag: '',        cx: 625, cy: 512, hw: 29, hh: 41, bx: 625, by: 472,
       x: 700,  y: 1000, h: 160, clip: 0,  ar: 0.7432, motion: 'm-bob',
       life: ['노래 흥얼거리는 중이에요', '발 흔들고 있어요', '잠깐 쉬는 중이에요'] },
-    { k: 'instinct', name: '인스팅트', tag: '',        cx: 795, cy: 742, hw: 78, hh: 122, bx: 795, by: 679,
+    { k: 'instinct', name: '인스팅트', tag: '',        cx: 672, cy: 537, hw: 33, hh: 45, bx: 672, by: 496,
       x: 856,  y: 1066, h: 168, clip: 0,  ar: 0.7432, motion: 'm-read',
       life: ['책 읽는 중이에요', '안경 고쳐 쓰는 중이에요', '페이지 넘기는 중이에요'] }
   ];
