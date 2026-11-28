@@ -250,8 +250,16 @@ HANDOFF = [
 ]
 
 # ── 10. 적립·포인트 보드 ────────────────────────────────────────────────
-MALL_STAMP_TOTAL = 10070          # 5대 몰 출첵 누적 (원/P)
-MALL_STAMPS = ["맘큐", "락앤락몰", "셰프애찬", "칠성몰", "G마켓"]
+# 5대 몰 출첵 누적 — 몰별 금액/포인트를 각각 표기한다(11/28 노션 결산).
+# (몰 이름, 누적값, 단위) — 합계는 아래에서 자동 계산(1P≈1원).
+MALL_STAMPS = [
+    ("맘큐", 3300, "원"),
+    ("락앤락몰", 2500, "P"),
+    ("셰프애찬", 2300, "P"),
+    ("칠성몰", 930, "P"),
+    ("G마켓", 1040, "원"),
+]
+MALL_STAMP_TOTAL = sum(v for _, v, _ in MALL_STAMPS)   # 10,070 (원/P)
 POINT_ITEMS = [
     ("카카오 쇼핑포인트", "26,700", "P"),
     ("패널나우", "3,627", "P"),
@@ -398,7 +406,10 @@ def boards_html():
              '<div class="pnt-num">%s<small>원/P</small></div>'
              '<div class="pnt-malls">%s</div></div>'
              % (format(MALL_STAMP_TOTAL, ","),
-                "".join('<span>%s <i aria-hidden="true">✓</i></span>' % m for m in MALL_STAMPS)))
+                "".join('<span class="pnt-mall"><em>%s</em>'
+                        '<b>%s%s</b><i aria-hidden="true">✓</i></span>'
+                        % (name, format(value, ","), unit)
+                        for name, value, unit in MALL_STAMPS)))
     for label, value, unit in POINT_ITEMS:
         o.append('<div class="pnt-box"><div class="pnt-label">%s</div>'
                  '<div class="pnt-num">%s<small>%s</small></div></div>' % (label, value, unit))
@@ -881,6 +892,26 @@ SUM_CSS = """
   .trk-detail > .trk-sec:first-child{margin-top:0}
 """
 
+# 5대 몰 누적 — 몰 이름과 금액/포인트를 칩으로 각각 구분해 보여 준다
+# (이미 삽입된 BOARD_CSS 는 다시 들어가지 않아 새 규칙은 별도 블록으로 둔다)
+MALL_CSS = """
+  /* ── 5대 몰: 몰별 누적 포인트 ── */
+  .pnt-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .pnt-grid > .pnt-box:first-child{grid-column:1 / -1}
+  .pnt-malls{display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:7px}
+  .pnt-malls .pnt-mall{display:inline-flex; align-items:baseline; gap:4px;
+    padding:3px 8px; white-space:nowrap; line-height:1.5}
+  .pnt-mall em{font-style:normal; font-weight:700; color:var(--muted); letter-spacing:-.2px}
+  .pnt-mall b{font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:-.2px}
+  .pnt-mall i{color:#2F7D3C; font-style:normal; font-weight:800; margin-left:1px}
+  @media (max-width:720px){
+    .pnt-grid{grid-template-columns:1fr 1fr}
+    .pnt-grid > .pnt-box:first-child{grid-column:1 / -1}
+    .pnt-malls{gap:4px}
+    .pnt-malls .pnt-mall{padding:2px 6px; gap:3px}
+  }
+"""
+
 # 보드 모바일 보정 — 처음 만든 파일에도 따로 끼워 넣을 수 있게 별도 블록으로 둔다
 # (MOBILE_CSS 는 이미 삽입된 파일에는 다시 들어가지 않아서 새 규칙은 여기에 적는다)
 BOARD_MOBILE_CSS = """
@@ -960,6 +991,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", LOT_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-sum + .pnt-card{" not in html:
         html = html.replace("  @media (max-width:860px){", SUM_CSS + "\n  @media (max-width:860px){", 1)
+    if ".pnt-malls .pnt-mall{" not in html:
+        html = html.replace("  @media (max-width:860px){", MALL_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:

@@ -810,6 +810,23 @@
   .trk-sum + .pnt-card{margin-top:16px}
   .trk-detail > .trk-sec:first-child{margin-top:0}
 
+
+  /* ── 5대 몰: 몰별 누적 포인트 ── */
+  .pnt-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .pnt-grid > .pnt-box:first-child{grid-column:1 / -1}
+  .pnt-malls{display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-top:7px}
+  .pnt-malls .pnt-mall{display:inline-flex; align-items:baseline; gap:4px;
+    padding:3px 8px; white-space:nowrap; line-height:1.5}
+  .pnt-mall em{font-style:normal; font-weight:700; color:var(--muted); letter-spacing:-.2px}
+  .pnt-mall b{font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:-.2px}
+  .pnt-mall i{color:#2F7D3C; font-style:normal; font-weight:800; margin-left:1px}
+  @media (max-width:720px){
+    .pnt-grid{grid-template-columns:1fr 1fr}
+    .pnt-grid > .pnt-box:first-child{grid-column:1 / -1}
+    .pnt-malls{gap:4px}
+    .pnt-malls .pnt-mall{padding:2px 6px; gap:3px}
+  }
+
   @media (max-width:860px){
     .kanban{grid-template-columns:1fr}
   }
@@ -1552,7 +1569,7 @@
 <div class="pnt-head"><h3>적립·포인트 한눈에</h3><span>5대 몰 출첵 · 포인트 · 누적 수익 · <b>2026-11-28(토) 21:30 기준</b></span></div>
 <div class="pnt-goal"><div class="pnt-goal-top"><span>포인트·수익 합계 <b>81,250</b> <small>(1P≈1원)</small></span><span class="pnt-goal-tag hit">목표 50,000 · 162%</span></div><div class="pnt-bar"><i style="width:100%"></i></div></div>
 <div class="pnt-grid">
-<div class="pnt-box"><div class="pnt-label">5대 몰 출첵 누적</div><div class="pnt-num">10,070<small>원/P</small></div><div class="pnt-malls"><span>맘큐 <i aria-hidden="true">✓</i></span><span>락앤락몰 <i aria-hidden="true">✓</i></span><span>셰프애찬 <i aria-hidden="true">✓</i></span><span>칠성몰 <i aria-hidden="true">✓</i></span><span>G마켓 <i aria-hidden="true">✓</i></span></div></div>
+<div class="pnt-box"><div class="pnt-label">5대 몰 출첵 누적</div><div class="pnt-num">10,070<small>원/P</small></div><div class="pnt-malls"><span class="pnt-mall"><em>맘큐</em><b>3,300원</b><i aria-hidden="true">✓</i></span><span class="pnt-mall"><em>락앤락몰</em><b>2,500P</b><i aria-hidden="true">✓</i></span><span class="pnt-mall"><em>셰프애찬</em><b>2,300P</b><i aria-hidden="true">✓</i></span><span class="pnt-mall"><em>칠성몰</em><b>930P</b><i aria-hidden="true">✓</i></span><span class="pnt-mall"><em>G마켓</em><b>1,040원</b><i aria-hidden="true">✓</i></span></div></div>
 <div class="pnt-box"><div class="pnt-label">카카오 쇼핑포인트</div><div class="pnt-num">26,700<small>P</small></div></div>
 <div class="pnt-box"><div class="pnt-label">패널나우</div><div class="pnt-num">3,627<small>P</small></div></div>
 <div class="pnt-box"><div class="pnt-label">엠브레인</div><div class="pnt-num">2,280<small>원</small></div></div>
