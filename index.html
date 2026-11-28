@@ -77,7 +77,9 @@
   }
   .cmd-btn:hover{transform:translateY(-2px); box-shadow:0 10px 22px rgba(140,105,70,.14); background:#FFFDFA}
   .cmd-btn:active{transform:translateY(0)}
-  .chips{display:flex; flex-wrap:wrap; gap:8px}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+  .chips .today-brief{flex:1 1 340px; margin:0}
+  .chips-bottom{margin-top:14px; padding:0 2px}
   .chip{
     display:inline-flex; align-items:center; gap:7px; padding:8px 14px; border-radius:999px;
     background:#FFFCF7; border:1px solid var(--line); font-size:12.5px; font-weight:600; color:var(--ink-soft);
@@ -343,6 +345,7 @@
   .status::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor}
   .status.idle{color:#b06a08; background:#FDF3DF}
   .status.offline{color:#6b7280; background:#F0F0EE}
+  .status.waiting{color:#B0442F; background:#FBEAE6; animation:live 2.4s ease-in-out infinite}
   .status:hover{filter:brightness(.97)}
   .status:active{transform:scale(.96)}
 
@@ -523,6 +526,66 @@
   .sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
 
 
+  /* ── 상단 원터치 새로고침 ── */
+  .header-actions{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .btn-refresh{display:inline-flex; align-items:center; gap:5px; padding:9px 13px; border-radius:999px;
+    background:#fff; border:1px solid var(--line-strong); font-size:12px; font-weight:800; color:var(--ink-soft);
+    box-shadow:var(--shadow-sm); transition:transform .18s ease, box-shadow .18s ease; white-space:nowrap}
+  .btn-refresh:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(140,105,70,.14)}
+  .btn-refresh.spin span{display:inline-block; animation:tb-spin .55s linear}
+  @keyframes tb-spin{to{transform:rotate(360deg)}}
+
+  /* ── 오늘 생활·하진이 한 줄 브리핑 (오피스 맵 위) ── */
+  .today-brief{display:flex; align-items:center; gap:8px; margin:0 0 12px; padding:9px 14px;
+    border-radius:14px; background:#FFFBF5; border:1px solid var(--line); box-shadow:var(--shadow-sm);
+    font-size:12px; letter-spacing:-.2px; overflow:hidden}
+  .tb-date{flex:0 0 auto; font-size:11px; font-weight:800; color:#FFF9F2; background:#4B3A31;
+    border-radius:999px; padding:3px 8px; font-variant-numeric:tabular-nums}
+  .tb-text{min-width:0; flex:1 1 auto; font-weight:700; color:var(--ink); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis}
+  .tb-text b{font-weight:800; color:#B0442F}
+  .tb-src{flex:0 0 auto; font-size:9.5px; font-weight:700; color:var(--muted-2); text-decoration:none}
+  .tb-src:hover{text-decoration:underline}
+
+  /* ── 지금 내 손이 필요한 핵심 3건 ── */
+  .hand-card{margin-top:14px; padding:18px 20px 16px}
+  .hand-head{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; flex-wrap:wrap}
+  .hand-head h3{font-size:16px; font-weight:800; letter-spacing:-.35px}
+  .hand-count{font-size:11px; font-weight:800; color:#B0442F; background:#FBEAE6; border:1px solid #F3D2CA;
+    border-radius:999px; padding:3px 9px; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .hand-count.zero{color:#2F7D3C; background:#E8F3EA; border-color:#CDE7D5}
+  .hand-sub{margin-top:4px; font-size:11.5px; color:var(--muted); line-height:1.55; letter-spacing:-.15px}
+  .hand-list{list-style:none; margin:10px 0 0; padding:0}
+  .hand-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:10px; align-items:start;
+    padding:11px 0; border-top:1px solid var(--line)}
+  .hand-list > .hand-row:first-child{border-top:0}
+  .hand-t{display:block; font-size:13px; font-weight:800; color:var(--ink); letter-spacing:-.25px; overflow-wrap:anywhere}
+  .hand-meta{display:flex; flex-wrap:wrap; gap:4px; margin-top:6px}
+  .hand-b{font-size:10px; font-weight:800; padding:2px 7px; border-radius:6px; background:#F5EEE4; color:#8B7C6D; letter-spacing:-.2px}
+  .hand-b.need{background:#EDEBFA; color:#5E559B}
+  .hand-b.min{background:#E7F0F9; color:#4A7098}
+  .hand-b.own{background:#EFF7F1; color:#2F7D3C}
+  .hand-b.due{background:#FFF3E2; color:#9A6B33; font-variant-numeric:tabular-nums}
+  .hand-b.due.today{background:#C0392B; color:#fff}
+  .hand-b.due.past{background:#F1ECE6; color:#84736A}
+  .hand-note{display:block; margin-top:5px; font-size:11px; color:var(--muted); line-height:1.5; overflow-wrap:anywhere}
+  .hand-btns{display:flex; gap:5px; flex-wrap:wrap; justify-content:flex-end}
+  .hand-btn{font-size:11px; font-weight:800; padding:6px 10px; border-radius:999px; border:1px solid var(--line-strong);
+    background:#fff; color:var(--ink-soft); white-space:nowrap; text-decoration:none; line-height:1.2}
+  .hand-btn:hover{background:#FFF6EC}
+  .hand-btn.done{background:#EFF7F1; border-color:#CDE7D5; color:#2F7D3C}
+  .hand-btn.pass{background:#FDF6E6; border-color:#EFE0BC; color:#8A6A18}
+  .hand-btn.undo{background:#fff; border-color:var(--line-strong); color:var(--muted)}
+  .hand-row.is-done{opacity:.62}
+  .hand-row.is-done .hand-t{text-decoration:line-through; text-decoration-thickness:1px}
+  .hand-row.is-done .hand-btns{opacity:1}
+  .hand-more{display:flex; align-items:center; justify-content:center; gap:6px; width:100%; margin-top:10px;
+    padding:9px 12px; border-radius:12px; border:1px dashed var(--line-strong); background:#FFFDFA;
+    font-size:11.5px; font-weight:800; color:var(--ink-soft)}
+  .hand-more:hover{background:#FFF6EC}
+  .hand-more b{font-variant-numeric:tabular-nums; color:#B0442F}
+  .hand-empty{padding:14px 2px; font-size:12px; font-weight:700; color:var(--muted); line-height:1.6}
+
   /* ── 트래커 ── */
   .trk-card{padding:22px 22px 26px}
   .trk-top{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
@@ -644,6 +707,67 @@
     .hub-reset-i{flex:1 1 100%}
   }
 
+
+  /* ── 적립·포인트 / 복권·예치금 / 당첨 후 미션 보드 ── */
+  .pnt-card{padding:20px 22px}
+  .lot-card, .msn-card{margin-top:14px; padding:20px 22px}
+  .pnt-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+  .pnt-head h3{font-size:16px; font-weight:800; letter-spacing:-.35px}
+  .pnt-head span{font-size:11.5px; font-weight:700; color:var(--muted)}
+  .pnt-head b{color:var(--ink)}
+  .pnt-goal{padding:12px 14px; border-radius:14px; background:#FFF9F2; border:1px solid var(--line); margin-bottom:12px}
+  .pnt-goal-top{display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-size:12px; font-weight:700; color:var(--ink-soft); letter-spacing:-.2px}
+  .pnt-goal-top b{font-size:15px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+  .pnt-goal-top small{font-weight:600; color:var(--muted-2); font-size:10.5px}
+  .pnt-goal-tag{font-size:11px; font-weight:800; color:#9A6B33; background:#FFF3E2; border:1px solid #F0DFC6; border-radius:999px; padding:3px 9px; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .pnt-goal-tag.hit{color:#2F7D3C; background:#E8F3EA; border-color:#CDE7D5}
+  .pnt-bar{margin-top:8px; height:8px; border-radius:999px; background:#F1E7DA; overflow:hidden}
+  .pnt-bar i{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,#F2B34B,#C63A2B)}
+  .pnt-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+  .pnt-box{padding:13px 14px; border-radius:15px; background:#FFFBF5; border:1px solid var(--line); min-width:0}
+  .pnt-label{font-size:11px; font-weight:800; color:var(--muted); letter-spacing:-.15px}
+  .pnt-num{margin-top:5px; font-size:22px; font-weight:800; letter-spacing:-.8px;
+    font-variant-numeric:tabular-nums; color:var(--ink); line-height:1.15}
+  .pnt-num small{font-size:11px; font-weight:700; color:var(--muted); margin-left:2px; letter-spacing:-.2px}
+  .pnt-malls{display:flex; flex-wrap:wrap; gap:4px; margin-top:7px}
+  .pnt-malls span{font-size:10px; font-weight:700; color:var(--ink-soft); background:#F6EFE5; border-radius:6px; padding:2px 6px}
+  .pnt-malls i{color:#2F7D3C; font-style:normal; font-weight:800}
+  .pnt-exp{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line)}
+  .pnt-exp-t{font-size:10.5px; font-weight:800; color:#B0442F; background:#FBEAE6; border:1px solid #F3D2CA; border-radius:999px; padding:3px 9px}
+  .pnt-exp-i{font-size:11.5px; font-weight:700; color:var(--ink-soft); background:#fff; border:1px solid var(--line-strong); border-radius:999px; padding:4px 10px}
+  .pnt-exp-i b{font-weight:800; color:#B0442F}
+  .pnt-exp-i em{font-style:normal; font-variant-numeric:tabular-nums; color:var(--muted)}
+  .lot-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+  .lot-box{padding:13px 14px; border-radius:15px; background:#FFFBF5; border:1px solid var(--line); min-width:0}
+  .lot-main{margin-top:5px; font-size:17px; font-weight:800; letter-spacing:-.5px; color:var(--ink); line-height:1.3}
+  .lot-main small{font-size:11px; font-weight:700; color:var(--muted); margin-left:2px}
+  .lot-sub{margin-top:4px; font-size:11px; line-height:1.5; color:var(--muted); letter-spacing:-.15px}
+  .msn-list{list-style:none; margin:0; padding:0}
+  .msn-row{display:grid; grid-template-columns:52px minmax(0,1fr) auto; gap:10px; align-items:center;
+    padding:9px 2px; border-bottom:1px solid var(--line); font-size:12.5px}
+  .msn-row:last-child{border-bottom:0}
+  .msn-pf{font-size:10px}
+  .msn-body{min-width:0}
+  .msn-t{display:block; font-weight:700; color:var(--ink); overflow-wrap:anywhere; letter-spacing:-.2px}
+  .msn-steps{display:flex; flex-wrap:wrap; gap:4px; margin-top:5px}
+  .msn-s{font-size:10px; font-weight:800; padding:2px 7px; border-radius:6px; background:#F5EEE4; color:#A09284; letter-spacing:-.2px}
+  .msn-s.done{background:#E8F3EA; color:#2F7D3C}
+  .msn-s.done::before{content:"✓ "}
+  .msn-s.next{background:#FBEAE6; color:#B0442F; box-shadow:0 0 0 1px #F3D2CA inset}
+  .msn-note{font-size:10.5px; font-weight:700; color:var(--muted); text-align:right; white-space:nowrap}
+  /* ── 트래커 카드 → 담당 비서 실행 버튼 ── */
+  .trk-acts{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; align-items:center}
+  .trk-act{font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px;
+    border:1px solid var(--line-strong); background:#fff; color:var(--ink-soft); line-height:1.35}
+  .trk-act:hover{background:#FFF6EC}
+  .trk-act.go{color:#2F7D3C; border-color:#CDE7D5; background:#EFF7F1}
+  .trk-act.pass{color:#8A6A18; border-color:#EFE0BC; background:#FDF6E6}
+  .trk-act.rm{color:#4A7098; border-color:#CFE0EE; background:#F1F6FB}
+  .trk-act-state{font-size:10px; font-weight:800; color:#2F7D3C}
+  .trk-act-state.warn{color:#9A6B33}
+  .trk-acts.is-done .trk-act{display:none}
+  .hub-body .trk-acts{margin-top:5px}
+
   @media (max-width:860px){
     .kanban{grid-template-columns:1fr}
   }
@@ -653,6 +777,14 @@
     .brand-text h1{font-size:23px}
     .sub{font-size:12px}
     .cmd-btn{width:100%; justify-content:center}
+    .header-actions{display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px; width:100%}
+    .header-actions .btn-refresh{padding:9px 12px}
+    .chips .today-brief{flex:1 1 100%; padding:8px 12px; font-size:11.5px}
+    .tb-text{white-space:normal; line-height:1.55}
+    .hand-card{padding:16px}
+    .hand-row{grid-template-columns:1fr; gap:6px}
+    .hand-btns{justify-content:flex-start}
+    .chips-bottom{margin-top:12px}
     .tabs{display:flex; flex-wrap:wrap; border-radius:24px}
     .tab{flex:1 1 calc(25% - 6px); min-width:0}
     .panel{padding-top:20px}
@@ -1070,12 +1202,18 @@
           <p class="sub">나은님 전용 · 피클즈 4인 &amp; 해피방 7총사가 함께하는 오피스</p>
         </div>
       </div>
-      <button class="cmd-btn" id="openCmdTop" type="button">💬 지휘실에서 지시하기</button>
+      <div class="header-actions">
+        <button class="btn-refresh" id="reloadTop" type="button" title="모바일 브라우저 캐시를 건너뛰고 최신 화면을 바로 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button>
+        <button class="cmd-btn" id="openCmdTop" type="button">💬 지휘실에서 지시하기</button>
+      </div>
     </div>
     <div class="chips">
-      <span class="chip live" id="statusChip"><span class="dot" id="statusDot" aria-hidden="true"></span><span id="statusChipText">비서 13명 · 단톡방 연결 대기</span></span>
       <span class="chip clock-chip" id="clockChip" aria-live="off">오늘</span>
-      <span class="chip" id="oiChip" title="막내의 분신 — 별도 인원이 아니라 텔레그램 중계 창구입니다">🥒 오이 · 막내 분신 · 텔레그램 중계</span>
+      <div class="today-brief" id="todayBriefBar" role="status" aria-live="polite">
+        <span class="tb-date" id="todayBriefDate">오늘</span>
+        <span class="tb-text" id="todayBriefText">오늘 챙길 일을 불러오는 중이에요</span>
+        <a class="tb-src" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener noreferrer" title="날씨 출처 · Apple Weather">&#xF8FF; Weather</a>
+      </div>
     </div>
   </header>
 
@@ -1133,6 +1271,21 @@
         <span>2.5D 오피스 · 캐릭터를 누르면 그 비서의 최근 단톡방 대화가 머리 위 말풍선으로 뜹니다. 지도는 끌어서 이동, 두 손가락(또는 오른쪽 위 ⊞ ⊟ ⤢)으로 확대·축소할 수 있어요.</span>
       </div>
     </div>
+
+    <!-- 지금 내 손이 필요한 핵심 3건 — 오피스 맵 바로 아래(수다모드·안내 아래, 피클 단톡방 위) -->
+    <section class="card hand-card" id="handCard" aria-labelledby="handTitle">
+      <div class="hand-head">
+        <div>
+          <div class="eyebrow" style="margin-bottom:6px">나은님 손이 필요한 것</div>
+          <h3 id="handTitle">지금 내 손이 필요한 핵심 3건</h3>
+          <p class="hand-sub">SMS·간편인증·캡차·유튜브 구독·로그인처럼 비서가 대신하지 못하는 것만 마감 순으로 모았어요. [완료]·[패스]를 누르면 담당 비서에게 바로 전달됩니다.</p>
+        </div>
+        <span class="hand-count" id="handCount">불러오는 중</span>
+      </div>
+      <ul class="hand-list" id="handTop"></ul>
+      <ul class="hand-list" id="handRest" hidden></ul>
+      <button class="hand-more" id="handMoreBtn" type="button" aria-expanded="false" aria-controls="handRest" hidden>나머지 <b id="handMoreN">0</b>건 펼치기</button>
+    </section>
 
     <div class="card agc-card" id="agcMapCard" style="padding:20px 22px; margin-top:14px">
       <div class="agc-head">
@@ -1289,6 +1442,12 @@
         </div>
       </article>
     </div>
+
+    <!-- 접속 현황 · 오이 — 상단에서 내려 대회의실·단톡방 아래에 둔다 -->
+    <div class="chips chips-bottom" id="statusChipsBottom">
+      <span class="chip live" id="statusChip"><span class="dot" id="statusDot" aria-hidden="true"></span><span id="statusChipText">비서 13명 · 단톡방 연결 대기</span></span>
+      <span class="chip" id="oiChip" title="막내의 분신 — 별도 인원이 아니라 텔레그램 중계 창구입니다">🥒 오이 · 막내 분신 · 텔레그램 중계</span>
+    </div>
   </section>
 
   <!-- ═══ 트래커 ═══ -->
@@ -1301,6 +1460,33 @@
       <button class="cmd-btn" type="button" data-goto="work">작업실에서 보기</button>
     </div>
     <!-- TRACKER-PANEL:START -->
+<div class="card pnt-card">
+<div class="pnt-head"><h3>적립·포인트 한눈에</h3><span>5대 몰 출첵 · 포인트 · 누적 수익 · <b>2026-11-28(토) 21:30 기준</b></span></div>
+<div class="pnt-goal"><div class="pnt-goal-top"><span>포인트·수익 합계 <b>81,250</b> <small>(1P≈1원)</small></span><span class="pnt-goal-tag hit">목표 50,000 · 162%</span></div><div class="pnt-bar"><i style="width:100%"></i></div></div>
+<div class="pnt-grid">
+<div class="pnt-box"><div class="pnt-label">5대 몰 출첵 누적</div><div class="pnt-num">10,070<small>원/P</small></div><div class="pnt-malls"><span>맘큐 <i aria-hidden="true">✓</i></span><span>락앤락몰 <i aria-hidden="true">✓</i></span><span>셰프애찬 <i aria-hidden="true">✓</i></span><span>칠성몰 <i aria-hidden="true">✓</i></span><span>G마켓 <i aria-hidden="true">✓</i></span></div></div>
+<div class="pnt-box"><div class="pnt-label">카카오 쇼핑포인트</div><div class="pnt-num">26,700<small>P</small></div></div>
+<div class="pnt-box"><div class="pnt-label">패널나우</div><div class="pnt-num">3,627<small>P</small></div></div>
+<div class="pnt-box"><div class="pnt-label">엠브레인</div><div class="pnt-num">2,280<small>원</small></div></div>
+<div class="pnt-box"><div class="pnt-label">피클즈 누적 수익</div><div class="pnt-num">38,573<small>원</small></div></div>
+</div>
+<div class="pnt-exp"><span class="pnt-exp-t">소멸 임박</span><span class="pnt-exp-i">CU 모바일상품권 <b>5,000원</b> <em>~12/25</em></span><span class="pnt-exp-i">금천G밸리상품권 <b>5,000원</b> <em>~12/24</em></span></div>
+</div>
+<div class="card lot-card">
+<div class="pnt-head"><h3>복권·예치금</h3><span>11/28(토) 추첨 반영</span></div>
+<div class="lot-grid">
+<div class="lot-box"><div class="pnt-label">로또 6/45 · 제1252회</div><div class="lot-main">전원 낙첨</div><div class="lot-sub">다음 1253회 — 11/30(월) 발권 · 12/5(토) 추첨</div></div>
+<div class="lot-box"><div class="pnt-label">연금복권720+</div><div class="lot-main">제344~348회 <small>보유</small></div><div class="lot-sub">5개 회차 보유 · 당첨 확인은 회차별로</div></div>
+<div class="lot-box"><div class="pnt-label">공용 예치금</div><div class="lot-main">126,000<small>원</small></div><div class="lot-sub">응모·구매 공용</div></div>
+</div></div>
+<div class="card msn-card">
+<div class="pnt-head"><h3>당첨 후 미션</h3><span>예약 → 수령 → 후기 → 폼</span></div><ul class="msn-list">
+<li class="msn-row"><span class="trk-pf survey msn-pf">설문</span><span class="msn-body"><span class="msn-t">[서울신문광고대상] 소이프스튜디오 세럼</span><span class="msn-steps"><span class="msn-s done">예약</span><span class="msn-s next">수령</span><span class="msn-s todo">후기</span><span class="msn-s todo">폼</span></span></span><span class="msn-note">수령지 입력 완료 · 수령 대기</span></li>
+<li class="msn-row"><span class="trk-pf hot msn-pf">핫딜</span><span class="msn-body"><span class="msn-t">[KINSE] 워터 보틀 500mL</span><span class="msn-steps"><span class="msn-s done">예약</span><span class="msn-s done">수령</span><span class="msn-s next">인증</span><span class="msn-s todo">폼</span></span></span><span class="msn-note">3일 인증은 선택 · 여유될 때</span></li>
+<li class="msn-row"><span class="trk-pf survey msn-pf">설문</span><span class="msn-body"><span class="msn-t">[금천G밸리] 상품권 5,000원</span><span class="msn-steps"><span class="msn-s next">등록</span><span class="msn-s todo">사용</span></span></span><span class="msn-note">서울Pay+ 등록 12/24까지</span></li>
+<li class="msn-row"><span class="trk-pf survey msn-pf">설문</span><span class="msn-body"><span class="msn-t">[CU] 모바일상품권 5,000원</span><span class="msn-steps"><span class="msn-s done">등록</span><span class="msn-s next">사용</span></span></span><span class="msn-note">사용 기한 12/25까지</span></li>
+<li class="msn-row"><span class="trk-pf mom msn-pf">맘홀</span><span class="msn-body"><span class="msn-t">[라쉼] 아토리피드 장벽 크림</span><span class="msn-steps"><span class="msn-s done">예약</span><span class="msn-s done">수령</span><span class="msn-s done">후기</span><span class="msn-s done">폼</span></span></span><span class="msn-note">3채널 후기 + 폼 제출 완결</span></li>
+</ul></div>
 <div class="card hub-card">
 <div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 11/28 21:21</span></div>
 <div class="hub-grid">
@@ -1313,24 +1499,24 @@
 </div>
 <div class="hub-sub">🚧 미결 건 <span class="n">18건</span><em>피클 · 노랑 13 · 하마뮤즈 5</em></div>
 <ul class="hub-list">
-<li class="hub-row"><span class="hub-who">서울온 만족도</span><span class="hub-body"><b>서울특별시 서울온 만족도 조사</b><i>엠보팅 18문항 완료 → 제출 때 SMS 인증번호 필요</i></span><span class="trk-d wait">~12/7</span></li>
-<li class="hub-row"><span class="hub-who">한국무역협회</span><span class="hub-body"><b>수출 퀴즈</b><i>개인 SNS 공유 + 계정 아이디 노출 캡처 필수</i></span><span class="trk-d wait">~12/3</span></li>
-<li class="hub-row"><span class="hub-who">마이리얼트립</span><span class="hub-body"><b>서호주 퍼스 2인</b><i>카카오 로그인 후 실명인증</i></span><span class="trk-d warn">~11/30</span></li>
-<li class="hub-row"><span class="hub-who">국민연금공단</span><span class="hub-body"><b>블루투스 이어폰 만족도 조사</b><i>응답자 이름란 PASS 인증 전용</i></span><span class="trk-d wait">~12/7</span></li>
-<li class="hub-row"><span class="hub-who">엠브레인</span><span class="hub-body"><b>패널파워 3일 주기 점검</b><i>로그인 보안문자(CAPTCHA) 대기 · 11/26 회차 미접속</i></span><span class="trk-d wait">점검</span></li>
-<li class="hub-row"><span class="hub-who">서울아리수</span><span class="hub-body"><b>AI 숏폼 투표</b><i>제출 때 02-120 SMS 인증</i></span><span class="trk-d warn">~11/29</span></li>
-<li class="hub-row"><span class="hub-who">성평등가족부</span><span class="hub-body"><b>청소년 아르바이트 퀴즈</b><i>자동입력방지 문자(CAPTCHA)</i></span><span class="trk-d wait">~11/30</span></li>
-<li class="hub-row"><span class="hub-who">국가암정보센터</span><span class="hub-body"><b>암예방 실천 퀴즈</b><i>블로그 댓글창 원격 미오픈 · 다짐 댓글·인증샷 2장 대기</i></span><span class="trk-d warn">~11/29</span></li>
-<li class="hub-row"><span class="hub-who">대전 중구</span><span class="hub-body"><b>블로그 이웃추가 이벤트</b><i>블로그 이웃추가·공감 조작 불가</i></span><span class="trk-d warn">~11/29</span></li>
-<li class="hub-row"><span class="hub-who">옥천군</span><span class="hub-body"><b>퀴즈 이벤트</b><i>정답 ④ 확인 · 블로그 댓글 입력창 미오픈</i></span><span class="trk-d warn">~11/29</span></li>
-<li class="hub-row"><span class="hub-who">기술보증기금</span><span class="hub-body"><b>카톡 채널 추가 이벤트</b><i>채널 추가 캡처 + 블로그 비밀댓글 제출</i></span><span class="trk-d warn">~11/29</span></li>
-<li class="hub-row"><span class="hub-who">자이</span><span class="hub-body"><b>별내자이 더스타 이그제큐티브</b><i>자이TV 유튜브 구독 + 닉네임 확인 대기</i></span><span class="trk-d wait">~12/2</span></li>
-<li class="hub-row"><span class="hub-who">건강보험심사평가원</span><span class="hub-body"><b>최애 건강 콘텐츠</b><i>블로그 이웃추가·댓글 입력 불가</i></span><span class="trk-d wait">~12/4</span></li>
-<li class="hub-row"><span class="hub-who">국토안전관리원</span><span class="hub-body"><b>모두의 광장 일산 2건</b><i>간편인증 로그인 후 진행</i></span><span class="trk-d wait">~12/4</span></li>
-<li class="hub-row"><span class="hub-who">템빨</span><span class="hub-body"><b>오버기어드 룰렛</b><i>카톡 앱 전용 · 이용권 1장 보유</i></span><span class="trk-d wait">상시</span></li>
-<li class="hub-row"><span class="hub-who">몽실몽실</span><span class="hub-body"><b>먼치킨 꽁이 2027 캘린더</b><i>유튜브 앱 로그인 오류로 진행 불가</i></span><span class="trk-d wait">마감 지남</span></li>
-<li class="hub-row"><span class="hub-who">KOSIS</span><span class="hub-body"><b>통계 퀴즈</b><i>폰 크롬에 캡차만 남음 — 직접 풀어야 제출</i></span><span class="trk-d wait">마감 지남</span></li>
-<li class="hub-row"><span class="hub-who">잡아바</span><span class="hub-body"><b>일자리 퀴즈</b><i>경기도일자리재단 통합회원 로그인 필요</i></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">서울온 만족도</span><span class="hub-body"><b>서울특별시 서울온 만족도 조사</b><i>엠보팅 18문항 완료 → 제출 때 SMS 인증번호 필요</i><span class="trk-acts" data-owner="노랑" data-title="서울특별시 서울온 만족도 조사"><button class="trk-act go" type="button" data-act="go" aria-label="서울특별시 서울온 만족도 조사 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="서울특별시 서울온 만족도 조사 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="서울특별시 서울온 만족도 조사 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/7</span></li>
+<li class="hub-row"><span class="hub-who">한국무역협회</span><span class="hub-body"><b>수출 퀴즈</b><i>개인 SNS 공유 + 계정 아이디 노출 캡처 필수</i><span class="trk-acts" data-owner="노랑" data-title="수출 퀴즈"><button class="trk-act go" type="button" data-act="go" aria-label="수출 퀴즈 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="수출 퀴즈 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="수출 퀴즈 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/3</span></li>
+<li class="hub-row"><span class="hub-who">마이리얼트립</span><span class="hub-body"><b>서호주 퍼스 2인</b><i>카카오 로그인 후 실명인증</i><span class="trk-acts" data-owner="노랑" data-title="서호주 퍼스 2인"><button class="trk-act go" type="button" data-act="go" aria-label="서호주 퍼스 2인 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="서호주 퍼스 2인 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="서호주 퍼스 2인 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/30</span></li>
+<li class="hub-row"><span class="hub-who">국민연금공단</span><span class="hub-body"><b>블루투스 이어폰 만족도 조사</b><i>응답자 이름란 PASS 인증 전용</i><span class="trk-acts" data-owner="노랑" data-title="블루투스 이어폰 만족도 조사"><button class="trk-act go" type="button" data-act="go" aria-label="블루투스 이어폰 만족도 조사 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="블루투스 이어폰 만족도 조사 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="블루투스 이어폰 만족도 조사 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/7</span></li>
+<li class="hub-row"><span class="hub-who">엠브레인</span><span class="hub-body"><b>패널파워 3일 주기 점검</b><i>로그인 보안문자(CAPTCHA) 대기 · 11/26 회차 미접속</i><span class="trk-acts" data-owner="노랑" data-title="패널파워 3일 주기 점검"><button class="trk-act go" type="button" data-act="go" aria-label="패널파워 3일 주기 점검 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="패널파워 3일 주기 점검 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="패널파워 3일 주기 점검 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">점검</span></li>
+<li class="hub-row"><span class="hub-who">서울아리수</span><span class="hub-body"><b>AI 숏폼 투표</b><i>제출 때 02-120 SMS 인증</i><span class="trk-acts" data-owner="노랑" data-title="AI 숏폼 투표"><button class="trk-act go" type="button" data-act="go" aria-label="AI 숏폼 투표 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="AI 숏폼 투표 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="AI 숏폼 투표 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">성평등가족부</span><span class="hub-body"><b>청소년 아르바이트 퀴즈</b><i>자동입력방지 문자(CAPTCHA)</i><span class="trk-acts" data-owner="노랑" data-title="청소년 아르바이트 퀴즈"><button class="trk-act go" type="button" data-act="go" aria-label="청소년 아르바이트 퀴즈 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="청소년 아르바이트 퀴즈 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="청소년 아르바이트 퀴즈 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~11/30</span></li>
+<li class="hub-row"><span class="hub-who">국가암정보센터</span><span class="hub-body"><b>암예방 실천 퀴즈</b><i>블로그 댓글창 원격 미오픈 · 다짐 댓글·인증샷 2장 대기</i><span class="trk-acts" data-owner="노랑" data-title="암예방 실천 퀴즈"><button class="trk-act go" type="button" data-act="go" aria-label="암예방 실천 퀴즈 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="암예방 실천 퀴즈 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="암예방 실천 퀴즈 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">대전 중구</span><span class="hub-body"><b>블로그 이웃추가 이벤트</b><i>블로그 이웃추가·공감 조작 불가</i><span class="trk-acts" data-owner="노랑" data-title="블로그 이웃추가 이벤트"><button class="trk-act go" type="button" data-act="go" aria-label="블로그 이웃추가 이벤트 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="블로그 이웃추가 이벤트 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="블로그 이웃추가 이벤트 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">옥천군</span><span class="hub-body"><b>퀴즈 이벤트</b><i>정답 ④ 확인 · 블로그 댓글 입력창 미오픈</i><span class="trk-acts" data-owner="노랑" data-title="퀴즈 이벤트"><button class="trk-act go" type="button" data-act="go" aria-label="퀴즈 이벤트 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="퀴즈 이벤트 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="퀴즈 이벤트 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">기술보증기금</span><span class="hub-body"><b>카톡 채널 추가 이벤트</b><i>채널 추가 캡처 + 블로그 비밀댓글 제출</i><span class="trk-acts" data-owner="노랑" data-title="카톡 채널 추가 이벤트"><button class="trk-act go" type="button" data-act="go" aria-label="카톡 채널 추가 이벤트 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="카톡 채널 추가 이벤트 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="카톡 채널 추가 이벤트 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/29</span></li>
+<li class="hub-row"><span class="hub-who">자이</span><span class="hub-body"><b>별내자이 더스타 이그제큐티브</b><i>자이TV 유튜브 구독 + 닉네임 확인 대기</i><span class="trk-acts" data-owner="노랑" data-title="별내자이 더스타 이그제큐티브"><button class="trk-act go" type="button" data-act="go" aria-label="별내자이 더스타 이그제큐티브 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="별내자이 더스타 이그제큐티브 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="별내자이 더스타 이그제큐티브 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/2</span></li>
+<li class="hub-row"><span class="hub-who">건강보험심사평가원</span><span class="hub-body"><b>최애 건강 콘텐츠</b><i>블로그 이웃추가·댓글 입력 불가</i><span class="trk-acts" data-owner="노랑" data-title="최애 건강 콘텐츠"><button class="trk-act go" type="button" data-act="go" aria-label="최애 건강 콘텐츠 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="최애 건강 콘텐츠 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="최애 건강 콘텐츠 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/4</span></li>
+<li class="hub-row"><span class="hub-who">국토안전관리원</span><span class="hub-body"><b>모두의 광장 일산 2건</b><i>간편인증 로그인 후 진행</i><span class="trk-acts" data-owner="하마뮤즈" data-title="모두의 광장 일산 2건"><button class="trk-act go" type="button" data-act="go" aria-label="모두의 광장 일산 2건 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="모두의 광장 일산 2건 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="모두의 광장 일산 2건 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/4</span></li>
+<li class="hub-row"><span class="hub-who">템빨</span><span class="hub-body"><b>오버기어드 룰렛</b><i>카톡 앱 전용 · 이용권 1장 보유</i><span class="trk-acts" data-owner="하마뮤즈" data-title="오버기어드 룰렛"><button class="trk-act go" type="button" data-act="go" aria-label="오버기어드 룰렛 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="오버기어드 룰렛 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="오버기어드 룰렛 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">상시</span></li>
+<li class="hub-row"><span class="hub-who">몽실몽실</span><span class="hub-body"><b>먼치킨 꽁이 2027 캘린더</b><i>유튜브 앱 로그인 오류로 진행 불가</i><span class="trk-acts" data-owner="하마뮤즈" data-title="먼치킨 꽁이 2027 캘린더"><button class="trk-act go" type="button" data-act="go" aria-label="먼치킨 꽁이 2027 캘린더 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="먼치킨 꽁이 2027 캘린더 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="먼치킨 꽁이 2027 캘린더 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">마감 지남</span></li>
+<li class="hub-row"><span class="hub-who">KOSIS</span><span class="hub-body"><b>통계 퀴즈</b><i>폰 크롬에 캡차만 남음 — 직접 풀어야 제출</i><span class="trk-acts" data-owner="하마뮤즈" data-title="통계 퀴즈"><button class="trk-act go" type="button" data-act="go" aria-label="통계 퀴즈 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="통계 퀴즈 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="통계 퀴즈 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">마감 지남</span></li>
+<li class="hub-row"><span class="hub-who">잡아바</span><span class="hub-body"><b>일자리 퀴즈</b><i>경기도일자리재단 통합회원 로그인 필요</i><span class="trk-acts" data-owner="하마뮤즈" data-title="일자리 퀴즈"><button class="trk-act go" type="button" data-act="go" aria-label="일자리 퀴즈 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="일자리 퀴즈 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="일자리 퀴즈 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d warn">~11/29</span></li>
 </ul>
 <div class="hub-sub">담당별 지금 하는 일</div>
 <div class="hub-grid three">
@@ -1456,13 +1642,14 @@
 <li class="trk-row"><span class="trk-pf naver">네이버</span><span class="trk-body"><span class="trk-t">2건</span><span class="trk-m">11/25 뷰티시스 레티놀·프로틴 앰플 2종</span></span><span class="trk-d wait">2건</span></li>
 </ul></div>
 <div class="trk-sec"><div class="trk-sec-head"><h3>남은 큐 · 진행 중</h3><span class="cnt">21건 · 리뷰·후기 3 + 미결 18</span></div><ul class="trk-list">
-<li class="trk-row"><span class="trk-pf coupang">쿠팡</span><span class="trk-body"><span class="trk-t">동원 퀴진 미니핫도그 450g 2개</span><span class="trk-m">5점 초안 전달 완료 · 등록은 나은님 직접</span></span><span class="trk-d wait">등록 대기</span></li>
-<li class="trk-row"><span class="trk-pf coupang">쿠팡</span><span class="trk-body"><span class="trk-t">한끼통살 곤약 현미 볶음밥 5개</span><span class="trk-m">5점 초안 전달 완료 · 등록은 나은님 직접</span></span><span class="trk-d wait">등록 대기</span></li>
-<li class="trk-row"><span class="trk-pf challenge">챌린저스</span><span class="trk-body"><span class="trk-t">차앤박 더마앤서 액티브 부스트 앰플 30ml</span><span class="trk-m">11/28 22:00~24:00 올리브영 배송 구매 · 당일 23:59 1·2차 인증</span></span><span class="trk-d today">오늘 22시</span></li>
-<li class="trk-row"><span class="trk-pf hold">미결</span><span class="trk-body"><span class="trk-t">피클(노랑) 13건</span><span class="trk-m">서울온 · 한국무역협회 · 마이리얼트립 · 국민연금 · 엠브레인 · 서울아리수 · 성평등가족부 · 국가암정보 · 대전 중구 · 옥천군 · 기술보증기금 · 자이 · 건강보험심사평가원</span></span><span class="trk-d wait">13건</span></li>
-<li class="trk-row"><span class="trk-pf hold">미결</span><span class="trk-body"><span class="trk-t">하마뮤즈 5건</span><span class="trk-m">국토안전관리원 일산 2건 · 템빨 룰렛 · 몽실몽실 캘린더 · KOSIS · 잡아바</span></span><span class="trk-d wait">5건</span></li>
+<li class="trk-row"><span class="trk-pf coupang">쿠팡</span><span class="trk-body"><span class="trk-t">동원 퀴진 미니핫도그 450g 2개</span><span class="trk-m">5점 초안 전달 완료 · 등록은 나은님 직접</span><span class="trk-acts" data-owner="노랑" data-title="동원 퀴진 미니핫도그 450g 2개"><button class="trk-act go" type="button" data-act="go" aria-label="동원 퀴진 미니핫도그 450g 2개 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="동원 퀴진 미니핫도그 450g 2개 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="동원 퀴진 미니핫도그 450g 2개 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">등록 대기</span></li>
+<li class="trk-row"><span class="trk-pf coupang">쿠팡</span><span class="trk-body"><span class="trk-t">한끼통살 곤약 현미 볶음밥 5개</span><span class="trk-m">5점 초안 전달 완료 · 등록은 나은님 직접</span><span class="trk-acts" data-owner="노랑" data-title="한끼통살 곤약 현미 볶음밥 5개"><button class="trk-act go" type="button" data-act="go" aria-label="한끼통살 곤약 현미 볶음밥 5개 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="한끼통살 곤약 현미 볶음밥 5개 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="한끼통살 곤약 현미 볶음밥 5개 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">등록 대기</span></li>
+<li class="trk-row"><span class="trk-pf challenge">챌린저스</span><span class="trk-body"><span class="trk-t">차앤박 더마앤서 액티브 부스트 앰플 30ml</span><span class="trk-m">11/28 22:00~24:00 올리브영 배송 구매 · 당일 23:59 1·2차 인증</span><span class="trk-acts" data-owner="노랑" data-title="차앤박 더마앤서 액티브 부스트 앰플 30ml"><button class="trk-act go" type="button" data-act="go" aria-label="차앤박 더마앤서 액티브 부스트 앰플 30ml 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="차앤박 더마앤서 액티브 부스트 앰플 30ml 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="차앤박 더마앤서 액티브 부스트 앰플 30ml 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d today">오늘 22시</span></li>
+<li class="trk-row"><span class="trk-pf hold">미결</span><span class="trk-body"><span class="trk-t">피클(노랑) 13건</span><span class="trk-m">서울온 · 한국무역협회 · 마이리얼트립 · 국민연금 · 엠브레인 · 서울아리수 · 성평등가족부 · 국가암정보 · 대전 중구 · 옥천군 · 기술보증기금 · 자이 · 건강보험심사평가원</span><span class="trk-acts" data-owner="노랑" data-title="피클(노랑) 13건"><button class="trk-act go" type="button" data-act="go" aria-label="피클(노랑) 13건 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="피클(노랑) 13건 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="피클(노랑) 13건 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">13건</span></li>
+<li class="trk-row"><span class="trk-pf hold">미결</span><span class="trk-body"><span class="trk-t">하마뮤즈 5건</span><span class="trk-m">국토안전관리원 일산 2건 · 템빨 룰렛 · 몽실몽실 캘린더 · KOSIS · 잡아바</span><span class="trk-acts" data-owner="하마뮤즈" data-title="하마뮤즈 5건"><button class="trk-act go" type="button" data-act="go" aria-label="하마뮤즈 5건 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="하마뮤즈 5건 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="하마뮤즈 5건 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">5건</span></li>
 </ul></div>
 <p class="trk-foot">집계 기준 — 누적 응모는 기록이 남은 11/12~11/28 접수분(체험단은 카톡 선물하기 포함, 설문·응모는 일자별 완료 집계)입니다. 당첨률은 노션 발표 명단에 결과가 확정된 건(당첨 8 + 미당첨·미선정 28) 기준이고, 미결 건은 노션 🚧 미결 건의 항목 수입니다. 수치는 노션 두 현황판과 <code>current-status.md</code> 기록만으로 계산했습니다.</p>
+<script>window.TRACKER_DATA = {"updated":"2026-11-28(토) 21:30","brief":{"date":"2026-11-28","label":"11/28(토)","weather":"대구 이슬비 3~10°C → 밤 맑음 · 내일(11/29) 맑음 0~8°C","todo":"22:00~24:00 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증 · 내일 펀드 시험 준비"},"handoff":[{"id":"chal","owner":"노랑","title":"차앤박 더마앤서 앰플 구매·인증","need":"구매·인증","mins":"5분","due":"2026-11-28","note":"올리브영 배송 구매 22~24시 · 당일 23:59 1·2차 인증","link":""},{"id":"arisu","owner":"노랑","title":"서울아리수 AI 숏폼 투표","need":"SMS","mins":"1분","due":"2026-11-29","note":"제출 때 02-120 SMS 인증번호","link":""},{"id":"cancer","owner":"노랑","title":"국가암정보센터 암예방 퀴즈","need":"블로그 댓글","mins":"3분","due":"2026-11-29","note":"다짐 댓글 + 인증샷 2장","link":""},{"id":"daejeon","owner":"노랑","title":"대전 중구 블로그 이웃추가 이벤트","need":"이웃추가","mins":"2분","due":"2026-11-29","note":"이웃추가·공감은 직접만 가능","link":""},{"id":"okcheon","owner":"노랑","title":"옥천군 퀴즈 이벤트","need":"블로그 댓글","mins":"1분","due":"2026-11-29","note":"정답 ④ 확인 · 댓글 입력창 미오픈","link":""},{"id":"kibo","owner":"노랑","title":"기술보증기금 카톡 채널 추가","need":"채널 추가","mins":"1분","due":"2026-11-29","note":"채널 추가 캡처 + 블로그 비밀댓글","link":""},{"id":"jobaba","owner":"하마뮤즈","title":"잡아바 일자리 퀴즈","need":"로그인","mins":"2분","due":"2026-11-29","note":"경기도일자리재단 통합회원 로그인","link":""},{"id":"mrt","owner":"노랑","title":"마이리얼트립 서호주 퍼스 2인","need":"실명인증","mins":"3분","due":"2026-11-30","note":"카카오 로그인 후 실명인증","link":"https://www.myrealtrip.com"},{"id":"gender","owner":"노랑","title":"성평등가족부 청소년 아르바이트 퀴즈","need":"캡차","mins":"1분","due":"2026-11-30","note":"자동입력방지 문자","link":""},{"id":"xi","owner":"노랑","title":"자이 별내자이 이그제큐티브","need":"유튜브 구독","mins":"1분","due":"2026-12-02","note":"자이TV 구독 + 닉네임 확인","link":""},{"id":"kita","owner":"노랑","title":"한국무역협회 수출 퀴즈","need":"SNS 공유","mins":"2분","due":"2026-12-03","note":"개인 SNS 공유 + 아이디 노출 캡처","link":""},{"id":"hira","owner":"노랑","title":"건강보험심사평가원 최애 콘텐츠","need":"이웃추가","mins":"2분","due":"2026-12-04","note":"이웃추가·댓글 입력 불가","link":""},{"id":"kalis","owner":"하마뮤즈","title":"국토안전관리원 일산 2건","need":"간편인증","mins":"3분","due":"2026-12-04","note":"간편인증 로그인 후 진행","link":""},{"id":"seoulon","owner":"노랑","title":"서울온 만족도 조사","need":"SMS","mins":"2분","due":"2026-12-07","note":"엠보팅 18문항 완료 · 제출 때 SMS","link":""},{"id":"nps","owner":"노랑","title":"국민연금공단 이어폰 만족도","need":"PASS 인증","mins":"2분","due":"2026-12-07","note":"응답자 이름란 PASS 전용","link":""},{"id":"embrain","owner":"노랑","title":"엠브레인 패널파워","need":"캡차","mins":"2분","due":"2026-11-26","note":"로그인 보안문자 · 11/26 회차 미접속","link":"https://www.embrain.com"},{"id":"tembb","owner":"하마뮤즈","title":"템빨 오버기어드 룰렛","need":"카톡 앱","mins":"1분","due":"2026-12-31","note":"카톡 앱 전용 · 이용권 1장","link":""},{"id":"kosis","owner":"하마뮤즈","title":"KOSIS 통계 퀴즈","need":"캡차","mins":"1분","due":"2026-11-27","note":"폰 크롬에 캡차만 남음","link":""},{"id":"mong","owner":"하마뮤즈","title":"몽실몽실 먼치킨 캘린더","need":"유튜브 로그인","mins":"2분","due":"2026-11-27","note":"유튜브 앱 로그인 오류","link":""}]};</script>
 </div>
     <!-- TRACKER-PANEL:END -->
   </section>
@@ -2181,7 +2368,9 @@
     });
   });
   var trkRefresh = $('#trkRefresh');
-  if (trkRefresh) trkRefresh.addEventListener('click', function(){ location.reload(); });
+  if (trkRefresh) trkRefresh.addEventListener('click', function(){
+    location.replace(location.pathname + '?v=' + Date.now() + location.hash);   // 모바일 캐시 우회
+  });
 
   $$('[data-goto]').forEach(function(b){
     b.addEventListener('click', function(){ selectTab(b.getAttribute('data-goto')); });
@@ -2542,6 +2731,9 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 3200);
   }
+  /* 다른 블록(핵심 3건 카드·트래커 카드)에서도 토스트·지휘실 모달을 부를 수 있게 열어 둔다 */
+  window.naeunToast = toast;
+  window.naeunOpenCommand = openModal;
   function fallbackCopy(text){
     try {
       var ta = document.createElement('textarea');
@@ -2634,7 +2826,7 @@
     { name:'오이', emoji:'🥒', handle:'막내 분신 · 텔레그램 중계', role:'막내의 분신 — 해피방 메시지 중계·감지 (인원에 미포함)', status:'online', support:true,
       duties:['5분 감지 루틴으로 해피방 메시지 확인','필요한 건을 메인으로 중계'] }
   ];
-  var STATUS_LABEL = { online:'온라인', idle:'대기', offline:'오프라인' };
+  var STATUS_LABEL = { online:'온라인', idle:'대기', offline:'오프라인', waiting:'응답 대기' };
   var STATUS_KEY = 'naeun-office:status:v1';
   var statusSaved = {};
   try { statusSaved = JSON.parse(localStorage.getItem(STATUS_KEY) || '{}') || {}; } catch(e){ statusSaved = {}; }
@@ -2662,7 +2854,7 @@
      · 토큰이 없거나 응답이 없으면 카드·인원은 그대로 두고 배지만 '오프라인'으로 폴백
      · 단톡방에서 새로 감지된 멤버는 이름·역할만 받아 카드를 만들어 넣습니다 (개인정보·키 없음)
      · 20초 폴링과 화면 복귀 시점에 오피스 맵 쪽에서 window.NaeunRoster.apply() 로 밀어 넣습니다 */
-  var ROS = { ready: false, at: 0, members: {}, added: 0 };
+  var ROS = { ready: false, at: 0, members: {}, added: 0, waiting: {} };
   function rosNorm(s){ return String(s == null ? '' : s).replace(/[\s@()\[\]·._,|\\/-]/g, '').toLowerCase(); }
   var ROS_ALIAS = {
     '노랑이':'노랑','피클서브':'노랑','피클서브2':'노랑','노랑피클':'노랑','서브피클':'노랑',
@@ -2694,6 +2886,15 @@
   function paintRosterStatuses(){
     $$('#agentGrid [data-status-btn]').forEach(function(b){
       var n = b.getAttribute('data-status-btn'), s = rosterStatus(n);
+      /* 단톡방에서 불렸는데 5분 넘게 응답이 없으면 '응답 대기'를 먼저 보여 준다 */
+      var wait = ROS.waiting && ROS.waiting[n];
+      if (wait) {
+        b.className = 'status waiting';
+        b.setAttribute('data-s', 'waiting');
+        b.textContent = '응답 대기';
+        b.setAttribute('aria-label', n + ' · ' + Math.floor(wait / 60000) + '분째 응답이 없어요');
+        return;
+      }
       b.className = 'status ' + s;
       b.setAttribute('data-s', s);
       b.textContent = STATUS_LABEL[s];
@@ -2711,6 +2912,9 @@
       } else {
         parts.push('단톡방 연결 대기');
       }
+      var waitN = 0;
+      for (var wk in ROS.waiting) if (ROS.waiting.hasOwnProperty(wk)) waitN++;
+      if (waitN) parts.push('응답 대기 ' + waitN);
       text.textContent = parts.join(' · ');
     }
     var dot = $('#statusDot');
@@ -2818,9 +3022,15 @@
     var feed = $('#rosterFeedState');
     if (feed) feed.textContent = '단톡방에 연결하지 못했어요 — 비밀번호와 네트워크를 확인하면 다시 채워집니다.';
   }
+  /* 오피스 맵 쪽에서 응답 대기 명단을 밀어 넣는다 */
+  function rosterSetWaiting(map){
+    ROS.waiting = map || {};
+    paintRosterStatuses();
+  }
   window.NaeunRoster = {
     apply: rosterApply,
     fail: rosterFail,
+    setWaiting: rosterSetWaiting,
     state: function(){ return { ready: ROS.ready, at: ROS.at, members: ROS.members, added: ROS.added, err: !!ROS.err }; }
   };
 
@@ -3069,6 +3279,196 @@
   }
   paintNextRoutine();
   setInterval(paintNextRoutine, 60000);
+
+  /* ══ 오늘 한 줄 브리핑 · 지금 내 손이 필요한 핵심 3건 · 트래커 실행 버튼 ══
+     · 데이터는 트래커 탭 안의 window.TRACKER_DATA (build-tracker.py가 함께 갱신)
+     · [완료]·[패스]·[진행]·[리마인드]는 해피방 API로 담당 비서에게 지시를 보낸다.
+       방 주인 비밀번호(localStorage)가 없거나 전송이 실패하면 지휘실 모달을 문구 프리필로 연다.
+     · 처리 상태는 이 브라우저에만 저장(localStorage) — 되돌리기 가능 */
+  (function(){
+    var TD = window.TRACKER_DATA || null;
+    var API = 'https://ai-group-chat.jinphoto20211.workers.dev';
+    var TOKEN_KEY = 'naeun:agc-token:v1';
+    var STATE_KEY = 'naeun-office:handoff:v1';
+    function esc(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c];
+      });
+    }
+    function readToken(){ try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e){ return ''; } }
+
+    /* ── 상단 원터치 새로고침 — 모바일 브라우저 캐시를 건너뛰고 최신 화면을 받는다 ── */
+    var reloadBtn = $('#reloadTop');
+    if (reloadBtn) reloadBtn.addEventListener('click', function(){
+      reloadBtn.classList.add('spin');
+      setTimeout(function(){ reloadBtn.classList.remove('spin'); }, 600);
+      location.replace(location.pathname + '?v=' + Date.now() + location.hash);
+    });
+
+    /* ── 해피방 전송 / 지휘실 폴백 ── */
+    function postHappy(text){
+      var token = readToken();
+      if (!token) return Promise.reject(new Error('no-token'));
+      return fetch(API + '/api/admin/rooms/happy/messages', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text })
+      }).then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+    }
+    function deliver(text, okMsg){
+      return postHappy(text).then(function(){
+        if (window.naeunToast) window.naeunToast(okMsg || '담당 비서에게 전달했어요');
+        return true;
+      }, function(){
+        if (window.naeunToast) window.naeunToast('방 주인 비밀번호가 없어 지휘실로 열었어요 — 붙여넣어 보내 주세요');
+        if (window.naeunOpenCommand) window.naeunOpenCommand(text, '텔레그램 해피방');
+        return false;
+      });
+    }
+
+    /* ── 오늘 생활·하진이 한 줄 브리핑 ── */
+    var briefDate = $('#todayBriefDate'), briefText = $('#todayBriefText');
+    if (TD && TD.brief) {
+      if (briefDate) briefDate.textContent = TD.brief.label || '오늘';
+      if (briefText) {
+        briefText.innerHTML = '☀️ ' + esc(TD.brief.weather) + ' <span style="color:var(--line-strong)">·</span> ' + esc(TD.brief.todo);
+        briefText.title = TD.brief.weather + ' · ' + TD.brief.todo;
+      }
+    } else if (briefText) {
+      briefText.textContent = '브리핑 데이터를 못 읽었어요 — 트래커 탭에서 새로고침해 주세요';
+    }
+
+    /* ── 트래커 카드 양방향 실행 버튼 ── */
+    document.addEventListener('click', function(e){
+      var btn = e.target.closest('.trk-act');
+      if (!btn) return;
+      var box = btn.closest('.trk-acts');
+      if (!box) return;
+      var owner = box.getAttribute('data-owner') || '노랑';
+      var title = box.getAttribute('data-title') || '';
+      var kind = btn.getAttribute('data-act');
+      var msg = kind === 'go' ? '@' + owner + ' [' + title + '] 진행해 주세요'
+              : kind === 'pass' ? '@' + owner + ' [' + title + ']는 이번엔 패스할게요'
+              : '@' + owner + ' [' + title + '] 리마인드 부탁해요';
+      var stateEl = box.querySelector('.trk-act-state');
+      if (stateEl) { stateEl.textContent = '보내는 중'; stateEl.classList.remove('warn'); }
+      deliver(msg, kind === 'go' ? '진행 지시를 보냈어요' : kind === 'pass' ? '패스를 알렸어요' : '리마인드를 보냈어요')
+        .then(function(ok){
+          if (!stateEl) return;
+          box.classList.add('is-done');
+          stateEl.textContent = ok ? (kind === 'go' ? '보냄 · 진행' : kind === 'pass' ? '보냄 · 패스' : '보냄 · 리마인드')
+                                   : '지휘실에서 보내기';
+          stateEl.classList.toggle('warn', !ok);
+        });
+    });
+
+    /* ── 지금 내 손이 필요한 핵심 3건 ── */
+    var handCard = $('#handCard');
+    if (!handCard) return;
+    var handTop = $('#handTop'), handRest = $('#handRest'), handMore = $('#handMoreBtn');
+    var handCount = $('#handCount'), handSub = handCard.querySelector('.hand-sub');
+    var items = (TD && TD.handoff) || [];
+    var state = {};
+    try { state = JSON.parse(localStorage.getItem(STATE_KEY) || '{}') || {}; } catch(e){ state = {}; }
+    function saveState(){ try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e){} }
+    function ymd(d){ return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); }
+    function parseYmd(s){
+      var p = String(s || '').split('-');
+      if (p.length !== 3) return 0;
+      return (+p[0]) * 10000 + (+p[1]) * 100 + (+p[2]);
+    }
+    function dayNum(n){ return Math.floor(Date.UTC(Math.floor(n / 10000), Math.floor(n % 10000 / 100) - 1, n % 100) / 86400000); }
+    function dueInfo(it){
+      var due = parseYmd(it.due);
+      if (!due) return { cls: '', text: '예정 없음' };
+      var left = dayNum(due) - dayNum(ymd(new Date()));
+      if (left < 0) return { cls: 'past', text: '마감 지남' };
+      if (left === 0) return { cls: 'today', text: '오늘' };
+      return { cls: '', text: 'D-' + left };
+    }
+    var expanded = false;
+    function rowHtml(it){
+      var st = state[it.id], b = dueInfo(it);
+      var h = '<li class="hand-row' + (st ? ' is-done' : '') + '" data-id="' + esc(it.id) + '">' +
+        '<div class="hand-body"><span class="hand-t">' + esc(it.title) + '</span>' +
+        '<span class="hand-meta">' +
+          '<span class="hand-b need">' + esc(it.need) + '</span>' +
+          '<span class="hand-b min">' + esc(it.mins) + '</span>' +
+          '<span class="hand-b own">' + esc(it.owner) + '</span>' +
+          '<span class="hand-b due ' + b.cls + '">' + b.text + '</span>' +
+          (st ? '<span class="hand-b">' + (st === 'done' ? '완료함' : '패스함') + '</span>' : '') +
+        '</span>' +
+        (it.note ? '<span class="hand-note">' + esc(it.note) + '</span>' : '') +
+        '</div><div class="hand-btns">';
+      if (st) {
+        h += '<button class="hand-btn undo" type="button" data-h="undo">되돌리기</button>';
+      } else {
+        if (it.link) h += '<a class="hand-btn" href="' + esc(it.link) + '" target="_blank" rel="noopener noreferrer">링크</a>';
+        h += '<button class="hand-btn done" type="button" data-h="done">완료</button>' +
+             '<button class="hand-btn pass" type="button" data-h="pass">패스</button>';
+      }
+      return h + '</div></li>';
+    }
+    function byDue(a, b){ return (parseYmd(a.due) || 99999999) - (parseYmd(b.due) || 99999999); }
+    function render(){
+      if (!items.length) {
+        handTop.innerHTML = '<li class="hand-empty">목록을 못 읽었어요 — 트래커 탭에서 새로고침해 주세요</li>';
+        handRest.innerHTML = '';
+        if (handCount) handCount.textContent = '목록 없음';
+        if (handMore) handMore.hidden = true;
+        return;
+      }
+      var today = ymd(new Date()), open = [], overdue = [], handled = [];
+      items.forEach(function(it){
+        var due = parseYmd(it.due);
+        if (state[it.id]) handled.push(it);
+        else if (due && due < today) overdue.push(it);
+        else open.push(it);
+      });
+      open.sort(byDue); overdue.sort(byDue); handled.sort(byDue);
+      var top = open.slice(0, 3);
+      var rest = open.slice(3).concat(overdue).concat(handled);
+      var left = open.length + overdue.length;
+      handTop.innerHTML = top.length ? top.map(rowHtml).join('') :
+        '<li class="hand-empty">지금 바로 손이 필요한 건은 없어요 · 남은 건은 아래로 접어 두었어요</li>';
+      handRest.innerHTML = rest.map(rowHtml).join('');
+      if (handCount) {
+        handCount.textContent = left ? left + '건 남음' : '다 처리했어요';
+        handCount.classList.toggle('zero', !left);
+      }
+      if (handMore) {
+        handMore.hidden = !rest.length;
+        handMore.innerHTML = '<b>' + rest.length + '</b>건 ' + (expanded ? '접기' : '펼치기');
+        handMore.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        handRest.hidden = !expanded;
+      }
+      if (handSub && overdue.length) {
+        handSub.textContent = 'SMS·간편인증·캡차·유튜브 구독·로그인처럼 비서가 대신하지 못하는 것만 마감 순으로 모았어요. 마감 지난 ' + overdue.length + '건은 아래로 접었습니다.';
+      }
+    }
+    if (handMore) handMore.addEventListener('click', function(){ expanded = !expanded; render(); });
+    handCard.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-h]');
+      if (!btn) return;
+      var row = btn.closest('.hand-row');
+      if (!row) return;
+      var id = row.getAttribute('data-id'), kind = btn.getAttribute('data-h');
+      var it = null;
+      for (var i = 0; i < items.length; i++) if (items[i].id === id) { it = items[i]; break; }
+      if (!it) return;
+      if (kind === 'undo') {
+        delete state[id]; saveState(); render();
+        if (window.naeunToast) window.naeunToast('되돌렸어요');
+        return;
+      }
+      state[id] = kind; saveState(); render();
+      var msg = '@' + it.owner + ' [' + it.title + ']' +
+        (kind === 'done' ? ' 완료했어요! 이어서 진행해 주세요' : '는 이번엔 패스할게요');
+      deliver(msg, kind === 'done' ? '완료를 담당 비서에게 알렸어요' : '패스를 담당 비서에게 알렸어요');
+    });
+    render();
+
+  })();
 })();
 </script>
 <script>
@@ -3738,6 +4138,40 @@
       if (lu && (now - lu) < ACTIVE_MS) return true;   // 서버 시계가 조금 앞서도 최근으로 본다
       return !!recent;
     }
+    /* ── 단톡방 무응답 체크 ─────────────────────────────────
+       방 주인이 '@비서'나 이름으로 불렀는데 5분 넘게 그 비서의 말이 없으면 '응답 대기'.
+       호출은 최근 3시간 안의 방 주인 발언만 센다(지난 이력을 끝까지 읽어도 옛 호출은 버린다).
+       긴 이름부터 맞춰 지우므로 '큐(별)'을 부르면 '큐'까지 불린 것으로 치지 않는다. */
+    var CALLS = {}, WAIT_MS = 5 * 60 * 1000, CALL_MAX_MS = 3 * 60 * 60 * 1000;
+    var NAME_ORDER = CHARS.map(function (c) { return c.name; }).sort(function (a, b) { return b.length - a.length; });
+    function collectCalls(messages, now) {
+      (messages || []).forEach(function (m) {
+        if (!m || !m.sender || m.sender.role === 'system') return;
+        var nm = String(m.sender.name || '');
+        if (m.sender.role !== 'admin' && nm.indexOf('방 주인') < 0) return;
+        var at = Date.parse(m.at) || 0;
+        if (!at || now - at > CALL_MAX_MS) return;
+        var text = String(m.text == null ? '' : m.text);
+        NAME_ORDER.forEach(function (n) {
+          if (text.indexOf(n) >= 0) {
+            if (!CALLS[n] || at > CALLS[n]) CALLS[n] = at;
+            text = text.split(n).join(' ');
+          }
+        });
+      });
+    }
+    function waitingMap(now) {
+      var out = {};
+      Object.keys(CALLS).forEach(function (n) {
+        var at = CALLS[n], c = byName[n];
+        if (!at || !c) { delete CALLS[n]; return; }
+        if (now - at > CALL_MAX_MS) { delete CALLS[n]; return; }
+        if (now - at < WAIT_MS) return;                       // 아직 5분이 안 지남
+        if ((c.latestChatAt || 0) > at) { delete CALLS[n]; return; }   // 응답했음
+        out[n] = now - at;
+      });
+      return out;
+    }
     /* 접속 상태 반영 — 말풍선 점・아바타 바 컬러를 한 곳에서 같이 바꾼다 */
     function applyPresence(agents, messages) {
       var now = Date.now();
@@ -3782,6 +4216,10 @@
         }
         window.o25SetChatStatus(c.name, on);
       });
+      collectCalls(messages, now);
+      if (window.NaeunRoster && window.NaeunRoster.setWaiting) {
+        window.NaeunRoster.setWaiting(waitingMap(now));
+      }
       firstSync = false;
       if (typeof refreshBubbles === 'function') refreshBubbles();
       refreshMotions();

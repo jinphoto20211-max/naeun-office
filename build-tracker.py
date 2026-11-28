@@ -11,7 +11,7 @@
   - 마커가 없으면 탭·패널·CSS·JS를 한 번 삽입
 """
 
-import sys, io, os
+import sys, io, os, json, html as _html
 from datetime import datetime, timedelta, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -151,11 +151,11 @@ unknown_total = sum(u[3] for u in UNKNOWN)
 
 # ── 6. 남은 큐 ────────────────────────────────────────────────────────
 QUEUE = [
-    ("쿠팡", "동원 퀴진 미니핫도그 450g 2개", "5점 초안 전달 완료 · 등록은 나은님 직접", "등록 대기", "wait"),
-    ("쿠팡", "한끼통살 곤약 현미 볶음밥 5개", "5점 초안 전달 완료 · 등록은 나은님 직접", "등록 대기", "wait"),
-    ("챌린저스", "차앤박 더마앤서 액티브 부스트 앰플 30ml", "11/28 22:00~24:00 올리브영 배송 구매 · 당일 23:59 1·2차 인증", "오늘 22시", "today"),
-    ("미결", "피클(노랑) 13건", "서울온 · 한국무역협회 · 마이리얼트립 · 국민연금 · 엠브레인 · 서울아리수 · 성평등가족부 · 국가암정보 · 대전 중구 · 옥천군 · 기술보증기금 · 자이 · 건강보험심사평가원", "13건", "wait"),
-    ("미결", "하마뮤즈 5건", "국토안전관리원 일산 2건 · 템빨 룰렛 · 몽실몽실 캘린더 · KOSIS · 잡아바", "5건", "wait"),
+    ("쿠팡", "동원 퀴진 미니핫도그 450g 2개", "5점 초안 전달 완료 · 등록은 나은님 직접", "등록 대기", "wait", "노랑"),
+    ("쿠팡", "한끼통살 곤약 현미 볶음밥 5개", "5점 초안 전달 완료 · 등록은 나은님 직접", "등록 대기", "wait", "노랑"),
+    ("챌린저스", "차앤박 더마앤서 액티브 부스트 앰플 30ml", "11/28 22:00~24:00 올리브영 배송 구매 · 당일 23:59 1·2차 인증", "오늘 22시", "today", "노랑"),
+    ("미결", "피클(노랑) 13건", "서울온 · 한국무역협회 · 마이리얼트립 · 국민연금 · 엠브레인 · 서울아리수 · 성평등가족부 · 국가암정보 · 대전 중구 · 옥천군 · 기술보증기금 · 자이 · 건강보험심사평가원", "13건", "wait", "노랑"),
+    ("미결", "하마뮤즈 5건", "국토안전관리원 일산 2건 · 템빨 룰렛 · 몽실몽실 캘린더 · KOSIS · 잡아바", "5건", "wait", "하마뮤즈"),
 ]
 queue_review = 3
 queue_open = 18
@@ -190,6 +190,96 @@ VIDEO_RESETS = [
     ("별큐", "12/28(월)", "09:20", "2026-12-28T09:20:00+09:00"),
 ]
 
+# ── 8. 오늘 한 줄 브리핑 (오피스 맵 위 얇은 바) ─────────────────────────
+# 날씨 출처: Apple WeatherKit · 대구 달서구 2026-11-28 22:28 조회
+#   (11/28 이슬비 3~10°C·강수 58% → 밤 맑음 / 11/29 맑음 0~8°C·강수 0%)
+BRIEF_DATE = "2026-11-28"
+BRIEF_LABEL = "11/28(토)"
+BRIEF_WEATHER = "대구 이슬비 3~10°C → 밤 맑음 · 내일(11/29) 맑음 0~8°C"
+BRIEF_TODO = "22:00~24:00 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증 · 내일 펀드 시험 준비"
+
+# ── 9. 지금 내 손이 필요한 건 (SMS·간편인증·캡차·로그인 …) ───────────────
+# (id, 담당, 항목, 인증 종류, 예상 소요, 마감일(ISO), 메모, 링크)
+# 마감일이 지난 건은 화면에서 '마감 지남'으로 접힌다. 링크는 서비스 대표 주소만 넣는다.
+HANDOFF = [
+    ("chal", "노랑", "차앤박 더마앤서 앰플 구매·인증", "구매·인증", "5분", "2026-11-28",
+     "올리브영 배송 구매 22~24시 · 당일 23:59 1·2차 인증", ""),
+    ("arisu", "노랑", "서울아리수 AI 숏폼 투표", "SMS", "1분", "2026-11-29",
+     "제출 때 02-120 SMS 인증번호", ""),
+    ("cancer", "노랑", "국가암정보센터 암예방 퀴즈", "블로그 댓글", "3분", "2026-11-29",
+     "다짐 댓글 + 인증샷 2장", ""),
+    ("daejeon", "노랑", "대전 중구 블로그 이웃추가 이벤트", "이웃추가", "2분", "2026-11-29",
+     "이웃추가·공감은 직접만 가능", ""),
+    ("okcheon", "노랑", "옥천군 퀴즈 이벤트", "블로그 댓글", "1분", "2026-11-29",
+     "정답 ④ 확인 · 댓글 입력창 미오픈", ""),
+    ("kibo", "노랑", "기술보증기금 카톡 채널 추가", "채널 추가", "1분", "2026-11-29",
+     "채널 추가 캡처 + 블로그 비밀댓글", ""),
+    ("jobaba", "하마뮤즈", "잡아바 일자리 퀴즈", "로그인", "2분", "2026-11-29",
+     "경기도일자리재단 통합회원 로그인", ""),
+    ("mrt", "노랑", "마이리얼트립 서호주 퍼스 2인", "실명인증", "3분", "2026-11-30",
+     "카카오 로그인 후 실명인증", "https://www.myrealtrip.com"),
+    ("gender", "노랑", "성평등가족부 청소년 아르바이트 퀴즈", "캡차", "1분", "2026-11-30",
+     "자동입력방지 문자", ""),
+    ("xi", "노랑", "자이 별내자이 이그제큐티브", "유튜브 구독", "1분", "2026-12-02",
+     "자이TV 구독 + 닉네임 확인", ""),
+    ("kita", "노랑", "한국무역협회 수출 퀴즈", "SNS 공유", "2분", "2026-12-03",
+     "개인 SNS 공유 + 아이디 노출 캡처", ""),
+    ("hira", "노랑", "건강보험심사평가원 최애 콘텐츠", "이웃추가", "2분", "2026-12-04",
+     "이웃추가·댓글 입력 불가", ""),
+    ("kalis", "하마뮤즈", "국토안전관리원 일산 2건", "간편인증", "3분", "2026-12-04",
+     "간편인증 로그인 후 진행", ""),
+    ("seoulon", "노랑", "서울온 만족도 조사", "SMS", "2분", "2026-12-07",
+     "엠보팅 18문항 완료 · 제출 때 SMS", ""),
+    ("nps", "노랑", "국민연금공단 이어폰 만족도", "PASS 인증", "2분", "2026-12-07",
+     "응답자 이름란 PASS 전용", ""),
+    ("embrain", "노랑", "엠브레인 패널파워", "캡차", "2분", "2026-11-26",
+     "로그인 보안문자 · 11/26 회차 미접속", "https://www.embrain.com"),
+    ("tembb", "하마뮤즈", "템빨 오버기어드 룰렛", "카톡 앱", "1분", "2026-12-31",
+     "카톡 앱 전용 · 이용권 1장", ""),
+    ("kosis", "하마뮤즈", "KOSIS 통계 퀴즈", "캡차", "1분", "2026-11-27",
+     "폰 크롬에 캡차만 남음", ""),
+    ("mong", "하마뮤즈", "몽실몽실 먼치킨 캘린더", "유튜브 로그인", "2분", "2026-11-27",
+     "유튜브 앱 로그인 오류", ""),
+]
+
+# ── 10. 적립·포인트 보드 ────────────────────────────────────────────────
+MALL_STAMP_TOTAL = 10070          # 5대 몰 출첵 누적 (원/P)
+MALL_STAMPS = ["맘큐", "락앤락몰", "셰프애찬", "칠성몰", "G마켓"]
+POINT_ITEMS = [
+    ("카카오 쇼핑포인트", "26,700", "P"),
+    ("패널나우", "3,627", "P"),
+    ("엠브레인", "2,280", "원"),
+    ("피클즈 누적 수익", "38,573", "원"),
+]
+POINT_GOAL = 50000                # 포인트·수익 합계 목표 (1P≈1원 기준)
+POINT_EXPIRING = [
+    ("CU 모바일상품권", "5,000원", "12/25"),
+    ("금천G밸리상품권", "5,000원", "12/24"),
+]
+
+# ── 11. 복권·예치금 ─────────────────────────────────────────────────────
+LOTTO_ROUND = 1252
+LOTTO_RESULT = "전원 낙첨"
+LOTTO_NEXT = "다음 1253회 — 11/30(월) 발권 · 12/5(토) 추첨"
+PENSION_ROUNDS = "제344~348회"
+PENSION_NOTE = "5개 회차 보유 · 당첨 확인은 회차별로"
+DEPOSIT_TOTAL = "126,000"
+
+# ── 12. 당첨 후 미션 (예약 → 수령 → 후기 → 폼) ──────────────────────────
+# (제목, 라벨, 단계[(이름, 상태 done|next|todo)], 다음 할 일)
+MISSIONS = [
+    ("[서울신문광고대상] 소이프스튜디오 세럼", "설문",
+     [("예약", "done"), ("수령", "next"), ("후기", "todo"), ("폼", "todo")], "수령지 입력 완료 · 수령 대기"),
+    ("[KINSE] 워터 보틀 500mL", "핫딜",
+     [("예약", "done"), ("수령", "done"), ("인증", "next"), ("폼", "todo")], "3일 인증은 선택 · 여유될 때"),
+    ("[금천G밸리] 상품권 5,000원", "설문",
+     [("등록", "next"), ("사용", "todo")], "서울Pay+ 등록 12/24까지"),
+    ("[CU] 모바일상품권 5,000원", "설문",
+     [("등록", "done"), ("사용", "next")], "사용 기한 12/25까지"),
+    ("[라쉼] 아토리피드 장벽 크림", "맘홀",
+     [("예약", "done"), ("수령", "done"), ("후기", "done"), ("폼", "done")], "3채널 후기 + 폼 제출 완결"),
+]
+
 
 def dday(iso):
     """한국 시간 달력 날짜 기준 남은 일수 (빌드 시점 고정값, 화면에서는 JS가 갱신)"""
@@ -198,6 +288,14 @@ def dday(iso):
     if left > 0:
         return "D-%d" % left
     return "오늘" if left == 0 else "지남"
+
+
+# ── 담당 비서 (미결 건 버튼이 지시를 보낼 곳) ───────────────────────────
+HAMA_WHO = {"국토안전관리원", "템빨", "몽실몽실", "KOSIS", "잡아바"}
+
+
+def hub_owner(who):
+    return "하마뮤즈" if who in HAMA_WHO else "노랑"
 
 
 HUB = {
@@ -236,12 +334,108 @@ def pf(label):
     return '<span class="trk-pf %s">%s</span>' % (PF_CLASS.get(label, ""), label)
 
 
-def row(label, title, meta, badge=None, kind="", today=False):
+def acts(owner, title):
+    """트래커 카드 → 담당 비서 양방향 실행 버틍 (진행·패스·리마인드).
+    누르면 index.html 쪽 JS가 해피방 API(또는 지휘실 모달)로 지시를 보낸다."""
+    return ('<span class="trk-acts" data-owner="%s" data-title="%s">'
+            '<button class="trk-act go" type="button" data-act="go" aria-label="%s 진행 지시">진행</button>'
+            '<button class="trk-act pass" type="button" data-act="pass" aria-label="%s 패스">패스</button>'
+            '<button class="trk-act rm" type="button" data-act="remind" aria-label="%s 리마인드">리마인드</button>'
+            '<span class="trk-act-state" aria-live="polite"></span></span>'
+            % (_html.escape(owner, quote=True), _html.escape(title, quote=True),
+               _html.escape(title, quote=True), _html.escape(title, quote=True),
+               _html.escape(title, quote=True)))
+
+
+def row(label, title, meta, badge=None, kind="", today=False, owner=None):
     b = ""
     if badge:
         b = '<span class="trk-d %s%s">%s</span>' % (kind, " today" if today else "", badge)
+    a = acts(owner, title) if owner else ""
     return ('<li class="trk-row">%s<span class="trk-body"><span class="trk-t">%s</span>'
-            '<span class="trk-m">%s</span></span>%s</li>' % (pf(label), title, meta, b))
+            '<span class="trk-m">%s</span>%s</span>%s</li>' % (pf(label), title, meta, a, b))
+
+
+def _num(s):
+    return int(str(s).replace(",", ""))
+
+
+def boards_html():
+    """트래커 탭 맨 위 핵심 보드 — 적립·포인트 / 복권·예치금 / 당첨 후 미션."""
+    point_total = MALL_STAMP_TOTAL + sum(_num(v) for _, v, _ in POINT_ITEMS)
+    pct = round(point_total / float(POINT_GOAL) * 100)
+    bar = min(100, pct)
+    o = ['<div class="card pnt-card">']
+    o.append('<div class="pnt-head"><h3>적립·포인트 한눈에</h3>'
+             '<span>5대 몰 출첵 · 포인트 · 누적 수익 · <b>%s 기준</b></span></div>' % STAMP)
+    o.append('<div class="pnt-goal">'
+             '<div class="pnt-goal-top"><span>포인트·수익 합계 <b>%s</b> <small>(1P≈1원)</small></span>'
+             '<span class="pnt-goal-tag%s">목표 %s · %s%%</span></div>'
+             '<div class="pnt-bar"><i style="width:%d%%"></i></div></div>'
+             % (format(point_total, ","), " hit" if pct >= 100 else "",
+                format(POINT_GOAL, ","), pct, bar))
+    o.append('<div class="pnt-grid">')
+    o.append('<div class="pnt-box"><div class="pnt-label">5대 몰 출첵 누적</div>'
+             '<div class="pnt-num">%s<small>원/P</small></div>'
+             '<div class="pnt-malls">%s</div></div>'
+             % (format(MALL_STAMP_TOTAL, ","),
+                "".join('<span>%s <i aria-hidden="true">✓</i></span>' % m for m in MALL_STAMPS)))
+    for label, value, unit in POINT_ITEMS:
+        o.append('<div class="pnt-box"><div class="pnt-label">%s</div>'
+                 '<div class="pnt-num">%s<small>%s</small></div></div>' % (label, value, unit))
+    o.append('</div>')
+    o.append('<div class="pnt-exp"><span class="pnt-exp-t">소멸 임박</span>%s</div>'
+             % "".join('<span class="pnt-exp-i">%s <b>%s</b> <em>~%s</em></span>'
+                       % (name, amount, date) for name, amount, date in POINT_EXPIRING))
+    o.append('</div>')
+
+    o.append('<div class="card lot-card">')
+    o.append('<div class="pnt-head"><h3>복권·예치금</h3><span>11/28(토) 추첨 반영</span></div>')
+    o.append('<div class="lot-grid">')
+    o.append('<div class="lot-box"><div class="pnt-label">로또 6/45 · 제%d회</div>'
+             '<div class="lot-main">%s</div><div class="lot-sub">%s</div></div>'
+             % (LOTTO_ROUND, LOTTO_RESULT, LOTTO_NEXT))
+    o.append('<div class="lot-box"><div class="pnt-label">연금복권720+</div>'
+             '<div class="lot-main">%s <small>보유</small></div>'
+             '<div class="lot-sub">%s</div></div>' % (PENSION_ROUNDS, PENSION_NOTE))
+    o.append('<div class="lot-box"><div class="pnt-label">공용 예치금</div>'
+             '<div class="lot-main">%s<small>원</small></div>'
+             '<div class="lot-sub">응모·구매 공용</div></div>' % DEPOSIT_TOTAL)
+    o.append('</div></div>')
+
+    o.append('<div class="card msn-card">')
+    o.append('<div class="pnt-head"><h3>당첨 후 미션</h3>'
+             '<span>예약 → 수령 → 후기 → 폼</span></div><ul class="msn-list">')
+    for title, label, steps, note in MISSIONS:
+        o.append('<li class="msn-row"><span class="trk-pf %s msn-pf">%s</span>'
+                 '<span class="msn-body"><span class="msn-t">%s</span>'
+                 '<span class="msn-steps">%s</span></span>'
+                 '<span class="msn-note">%s</span></li>'
+                 % (PF_CLASS.get(label, ""), label, title,
+                    "".join('<span class="msn-s %s">%s</span>' % (st, nm) for nm, st in steps),
+                    note))
+    o.append('</ul></div>')
+    return "\n".join(o)
+
+
+def tracker_data_js():
+    """오피스 맵의 한 줄 브리핑 바·핵심 3건 카드가 읽어 가는 데이터."""
+    data = {
+        "updated": STAMP,
+        "brief": {
+            "date": BRIEF_DATE,
+            "label": BRIEF_LABEL,
+            "weather": BRIEF_WEATHER,
+            "todo": BRIEF_TODO,
+        },
+        "handoff": [
+            {"id": i, "owner": w, "title": t, "need": n, "mins": m,
+             "due": d, "note": note, "link": link}
+            for i, w, t, n, m, d, note, link in HANDOFF
+        ],
+    }
+    return ('<script>window.TRACKER_DATA = %s;</script>'
+            % json.dumps(data, ensure_ascii=False, separators=(",", ":")))
 
 
 def hub_html():
@@ -270,8 +464,9 @@ def hub_html():
     o.append('<ul class="hub-list">')
     for who, title, why, due, kind in HUB_MIGYEOL:
         o.append('<li class="hub-row"><span class="hub-who">%s</span>'
-                 '<span class="hub-body"><b>%s</b><i>%s</i></span>'
-                 '<span class="trk-d %s">%s</span></li>' % (who, title, why, kind, due))
+                 '<span class="hub-body"><b>%s</b><i>%s</i>%s</span>'
+                 '<span class="trk-d %s">%s</span></li>'
+                 % (who, title, why, acts(hub_owner(who), title), kind, due))
     o.append('</ul>')
 
     o.append('<div class="hub-sub">담당별 지금 하는 일</div>')
@@ -291,7 +486,10 @@ def hub_html():
 def sections():
     out = []
 
-    # 노션 공용 허브 요약 — 트래커 맨 위(1번 카드)
+    # 적립·포인트 / 복권·예치금 / 당첨 후 미션 — 트래커 탭 맨 위 핵심 보드
+    out.append(boards_html())
+
+    # 노션 공용 허브 요약 (그 아래 1번 카드)
     out.append(hub_html())
 
     # 요약
@@ -368,8 +566,8 @@ def sections():
     out.append('<div class="trk-sec"><div class="trk-sec-head"><h3>남은 큐 · 진행 중</h3>'
                '<span class="cnt">%d건 · 리뷰·후기 %d + 미결 %d</span></div><ul class="trk-list">'
                % (queue_total, queue_review, queue_open))
-    for label, title, meta, badge, kind in QUEUE:
-        out.append(row(label, title, meta, badge, kind))
+    for label, title, meta, badge, kind, owner in QUEUE:
+        out.append(row(label, title, meta, badge, kind, owner=owner))
     out.append('</ul></div>')
 
     out.append('<p class="trk-foot">집계 기준 — 누적 응모는 기록이 남은 11/12~11/28 접수분'
@@ -377,6 +575,8 @@ def sections():
                '당첨률은 노션 발표 명단에 결과가 확정된 건(당첨 %d + 미당첨·미선정 %d) 기준이고, '
                '미결 건은 노션 🚧 미결 건의 항목 수입니다. 수치는 노션 두 현황판과 '
                '<code>current-status.md</code> 기록만으로 계산했습니다.</p>' % (WINS_N, MISSES))
+    # 오피스 맵(한 줄 브리핑·핵심 3건 카드)이 읽어 가는 데이터 — 빌드할 때마다 함께 갱신
+    out.append(tracker_data_js())
     out.append('</div>')
     return "\n".join(out)
 
@@ -451,6 +651,68 @@ CSS = """
   .trk-foot{margin-top:20px; padding-top:14px; border-top:1px solid var(--line);
     font-size:11px; line-height:1.65; color:var(--muted-2); letter-spacing:-.15px}
   .trk-foot code{font-size:10.5px; background:#F7F1E8; padding:1px 5px; border-radius:5px}
+"""
+
+BOARD_CSS = """
+  /* ── 적립·포인트 / 복권·예치금 / 당첨 후 미션 보드 ── */
+  .pnt-card{padding:20px 22px}
+  .lot-card, .msn-card{margin-top:14px; padding:20px 22px}
+  .pnt-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+  .pnt-head h3{font-size:16px; font-weight:800; letter-spacing:-.35px}
+  .pnt-head span{font-size:11.5px; font-weight:700; color:var(--muted)}
+  .pnt-head b{color:var(--ink)}
+  .pnt-goal{padding:12px 14px; border-radius:14px; background:#FFF9F2; border:1px solid var(--line); margin-bottom:12px}
+  .pnt-goal-top{display:flex; align-items:baseline; justify-content:space-between; gap:8px; font-size:12px; font-weight:700; color:var(--ink-soft); letter-spacing:-.2px}
+  .pnt-goal-top b{font-size:15px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+  .pnt-goal-top small{font-weight:600; color:var(--muted-2); font-size:10.5px}
+  .pnt-goal-tag{font-size:11px; font-weight:800; color:#9A6B33; background:#FFF3E2; border:1px solid #F0DFC6; border-radius:999px; padding:3px 9px; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .pnt-goal-tag.hit{color:#2F7D3C; background:#E8F3EA; border-color:#CDE7D5}
+  .pnt-bar{margin-top:8px; height:8px; border-radius:999px; background:#F1E7DA; overflow:hidden}
+  .pnt-bar i{display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,#F2B34B,#C63A2B)}
+  .pnt-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+  .pnt-box{padding:13px 14px; border-radius:15px; background:#FFFBF5; border:1px solid var(--line); min-width:0}
+  .pnt-label{font-size:11px; font-weight:800; color:var(--muted); letter-spacing:-.15px}
+  .pnt-num{margin-top:5px; font-size:22px; font-weight:800; letter-spacing:-.8px;
+    font-variant-numeric:tabular-nums; color:var(--ink); line-height:1.15}
+  .pnt-num small{font-size:11px; font-weight:700; color:var(--muted); margin-left:2px; letter-spacing:-.2px}
+  .pnt-malls{display:flex; flex-wrap:wrap; gap:4px; margin-top:7px}
+  .pnt-malls span{font-size:10px; font-weight:700; color:var(--ink-soft); background:#F6EFE5; border-radius:6px; padding:2px 6px}
+  .pnt-malls i{color:#2F7D3C; font-style:normal; font-weight:800}
+  .pnt-exp{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line)}
+  .pnt-exp-t{font-size:10.5px; font-weight:800; color:#B0442F; background:#FBEAE6; border:1px solid #F3D2CA; border-radius:999px; padding:3px 9px}
+  .pnt-exp-i{font-size:11.5px; font-weight:700; color:var(--ink-soft); background:#fff; border:1px solid var(--line-strong); border-radius:999px; padding:4px 10px}
+  .pnt-exp-i b{font-weight:800; color:#B0442F}
+  .pnt-exp-i em{font-style:normal; font-variant-numeric:tabular-nums; color:var(--muted)}
+  .lot-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+  .lot-box{padding:13px 14px; border-radius:15px; background:#FFFBF5; border:1px solid var(--line); min-width:0}
+  .lot-main{margin-top:5px; font-size:17px; font-weight:800; letter-spacing:-.5px; color:var(--ink); line-height:1.3}
+  .lot-main small{font-size:11px; font-weight:700; color:var(--muted); margin-left:2px}
+  .lot-sub{margin-top:4px; font-size:11px; line-height:1.5; color:var(--muted); letter-spacing:-.15px}
+  .msn-list{list-style:none; margin:0; padding:0}
+  .msn-row{display:grid; grid-template-columns:52px minmax(0,1fr) auto; gap:10px; align-items:center;
+    padding:9px 2px; border-bottom:1px solid var(--line); font-size:12.5px}
+  .msn-row:last-child{border-bottom:0}
+  .msn-pf{font-size:10px}
+  .msn-body{min-width:0}
+  .msn-t{display:block; font-weight:700; color:var(--ink); overflow-wrap:anywhere; letter-spacing:-.2px}
+  .msn-steps{display:flex; flex-wrap:wrap; gap:4px; margin-top:5px}
+  .msn-s{font-size:10px; font-weight:800; padding:2px 7px; border-radius:6px; background:#F5EEE4; color:#A09284; letter-spacing:-.2px}
+  .msn-s.done{background:#E8F3EA; color:#2F7D3C}
+  .msn-s.done::before{content:"✓ "}
+  .msn-s.next{background:#FBEAE6; color:#B0442F; box-shadow:0 0 0 1px #F3D2CA inset}
+  .msn-note{font-size:10.5px; font-weight:700; color:var(--muted); text-align:right; white-space:nowrap}
+  /* ── 트래커 카드 → 담당 비서 실행 버튼 ── */
+  .trk-acts{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; align-items:center}
+  .trk-act{font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px;
+    border:1px solid var(--line-strong); background:#fff; color:var(--ink-soft); line-height:1.35}
+  .trk-act:hover{background:#FFF6EC}
+  .trk-act.go{color:#2F7D3C; border-color:#CDE7D5; background:#EFF7F1}
+  .trk-act.pass{color:#8A6A18; border-color:#EFE0BC; background:#FDF6E6}
+  .trk-act.rm{color:#4A7098; border-color:#CFE0EE; background:#F1F6FB}
+  .trk-act-state{font-size:10px; font-weight:800; color:#2F7D3C}
+  .trk-act-state.warn{color:#9A6B33}
+  .trk-acts.is-done .trk-act{display:none}
+  .hub-body .trk-acts{margin-top:5px}
 """
 
 HUB_CSS = """
@@ -537,6 +799,13 @@ MOBILE_CSS = """
     .hub-grid, .hub-grid.three{grid-template-columns:1fr}
     .hub-row{grid-template-columns:76px minmax(0,1fr) auto; gap:7px; font-size:11.5px}
     .hub-reset-i{flex:1 1 100%}
+    .pnt-card, .lot-card, .msn-card{padding:16px}
+    .pnt-grid, .lot-grid{grid-template-columns:1fr 1fr}
+    .pnt-num{font-size:19px; letter-spacing:-.6px}
+    .pnt-goal-top{font-size:11.5px}
+    .pnt-goal-top b{font-size:14px}
+    .msn-row{grid-template-columns:46px minmax(0,1fr); gap:8px}
+    .msn-note{grid-column:2; text-align:left; white-space:normal}
 """
 
 NAV_BTN = ('    <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" '
@@ -560,7 +829,9 @@ PANEL_TMPL = """  <!-- ═══ 트래커 ═══ -->
 
 JS_ADD = """
   var trkRefresh = $('#trkRefresh');
-  if (trkRefresh) trkRefresh.addEventListener('click', function(){ location.reload(); });
+  if (trkRefresh) trkRefresh.addEventListener('click', function(){
+    location.replace(location.pathname + '?v=' + Date.now() + location.hash);   // 모바일 캐시 우회
+  });
 """
 
 
@@ -588,6 +859,8 @@ def build(path):
         html = html.replace(css_anchor, CSS + "\n" + css_anchor, 1)
     if ".hub-card{" not in html:
         html = html.replace("  @media (max-width:860px){", HUB_CSS + "\n  @media (max-width:860px){", 1)
+    if ".pnt-card{" not in html:
+        html = html.replace("  @media (max-width:860px){", BOARD_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:
