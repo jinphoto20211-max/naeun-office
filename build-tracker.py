@@ -799,13 +799,25 @@ MOBILE_CSS = """
     .hub-grid, .hub-grid.three{grid-template-columns:1fr}
     .hub-row{grid-template-columns:76px minmax(0,1fr) auto; gap:7px; font-size:11.5px}
     .hub-reset-i{flex:1 1 100%}
+"""
+
+# 보드 모바일 보정 — 처음 만든 파일에도 따로 끼워 넣을 수 있게 별도 블록으로 둔다
+# (MOBILE_CSS 는 이미 삽입된 파일에는 다시 들어가지 않아서 새 규칙은 여기에 적는다)
+BOARD_MOBILE_CSS = """
+  @media (max-width:720px){
     .pnt-card, .lot-card, .msn-card{padding:16px}
     .pnt-grid, .lot-grid{grid-template-columns:1fr 1fr}
+    .pnt-grid > .pnt-box:first-child{grid-column:1 / -1}
     .pnt-num{font-size:19px; letter-spacing:-.6px}
+    .pnt-num small{font-size:10px}
     .pnt-goal-top{font-size:11.5px}
     .pnt-goal-top b{font-size:14px}
+    .pnt-malls span{font-size:9.5px}
+    .lot-main{font-size:15px}
+    .lot-sub{font-size:10.5px}
     .msn-row{grid-template-columns:46px minmax(0,1fr); gap:8px}
     .msn-note{grid-column:2; text-align:left; white-space:normal}
+  }
 """
 
 NAV_BTN = ('    <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" '
@@ -861,6 +873,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", HUB_CSS + "\n  @media (max-width:860px){", 1)
     if ".pnt-card{" not in html:
         html = html.replace("  @media (max-width:860px){", BOARD_CSS + "\n  @media (max-width:860px){", 1)
+    if ".msn-row{grid-template-columns:46px" not in html:
+        html = html.replace("  @media (max-width:860px){", BOARD_MOBILE_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:
