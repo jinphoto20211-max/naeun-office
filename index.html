@@ -3478,7 +3478,7 @@
           getJSON(base + '/messages?limit=60&since=' + since).catch(function () { return null; })
         ]);
       }).then(function (res) {
-        if (!res) { if (window.NaeunRoster && window.NaeunRoster.fail) window.NaeunRoster.fail(); return; }
+        if (!res || (!res[0] && !res[1])) { if (window.NaeunRoster && window.NaeunRoster.fail) window.NaeunRoster.fail(); return; }
         applyPresence(res[0] && res[0].agents, res[1] && res[1].messages);
       }).catch(function () {}).then(function () { busy = false; });
     }
