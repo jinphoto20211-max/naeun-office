@@ -15,9 +15,9 @@
     `localStorage: naeun-office:handoff:v1` 에만 저장되고 [되돌리기]가 됩니다.
   - 맨 아래(대회의실·단톡방 아래): 비서 접속 현황·오이 상태 줄과 「💬 지휘실에서 지시하기」 버튼
   - 트래커: 적립·포인트 / 복권·예치금 / 미션 보드 + 체험단·설문·응모·상품권 집계와 노션 공용 허브 요약
-  - 패밀리: 영유아 건강검진·국가예방접종 D-day 보드(열 때마다 오늘 날짜로 재계산) + 어린이집·가족 일정 타임라인(직접 추가·완료·삭제) + 성장·준비 체크 포인트와 한 줄 육아 메모
-    - 기본 일정은 `index.html` 의 `FAMILY_EVENTS`, 검진·접종 항목은 `FAM_CHECKS`·`FAM_VACCINES` 상수에서 고칩니다.
-    - 저장 키(이 브라우저에만): `naeun.family.checks.v1`(검진·접종 완료) · `naeun.family.events.v1`(직접 추가 일정) · `naeun.family.evdone.v1`(일정 완료 표시) · `naeun.family.memo.v1`(한 줄 육아 메모)
+  - 패밀리: 맨 위 **핵심 D-day 카드**(오늘 기준 자동 계산) → **어린이집·가족 일정 타임라인**(비서가 관리하는 조회 전용 · 분류 필터 · 완료 접기) → **지금 시기 체크 포인트 + 한 줄 육아 메모** → 맨 아래 **영유아 건강검진·예방접종 내역**(질병관리청 예방접종도우미 실측 기록)
+    - 핵심 D-day는 `FAM_DDAYS`, 검진 항목은 `FAM_CHECKUPS`, 완료 접종은 `FAM_DONE_VACCINES`, 남은 차수는 `FAM_NEXT_VACCINES`, 일정은 `FAMILY_EVENTS` 상수에서 고칩니다. 날짜가 바뀌면 D-day는 화면을 열 때 다시 계산됩니다.
+    - 일정은 화면에서 추가·수정하지 않습니다(나은님이 말씀하면 비서가 `FAMILY_EVENTS`에 반영). 검진·독감 접종 완료 표시와 한 줄 육아 메모만 브라우저에 저장됩니다: `naeun.family.checks.v1` · `naeun.family.memo.v1`
     - `build-tracker.py` 는 `TRACKER-PANEL` 안만 다시 쓰므로 이 탭은 영향받지 않습니다.
   - 회의실: 오늘의 안건 + AI 단톡방(임베드/새 창) — 방 주인 비밀번호는 브라우저에만 저장
 - `build-tracker.py` — 트래커 탭 HTML/CSS 생성 (노션 기록 → 수치)

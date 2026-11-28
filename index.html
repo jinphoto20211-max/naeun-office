@@ -1276,8 +1276,21 @@
   .fam-head h3{font-size:16px; font-weight:800; letter-spacing:-.4px}
   .fam-head p{font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.55}
   .fam-head p b{color:var(--ink-soft)}
-  .fam-legend{display:flex; flex-wrap:wrap; gap:6px}
-  .fam-legend span{font-size:10.5px; font-weight:800; padding:4px 8px; border-radius:999px; background:#F7F1E9; color:var(--muted)}
+  /* 핵심 D-day */
+  .fam-dday{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-top:12px}
+  .fam-dd{padding:12px 11px; border-radius:16px; background:#FFFBF6; border:1px solid var(--line); min-width:0}
+  .fam-dd-k{display:block; font-size:11px; font-weight:800; color:var(--ink-soft); line-height:1.42; letter-spacing:-.2px; word-break:keep-all}
+  .fam-dd-n{display:block; margin-top:6px; font-size:22px; font-weight:900; letter-spacing:-1px; color:var(--ink); font-variant-numeric:tabular-nums; line-height:1.1}
+  .fam-dd-d{display:block; margin-top:4px; font-size:10.5px; color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .fam-dd.is-soon{background:#FFF3EE; border-color:#F7DCCF}
+  .fam-dd.is-soon .fam-dd-n{color:#C0534C}
+  .fam-dd.is-urgent{background:#FCE7E4; border-color:#F2CFC9}
+  .fam-dd.is-urgent .fam-dd-n{color:#B4473F}
+  .fam-dd.is-far .fam-dd-n{color:var(--blue-deep)}
+  .fam-dd.is-done{background:#EFF5F0; border-color:#DCE9DF}
+  .fam-dd.is-done .fam-dd-n{color:#7C9C88; font-size:14px; letter-spacing:-.2px}
+  .fam-dd.is-past{background:#F4F0EA; border-color:#EDE5DA}
+  .fam-dd.is-past .fam-dd-n{color:#A0938A; font-size:14px; letter-spacing:-.2px}
   .fam-sub{display:flex; align-items:center; gap:7px; margin:16px 0 8px; font-size:12px; font-weight:800; color:var(--ink-soft)}
   .fam-sub::before{content:""; width:4px; height:13px; border-radius:2px; background:linear-gradient(180deg,var(--pink),#E8C49A)}
   .fam-sub small{font-weight:600; color:var(--muted); font-size:11px}
@@ -1300,17 +1313,8 @@
   .fam-note{margin-top:12px; font-size:11px; color:var(--muted); line-height:1.62}
   .fam-note b{color:var(--ink-soft)}
   .fam-note code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10.5px; background:#F5EFE6; border-radius:5px; padding:1px 4px}
-  .fam-tools{display:flex; gap:6px; flex-wrap:wrap}
-
-  /* 일정 폼 · 타임라인 */
-  .fam-form{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:14px 0 4px; padding:13px; border-radius:18px; background:#FFFBF6; border:1px dashed var(--line-strong)}
-  .fam-field{display:flex; flex-direction:column; gap:5px; min-width:0}
-  .fam-field.wide{grid-column:1 / -1}
-  .fam-field label{font-size:11px; font-weight:800; color:var(--ink-soft); letter-spacing:-.1px}
-  .fam-field input, .fam-field select{border:1px solid var(--line-strong); background:#fff; border-radius:12px; padding:9px 11px; font:inherit; font-size:12.5px; color:var(--ink); min-width:0; width:100%}
-  .fam-field input::placeholder{color:var(--muted-2)}
-  .fam-form-act{grid-column:1 / -1; display:flex; justify-content:flex-end; margin-top:2px}
-  .fam-filter{display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 2px}
+  /* 타임라인 */
+  .fam-filter{display:flex; gap:6px; flex-wrap:wrap; margin:12px 0 2px}
   .fam-filter button{appearance:none; border:1px solid var(--line); background:#fff; border-radius:999px; padding:6px 11px; font-size:11.5px; font-weight:800; color:var(--muted)}
   .fam-filter button[aria-pressed="true"]{background:var(--pink-soft); border-color:#F3D6D9; color:#C2646F}
   .fam-tl{display:grid; gap:8px; margin-top:10px}
@@ -1331,10 +1335,6 @@
   .fam-tag.t-med{background:var(--pink-soft); color:#C2646F}
   .fam-tag.t-out{background:var(--green-soft); color:var(--green-deep)}
   .fam-tag.t-ready{background:#FBF0DE; color:#B0813F}
-  .fam-ev-acts{display:flex; flex-direction:column; gap:5px}
-  .fam-mini{appearance:none; border:1px solid var(--line-strong); background:#fff; border-radius:10px; padding:5px 9px; font-size:10.5px; font-weight:800; color:var(--muted); white-space:nowrap}
-  .fam-mini:hover{background:#FFF8F1; color:var(--ink-soft)}
-  .fam-mini.on{background:var(--green-soft); border-color:#CFE3D6; color:var(--green-deep)}
   .fam-more{justify-self:start; appearance:none; border:0; background:transparent; padding:8px 2px; font-size:11.5px; font-weight:800; color:var(--muted)}
   .fam-more:hover{color:var(--ink-soft)}
   .fam-empty{padding:22px 14px; text-align:center; font-size:12px; color:var(--muted); border-radius:16px; background:#FFFBF6; border:1px dashed var(--line-strong)}
@@ -1355,16 +1355,15 @@
   .fam-del:hover{color:#C0534C}
   @media (max-width:720px){
     .fam-card{padding:16px 14px}
-    .fam-legend{display:none}
     .fam-row{grid-template-columns:minmax(0,1fr) auto; row-gap:8px; padding:11px 12px}
     .fam-row .fam-check{grid-column:1 / -1; justify-self:stretch; text-align:center}
-    .fam-form{grid-template-columns:1fr}
+    .fam-dday{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .fam-dd{padding:11px 10px}
     .fam-ev{grid-template-columns:auto minmax(0,1fr); row-gap:8px}
-    .fam-ev-acts{grid-column:1 / -1; flex-direction:row; justify-content:flex-end}
-    .fam-points{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .fam-points{grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:10px}
+    .fam-point{padding:10px 11px}
   }
   @media (max-width:400px){
-    .fam-points{grid-template-columns:1fr}
     .fam-memo-form{flex-wrap:wrap}
     .fam-memo-form .btn{width:100%}
   }
@@ -1602,8 +1601,8 @@
 <div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/28 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/27 조기 종료장에서 S&P500 약 7,297.49 · VIX 약 23.81로 반등했지만 하이일드·근원 물가의 악화 신호가 남아 있고, 시장 폭·일봉 추세·컨센서스 일부는 자료 충돌 또는 확인 불가지라 회복 확정은 이릅니다.</p></div>
 <div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/28 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,812원 · 옥포농협클린 1,795원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
 <div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 <small>노션 큐 그룹 · 11/28 17:59 기준</small></div><div class="hub-reset">
-<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-11</span></div>
-<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-30</span></div>
+<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-10</span></div>
+<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-29</span></div>
 <div class="hub-reset-i nodate"><span class="hub-reset-k">하트큐</span><span class="hub-reset-v nodate">날짜 미확인</span><span class="hub-reset-d unknown">미확인</span></div>
 </div></div>
 </div>
@@ -1802,70 +1801,30 @@
     <div class="section-head">
       <div>
         <h2>패밀리</h2>
-        <p>우리 아이 건강검진·예방접종 D-day와 어린이집·가족 일정을 한 장에 모았어요. 직접 추가한 일정은 이 기기에만 저장됩니다.</p>
+        <p>우리 아이 검진·예방접종과 어린이집 일정을 한 장에 모았어요. 새 일정은 저에게 말씀해 주시면 여기에 바로 반영할게요.</p>
       </div>
       <span class="chip" id="famTodayChip">오늘 기준</span>
     </div>
 
-    <!-- ① 건강검진 · 예방접종 -->
+    <!-- ① 핵심 D-day -->
     <div class="card fam-card">
       <div class="fam-head">
         <div>
-          <h3>🏥 영유아 건강검진 · 국가예방접종</h3>
-          <p>생후 <b id="famMonths">33</b>개월 · 국가 표준일정을 <b id="famBoardDate">오늘</b> 기준으로 다시 계산했어요.</p>
-        </div>
-        <div class="fam-legend" aria-hidden="true">
-          <span>파랑 가능 기간</span><span>빨강 마감 30일 이내</span><span>회색 예정</span><span>흐림 완료</span>
+          <h3>⏰ 핵심 D-day</h3>
+          <p>화면을 열 때마다 오늘 날짜로 다시 계산해요.</p>
         </div>
       </div>
-
-      <div class="fam-sub">영유아 건강검진 <small>국가 지원 · 아이 수첩에 스티커</small></div>
-      <div class="fam-list" id="famCheckList"></div>
-
-      <div class="fam-sub">어린이 국가예방접종 <small>표준일정 기준</small></div>
-      <div class="fam-list" id="famVaccList"></div>
-
-      <p class="fam-note">D-day는 화면을 열 때마다 오늘 날짜로 자동 계산됩니다. <b>[미완료]</b>를 누르면 완료로 바뀌고, 완료 표시는 이 기기 브라우저에만 저장돼요. 실제 검진·접종 기록은 아이 수첩이나 예방접종도우미에서 한 번 더 확인해 주세요.</p>
+      <div class="fam-dday" id="famDday"></div>
     </div>
 
-    <!-- ② 어린이집 · 가족 일정 타임라인 -->
+    <!-- ② 어린이집 · 가족 일정 타임라인 (비서가 관리 · 조회 전용) -->
     <div class="card fam-card">
       <div class="fam-head">
         <div>
           <h3>🗓️ 어린이집 · 가족 일정</h3>
-          <p>기본 일정과 나은님이 직접 추가한 일정을 날짜순으로 합쳐 보여 줘요.</p>
-        </div>
-        <div class="fam-tools">
-          <button class="btn btn-ghost btn-sm" type="button" id="famCopyBtn">📋 해피방에 알릴 문구</button>
+          <p>날짜순으로 모았어요. 지난 일정은 완료한 것만 따로 접어 두었어요.</p>
         </div>
       </div>
-
-      <form class="fam-form" id="famForm" autocomplete="off">
-        <div class="fam-field">
-          <label for="famDate">날짜</label>
-          <input type="date" id="famDate" required>
-        </div>
-        <div class="fam-field">
-          <label for="famTag">분류</label>
-          <select id="famTag">
-            <option value="어린이집">어린이집</option>
-            <option value="병원·검진">병원·검진</option>
-            <option value="나들이">나들이</option>
-            <option value="준비물">준비물</option>
-          </select>
-        </div>
-        <div class="fam-field wide">
-          <label for="famTitle">일정 제목</label>
-          <input type="text" id="famTitle" maxlength="60" placeholder="예) 어린이집 겨울 준비물 챙기기" required>
-        </div>
-        <div class="fam-field wide">
-          <label for="famMemo">메모 (선택)</label>
-          <input type="text" id="famMemo" maxlength="120" placeholder="예) 여벌옷·수건 두 장씩">
-        </div>
-        <div class="fam-form-act">
-          <button class="btn btn-primary btn-sm" type="submit">+ 일정 추가</button>
-        </div>
-      </form>
 
       <div class="fam-filter" id="famFilter" role="group" aria-label="분류별 보기">
         <button type="button" data-filter="all" aria-pressed="true">전체</button>
@@ -1876,7 +1835,6 @@
       </div>
 
       <div class="fam-tl" id="famTimeline"></div>
-      <p class="fam-note">기본 일정은 <code>FAMILY_EVENTS</code> 상수에서 고치면 바로 반영되고, 직접 추가한 일정·완료 표시는 이 브라우저에만 저장됩니다(다른 기기와 공유되지 않아요).</p>
     </div>
 
     <!-- ③ 성장 · 준비 메모 -->
@@ -1903,6 +1861,27 @@
         <button class="btn btn-primary btn-sm" type="button" id="famMemoSave">저장</button>
       </div>
       <div class="fam-memo-list" id="famMemoList"></div>
+    </div>
+
+    <!-- ④ 영유아 건강검진 · 예방접종 내역 -->
+    <div class="card fam-card">
+      <div class="fam-head">
+        <div>
+          <h3>🏥 영유아 건강검진 · 예방접종</h3>
+          <p>생후 <b id="famMonths">33</b>개월 · 질병관리청 예방접종도우미 기록(11/28 확인)을 <b id="famBoardDate">오늘</b> 기준으로 다시 계산했어요.</p>
+        </div>
+      </div>
+
+      <div class="fam-sub">영유아 건강검진 <small>국가 지원 · 아이 수첩에 스티커</small></div>
+      <div class="fam-list" id="famCheckList"></div>
+
+      <div class="fam-sub">예방접종 완료 <small>11종 · 28회 접종</small></div>
+      <div class="fam-list" id="famDoneList"></div>
+
+      <div class="fam-sub">다음 차수 예정 <small>만 4세 이후 · 접종 기록의 남은 차수</small></div>
+      <div class="fam-list" id="famNextList"></div>
+
+      <p class="fam-note">접종 기록은 질병관리청 예방접종도우미(11/28 확인) 그대로이고, 다음 차수는 국가 표준일정 기준이에요. 검진·독감은 <b>[미완료]</b>를 눌러 완료로 바꿀 수 있고, 그 표시는 이 기기 브라우저에만 저장돼요. 실제 기록은 아이 수첩이나 예방접종도우미에서 한 번 더 확인해 주세요.</p>
     </div>
   </section>
 
@@ -4747,16 +4726,37 @@
 
   /* ── 기준 상수 ── */
   var FAM_ANCHOR = { date: '2026-11-28', months: 33 };   // '생후 N개월' 표시용 기준점 (개인정보 아님)
+  /* 맨 위 핵심 D-day — 날짜만 바꾸면 화면에서 다시 계산됩니다 */
+  var FAM_DDAYS = [
+    { id:'dd-daycare', name:'12월 어린이집 일정표', date:'2026-12-01', kind:'시작', eventId:'base-1201' },
+    { id:'dd-chk5',    name:'5차 일반 건강검진',    date:'2027-02-23', kind:'마감', checkId:'chk5' },
+    { id:'dd-chk5d',   name:'5차 구강검진 (2차)',   date:'2027-07-23', kind:'마감', checkId:'chk5d' },
+    { id:'dd-chk6',    name:'6차 건강검진',         date:'2027-08-23', kind:'시작', checkId:'chk6' }
+  ];
   var FAM_CHECKUPS = [
     { id:'chk5',  name:'5차 일반 건강검진',     age:'생후 30~36개월', from:'2026-08-23', to:'2027-02-23' },
     { id:'chk5d', name:'5차 구강검진 (2차)',   age:'생후 30~41개월', from:'2026-08-23', to:'2027-07-23' },
     { id:'chk6',  name:'6차 일반 건강검진',     age:'생후 42~48개월', from:'2027-08-23', to:'2028-02-23' },
     { id:'chk6d', name:'6차 구강검진 (3차)',   age:'생후 42~53개월', from:'2027-08-23', to:'2028-07-23' }
   ];
-  var FAM_VACCINES = [
-    { id:'je',   name:'일본뇌염 (사백신 3차 / 생백신 2차)', age:'생후 24~35개월', from:'2026-02-23', to:'2027-02-23' },
-    { id:'flu',  name:'어린이 인플루엔자 (독감)',           age:'매년 가을·겨울 접종', seasonal:true },
-    { id:'dtap', name:'DTaP 5차 · 폴리오 4차 · MMR 2차',    age:'만 4~6세', from:'2028-02-23', to:'2030-02-23' }
+  /* 질병관리청 예방접종도우미 기록 그대로 (11/28 확인) — 끝난 접종은 읽기 전용 */
+  var FAM_DONE_VACCINES = [
+    { name:'결핵 (BCG 피내용)',              doses:'1차' },
+    { name:'B형간염 (HepB)',                doses:'1·2·3차' },
+    { name:'b형헤모필루스인플루엔자 (Hib)',    doses:'1·2·3·4차' },
+    { name:'폐렴구균 (PCV)',                 doses:'1·2·3·4차' },
+    { name:'로타바이러스',                    doses:'1·2·3차' },
+    { name:'수두 (VAR)',                    doses:'1차' },
+    { name:'A형간염 (HepA)',                doses:'1·2차' },
+    { name:'일본뇌염 (LJEV 약독화 생백신)',     doses:'1·2차' }
+  ];
+  /* 남은 차수 — 완료 차수와 다음 차수를 같이 보여 줍니다 */
+  var FAM_NEXT_VACCINES = [
+    { id:'dtap', name:'DTaP (디프테리아·파상풍·백일해)', done:'1·2·3·4차 완료', next:'5차 예정', age:'만 4~6세', from:'2028-02-23', to:'2030-02-23' },
+    { id:'ipv',  name:'폴리오 (IPV)',                    done:'1·2·3차 완료',   next:'4차 예정', age:'만 4~6세', from:'2028-02-23', to:'2030-02-23' },
+    { id:'mmr',  name:'MMR (홍역·유행성이하선염·풍진)',   done:'1차 완료',       next:'2차 예정', age:'만 4~6세', from:'2028-02-23', to:'2030-02-23' },
+    { id:'tdap', name:'Tdap (파상풍·디프테리아·백일해)',  done:'',              next:'예정',    age:'만 11~12세' },
+    { id:'flu',  name:'어린이 인플루엔자 (독감)',          done:'',              next:'매년 가을·겨울 접종', seasonal:true }
   ];
   var FAMILY_EVENTS = [
     { id:'base-1126', date:'2026-11-26', title:'소방대피훈련', tag:'어린이집', memo:'', done:true },
@@ -4764,8 +4764,6 @@
     { id:'base-1201', date:'2026-12-01', title:'12월 어린이집 일정표 수신 · 업데이트 예정', tag:'어린이집', memo:'일정표가 오면 이 탭 기본 일정(FAMILY_EVENTS)에 옮겨 적기', done:false }
   ];
   var K_CHECK = 'naeun.family.checks.v1';
-  var K_EVENTS = 'naeun.family.events.v1';
-  var K_EVDONE = 'naeun.family.evdone.v1';
   var K_MEMO = 'naeun.family.memo.v1';
 
   /* ── 도우미 ── */
@@ -4787,27 +4785,44 @@
     clearTimeout(famToast._t);
     famToast._t = setTimeout(function(){ el.classList.remove('show'); }, 3000);
   }
-  function fallbackCopy(text){
-    try {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.setAttribute('readonly','');
-      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
-      var ok = document.execCommand('copy'); document.body.removeChild(ta); return ok;
-    } catch(e){ return false; }
-  }
-  function famCopy(text, label){
-    var done = function(ok){ famToast(ok ? (label || '복사했어요') : '복사가 막혔어요. 문구를 길게 눌러 직접 복사해 주세요'); };
-    if (navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(fallbackCopy(text)); });
-    } else { done(fallbackCopy(text)); }
-  }
   function monthsNow(){
     var t = today(), a = toDate(FAM_ANCHOR.date);
     return FAM_ANCHOR.months + (t.getFullYear() - a.getFullYear()) * 12 + (t.getMonth() - a.getMonth());
   }
 
-  /* ── ① 검진·접종 보드 ── */
+  /* ── ① 핵심 D-day ── */
+  function baseEventDone(id){
+    for (var i = 0; i < FAMILY_EVENTS.length; i++){
+      if (FAMILY_EVENTS[i].id === id) return !!FAMILY_EVENTS[i].done;
+    }
+    return false;
+  }
+  function renderDday(){
+    var host = $('#famDday'); if (!host) return;
+    var checks = lsGet(K_CHECK, {});
+    var t = today();
+    host.textContent = '';
+    FAM_DDAYS.slice().sort(function(a, b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); }).forEach(function(item){
+      var d = toDate(item.date), diff = days(t, d);
+      var done = item.checkId ? !!checks[item.checkId] : (item.eventId ? baseEventDone(item.eventId) : false);
+      var card = document.createElement('article');
+      card.className = 'fam-dd';
+      var name = document.createElement('span'); name.className = 'fam-dd-k'; name.textContent = item.name;
+      var num = document.createElement('b'); num.className = 'fam-dd-n';
+      if (done){ card.className += ' is-done'; num.textContent = '✓ 완료'; }
+      else if (diff < 0){ card.className += ' is-past'; num.textContent = '지남'; }
+      else {
+        card.className += diff === 0 ? ' is-urgent' : (diff <= 30 ? ' is-soon' : ' is-far');
+        num.textContent = diff === 0 ? 'D-DAY' : 'D-' + diff;
+      }
+      var when = document.createElement('span'); when.className = 'fam-dd-d';
+      when.textContent = mmdd(item.date) + '(' + WEEK[d.getDay()] + ') ' + item.kind;
+      card.appendChild(name); card.appendChild(num); card.appendChild(when);
+      host.appendChild(card);
+    });
+  }
+
+  /* ── ④ 검진·접종 내역 ── */
   function stateOf(item, done){
     var t = today();
     if (done) return { cls:'done', text:'✓ 완료' };
@@ -4816,9 +4831,9 @@
       var season = (m >= 9 || m <= 2);
       return { cls: season ? 'green' : 'gray', text: season ? '이번 시즌 권장' : '가을에 접종' };
     }
-    var from = item.from ? toDate(item.from) : null;
-    var to = item.to ? toDate(item.to) : null;
-    if (from && t < from) return { cls:'gray', text:'예정 D-' + days(t, from) };
+    if (!item.from) return { cls:'gray', text:'예정' };
+    var from = toDate(item.from), to = item.to ? toDate(item.to) : null;
+    if (t < from) return { cls:'gray', text:'예정 D-' + days(t, from) };
     if (to && t > to) return { cls:'gray', text:'기간 지남' };
     if (to){ var left = days(t, to); return { cls: left <= 30 ? 'red' : 'blue', text:'마감 D-' + left }; }
     return { cls:'gray', text:'확인' };
@@ -4852,35 +4867,66 @@
     row.appendChild(name); row.appendChild(badge); row.appendChild(btn);
     return row;
   }
+  function vaccineDoneRow(v){
+    var row = document.createElement('div'); row.className = 'fam-row is-done';
+    var name = document.createElement('div'); name.className = 'fam-name';
+    var b = document.createElement('b'); b.textContent = v.name; name.appendChild(b);
+    var sub = document.createElement('span'); sub.className = 'fam-age'; sub.textContent = '💉 ' + v.doses + ' 완료'; name.appendChild(sub);
+    var badge = document.createElement('span'); badge.className = 'fam-badge done'; badge.textContent = '✓ 완료';
+    row.appendChild(name); row.appendChild(badge);
+    return row;
+  }
+  function nextRow(item, done){
+    var st = stateOf(item, done);
+    var row = document.createElement('div'); row.className = 'fam-row' + (done ? ' is-done' : '');
+    var name = document.createElement('div'); name.className = 'fam-name';
+    var b = document.createElement('b'); b.textContent = item.name; name.appendChild(b);
+    var head = [item.done, item.next + (item.age ? ' (' + item.age + ')' : '')].filter(Boolean).join(' · ');
+    var tail = [];
+    if (item.from && item.to) tail.push(item.from + ' ~ ' + item.to);
+    if (item.seasonal) tail.push('올 시즌 접종 여부 확인');
+    var sub = document.createElement('span'); sub.className = 'fam-age';
+    sub.textContent = [head].concat(tail).join(' · ');
+    name.appendChild(sub);
+    var badge = document.createElement('span'); badge.className = 'fam-badge ' + st.cls; badge.textContent = st.text;
+    row.appendChild(name); row.appendChild(badge);
+    if (item.seasonal){
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'fam-check';
+      btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+      btn.textContent = done ? '✓ 완료' : '미완료';
+      btn.addEventListener('click', function(){
+        var map = lsGet(K_CHECK, {});
+        if (map[item.id]) delete map[item.id]; else map[item.id] = true;
+        lsSet(K_CHECK, map);
+        renderBoard();
+        famToast(map[item.id] ? item.name + ' — 접종 완료로 표시했어요' : item.name + ' — 완료를 풀었어요');
+      });
+      row.appendChild(btn);
+    }
+    return row;
+  }
   function renderBoard(){
-    var host1 = $('#famCheckList'), host2 = $('#famVaccList');
-    if (!host1 || !host2) return;
+    var host1 = $('#famCheckList'), host2 = $('#famDoneList'), host3 = $('#famNextList');
+    if (!host1 || !host2 || !host3) return;
     var checks = lsGet(K_CHECK, {});
-    host1.textContent = ''; host2.textContent = '';
+    host1.textContent = ''; host2.textContent = ''; host3.textContent = '';
     FAM_CHECKUPS.forEach(function(it){ host1.appendChild(boardRow(it, !!checks[it.id])); });
-    FAM_VACCINES.forEach(function(it){ host2.appendChild(boardRow(it, !!checks[it.id])); });
+    FAM_DONE_VACCINES.forEach(function(v){ host2.appendChild(vaccineDoneRow(v)); });
+    FAM_NEXT_VACCINES.forEach(function(it){ host3.appendChild(nextRow(it, !!checks[it.id])); });
     var mEl = $('#famMonths'); if (mEl) mEl.textContent = monthsNow();
     var dEl = $('#famBoardDate'); if (dEl) dEl.textContent = fullDate(ymd(today()));
     var chip = $('#famTodayChip'); if (chip) chip.textContent = mmdd(ymd(today())) + '(' + WEEK[today().getDay()] + ') 기준';
+    renderDday();
   }
 
   /* ── ② 타임라인 ── */
   var famFilter = 'all', famShowDone = false;
   function ymd(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
   function allEvents(){
-    var custom = lsGet(K_EVENTS, []);
-    if (!custom || typeof custom.length !== 'number') custom = [];
     var out = [];
     FAMILY_EVENTS.forEach(function(e){
-      out.push({ id:e.id, date:e.date, title:e.title, tag:e.tag, memo:e.memo || '', base:true, baseDone:!!e.done });
-    });
-    custom.forEach(function(e){
-      if (!e || !e.date || !e.title || !e.id) return;
-      out.push({ id:e.id, date:e.date, title:e.title, tag:e.tag || '준비물', memo:e.memo || '', base:false, baseDone:false });
-    });
-    var dones = lsGet(K_EVDONE, {});
-    out.forEach(function(e){
-      e.done = Object.prototype.hasOwnProperty.call(dones, e.id) ? !!dones[e.id] : e.baseDone;
+      out.push({ id:e.id, date:e.date, title:e.title, tag:e.tag, memo:e.memo || '', base:true, done:!!e.done });
     });
     return out;
   }
@@ -4889,22 +4935,6 @@
     if (tag === '병원·검진') return 't-med';
     if (tag === '나들이') return 't-out';
     return 't-ready';
-  }
-  function toggleDone(id){
-    var map = lsGet(K_EVDONE, {}), list = allEvents(), cur = false;
-    for (var i = 0; i < list.length; i++){ if (list[i].id === id){ cur = list[i].done; break; } }
-    map[id] = !cur;
-    lsSet(K_EVDONE, map);
-    renderTimeline();
-    famToast(map[id] ? '일정을 완료로 표시했어요' : '일정 완료를 풀었어요');
-  }
-  function deleteEvent(id){
-    var list = lsGet(K_EVENTS, []), next = [];
-    for (var i = 0; i < list.length; i++){ if (list[i] && list[i].id === id) continue; next.push(list[i]); }
-    lsSet(K_EVENTS, next);
-    var dones = lsGet(K_EVDONE, {}); delete dones[id]; lsSet(K_EVDONE, dones);
-    renderTimeline();
-    famToast('일정을 지웠어요');
   }
   function eventEl(e){
     var t = today(), d = toDate(e.date), diff = days(t, d);
@@ -4927,22 +4957,7 @@
     top.appendChild(badge);
     body.appendChild(top);
     if (e.memo){ var p = document.createElement('p'); p.className = 'fam-ev-memo'; p.textContent = e.memo; body.appendChild(p); }
-    var acts = document.createElement('div'); acts.className = 'fam-ev-acts';
-    var doneBtn = document.createElement('button');
-    doneBtn.type = 'button'; doneBtn.className = 'fam-mini' + (e.done ? ' on' : '');
-    doneBtn.setAttribute('aria-pressed', e.done ? 'true' : 'false');
-    doneBtn.textContent = e.done ? '완료 취소' : '완료';
-    doneBtn.addEventListener('click', function(){ toggleDone(e.id); });
-    acts.appendChild(doneBtn);
-    if (!e.base){
-      var delBtn = document.createElement('button');
-      delBtn.type = 'button'; delBtn.className = 'fam-mini'; delBtn.textContent = '삭제';
-      delBtn.addEventListener('click', function(){
-        if (window.confirm('이 일정을 지울까요?\n' + fullDate(e.date) + ' · ' + e.title)) deleteEvent(e.id);
-      });
-      acts.appendChild(delBtn);
-    }
-    art.appendChild(dateBox); art.appendChild(body); art.appendChild(acts);
+    art.appendChild(dateBox); art.appendChild(body);
     return art;
   }
   function renderTimeline(){
@@ -4957,7 +4972,7 @@
     host.textContent = '';
     if (!list.length){
       var empty = document.createElement('div'); empty.className = 'fam-empty';
-      empty.textContent = famFilter === 'all' ? '아직 일정이 없어요. 위에서 첫 일정을 추가해 보세요.' : '이 분류에 담긴 일정이 없어요.';
+      empty.textContent = famFilter === 'all' ? '아직 올린 일정이 없어요.' : '이 분류에 담긴 일정이 없어요.';
       host.appendChild(empty);
     }
     todo.forEach(function(e){ host.appendChild(eventEl(e)); });
@@ -4970,31 +4985,6 @@
       host.appendChild(more);
       if (famShowDone) done.forEach(function(e){ host.appendChild(eventEl(e)); });
     }
-  }
-
-  /* ── 해피방 알림 문구 ── */
-  function buildBrief(){
-    var t = today();
-    var lines = ['📅 패밀리 일정 (' + mmdd(ymd(t)) + '(' + WEEK[t.getDay()] + ') 기준)'];
-    var up = allEvents().filter(function(e){ return !e.done && toDate(e.date) >= t; })
-      .sort(function(a, b){ return a.date < b.date ? -1 : 1; }).slice(0, 6);
-    if (up.length){
-      up.forEach(function(e){ lines.push('· ' + mmdd(e.date) + '(' + WEEK[toDate(e.date).getDay()] + ') ' + e.title + ' [' + e.tag + ']'); });
-    } else {
-      lines.push('· 다가오는 일정 없음');
-    }
-    var checks = lsGet(K_CHECK, {});
-    var cTexts = [], vTexts = [];
-    FAM_CHECKUPS.concat(FAM_VACCINES).forEach(function(it){
-      var st = stateOf(it, !!checks[it.id]);
-      if (st.cls === 'done' || st.cls === 'gray') return;
-      (it.id.indexOf('je') === 0 || it.id === 'flu' || it.id === 'dtap' ? vTexts : cTexts)
-        .push(it.name.replace(/\s*\(.*?\)/, '') + ' ' + st.text);
-    });
-    if (cTexts.length) lines.push('', '🏥 ' + cTexts.join(' · '));
-    if (vTexts.length) lines.push('💉 ' + vTexts.join(' · '));
-    lines.push('', '이 일정들 챙겨줘.');
-    return lines.join('\n');
   }
 
   /* ── ③ 한 줄 육아 메모 ── */
@@ -5030,28 +5020,6 @@
     var panel = $('#panel-family'); if (!panel) return;
     renderBoard(); renderTimeline(); renderMemos();
 
-    var dateEl = $('#famDate');
-    if (dateEl && !dateEl.value) dateEl.value = ymd(today());
-
-    var form = $('#famForm');
-    if (form) form.addEventListener('submit', function(ev){
-      ev.preventDefault();
-      var tagEl = $('#famTag'), titleEl = $('#famTitle'), memoEl = $('#famMemo');
-      var date = (dateEl && dateEl.value || '').trim();
-      var title = (titleEl && titleEl.value || '').trim();
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)){ famToast('날짜를 골라 주세요'); if (dateEl) dateEl.focus(); return; }
-      if (!title){ famToast('일정 제목을 적어 주세요'); if (titleEl) titleEl.focus(); return; }
-      var list = lsGet(K_EVENTS, []);
-      if (!list || typeof list.length !== 'number') list = [];
-      list.push({ id:'c' + Date.now().toString(36), date:date, title:title, tag:(tagEl ? tagEl.value : '어린이집'), memo:(memoEl ? memoEl.value : '').trim(), at:new Date().toISOString() });
-      lsSet(K_EVENTS, list);
-      if (titleEl) titleEl.value = '';
-      if (memoEl) memoEl.value = '';
-      famShowDone = false;
-      renderTimeline();
-      famToast('일정을 추가했어요 · ' + fullDate(date));
-    });
-
     $$('#famFilter button').forEach(function(b){
       b.addEventListener('click', function(){
         famFilter = b.getAttribute('data-filter') || 'all';
@@ -5059,9 +5027,6 @@
         renderTimeline();
       });
     });
-
-    var copyBtn = $('#famCopyBtn');
-    if (copyBtn) copyBtn.addEventListener('click', function(){ famCopy(buildBrief(), '복사했어요 · 해피방에 붙여넣어 주세요'); });
 
     var memoInput = $('#famMemoInput'), memoSave = $('#famMemoSave');
     function addMemo(){
