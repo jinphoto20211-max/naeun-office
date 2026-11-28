@@ -12,8 +12,10 @@
 """
 
 import sys, io, os
+from datetime import datetime, timedelta, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+KST = timezone(timedelta(hours=9))
 
 STAMP = "2026-11-28(토) 09:00"
 NOTION_SYNC = "11/28 08:30"
@@ -174,6 +176,24 @@ HUB_MIGYEOL = [
     ("몽실몽실", "먼치킨 꽁이 2027 캘린더", "유튜브 앱 로그인 오류로 진행 불가", "마감 지남", "wait"),
     ("KOSIS·잡아바", "통계 퀴즈 / 일자리 퀴즈", "캡차·통합회원 로그인 직접 필요", "11/27·11/29", "wait"),
 ]
+# ── 영상 주간 한도 초기화 (노션 「큐 그룹」 2026-11-28 12:02 KST 기준) ────
+# 큐: 2026-12-09(수) 20:22 / 별큐: 2026-12-28(월) 09:20 (Asia/Seoul)
+VIDEO_RESET_SRC = "노션 큐 그룹 · 11/28 12:02 기준"
+VIDEO_RESETS = [
+    ("큐", "12/09(수)", "20:22", "2026-12-09T20:22:00+09:00"),
+    ("별큐", "12/28(월)", "09:20", "2026-12-28T09:20:00+09:00"),
+]
+
+
+def dday(iso):
+    """한국 시간 달력 날짜 기준 남은 일수 (빌드 시점 고정값, 화면에서는 JS가 갱신)"""
+    target = datetime.fromisoformat(iso).astimezone(KST).date()
+    left = (target - datetime.now(KST).date()).days
+    if left > 0:
+        return "D-%d" % left
+    return "오늘" if left == 0 else "지남"
+
+
 HUB = {
     "market_title": "탈출 3단계 · 회복 0단계",
     "market_body": "미국 11/25 S&P500 7,182.78로 낙폭을 줄였지만 하이일드·변동성·추세 경계가 이어집니다. "
@@ -221,13 +241,22 @@ def row(label, title, meta, badge=None, kind="", today=False):
 def hub_html():
     o = ['<div class="card hub-card">']
     o.append('<div class="hub-top"><h3>노션 공용 허브 한눈에</h3>'
-             '<span>미결 건 · 증시 · 유가 · 담당별 요약 · 노션 동기화 %s</span></div>' % NOTION_SYNC)
+             '<span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 %s</span></div>' % NOTION_SYNC)
     o.append('<div class="hub-grid">')
     o.append('<div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/25 기준</div>'
              '<div class="hub-big">%s</div><p class="hub-p">%s</p></div>' % (HUB["market_title"], HUB["market_body"]))
     o.append('<div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/27 08:30</div>'
              '<div class="hub-big">%s <small>%s</small></div><p class="hub-p">%s</p></div>'
              % (HUB["fuel_big"], HUB["fuel_small"], HUB["fuel_body"]))
+    # 영상 주간 한도 초기화 — 증시·유가 바로 아래 전체 너비 1칸
+    o.append('<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 '
+             '<small>%s</small></div><div class="hub-reset">' % VIDEO_RESET_SRC)
+    for name, date, tm, iso in VIDEO_RESETS:
+        o.append('<div class="hub-reset-i"><span class="hub-reset-k">%s</span>'
+                 '<span class="hub-reset-v">%s <b>%s</b></span>'
+                 '<span class="hub-reset-d" data-reset="%s">%s</span></div>'
+                 % (name, date, tm, iso, dday(iso)))
+    o.append('</div></div>')
     o.append('</div>')
 
     o.append('<div class="hub-sub">🚧 미결 건 <span class="n">%d건</span><em>피클 · 노랑 10 · 하마뮤즈 4</em></div>'
@@ -246,8 +275,10 @@ def hub_html():
                  % (name, "".join("<li>%s</li>" % l for l in lines)))
     o.append('</div>')
     o.append('<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · '
-             '담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>')
+             '🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. '
+             '상세 기록은 노션에서 확인합니다.</p>')
     o.append('</div>')
+    o.append(DDAY_JS)
     return "\n".join(o)
 
 
@@ -446,10 +477,44 @@ HUB_CSS = """
   .hub-ul li{position:relative; padding-left:11px; font-size:11.5px; line-height:1.6; color:var(--ink-soft); letter-spacing:-.2px}
   .hub-ul li::before{content:""; position:absolute; left:0; top:8px; width:4px; height:4px; border-radius:50%; background:var(--pink)}
   .hub-foot{margin-top:16px; padding-top:12px; border-top:1px solid var(--line); font-size:11px; line-height:1.65; color:var(--muted-2); letter-spacing:-.15px}
+  /* 영상 주간 한도 초기화 — 증시·유가 아래 전체 너비 한 칸 */
+  .hub-wide{grid-column:1 / -1}
+  .hub-label small{font-weight:700; color:var(--muted-2); letter-spacing:-.2px; margin-left:5px}
+  .hub-reset{display:flex; flex-wrap:wrap; gap:10px 12px; margin-top:9px}
+  .hub-reset-i{flex:1 1 190px; display:flex; align-items:center; gap:9px; min-width:0;
+    padding:10px 13px; border-radius:14px; background:#fff; border:1px solid var(--line-strong)}
+  .hub-reset-k{font-size:11.5px; font-weight:800; color:var(--muted); letter-spacing:-.2px; white-space:nowrap}
+  .hub-reset-v{font-size:15px; font-weight:700; color:var(--ink-soft); letter-spacing:-.4px;
+    font-variant-numeric:tabular-nums; white-space:nowrap}
+  .hub-reset-v b{font-size:17px; font-weight:800; color:var(--ink); letter-spacing:-.5px}
+  .hub-reset-d{margin-left:auto; font-size:11px; font-weight:800; padding:3px 8px; border-radius:999px;
+    background:#FFF3E2; border:1px solid #F0DFC6; color:#96632E; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .hub-reset-d.today{background:#FBEAE6; border-color:#F3D2CA; color:#B0442F}
+  .hub-reset-d.past{background:#F4EFE8; border-color:var(--line-strong); color:var(--muted)}
   @media (max-width:720px){
     .hub-big{font-size:19px}
+    .hub-reset-v{font-size:14.5px}
+    .hub-reset-v b{font-size:16px}
   }
 """
+
+DDAY_JS = """<script>
+(function(){
+  function kstYMD(ms){ var d = new Date(ms + 9 * 3600000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; }
+  var now = kstYMD(Date.now());
+  var els = document.querySelectorAll('.hub-reset-d[data-reset]');
+  for (var i = 0; i < els.length; i++){
+    var el = els[i], t = Date.parse(el.getAttribute('data-reset'));
+    if (!t) continue;
+    var tg = kstYMD(t);
+    var left = Math.round((Date.UTC(tg[0], tg[1], tg[2]) - Date.UTC(now[0], now[1], now[2])) / 86400000);
+    el.textContent = left > 0 ? 'D-' + left : (left === 0 ? '오늘' : '지남');
+    el.classList.remove('today', 'past');
+    if (left === 0) el.classList.add('today');
+    else if (left < 0) el.classList.add('past');
+  }
+})();
+</script>"""
 
 MOBILE_CSS = """
     .trk-card{padding:18px 16px 20px}
@@ -465,6 +530,7 @@ MOBILE_CSS = """
     .hub-card{padding:16px}
     .hub-grid, .hub-grid.three{grid-template-columns:1fr}
     .hub-row{grid-template-columns:76px minmax(0,1fr) auto; gap:7px; font-size:11.5px}
+    .hub-reset-i{flex:1 1 100%}
 """
 
 NAV_BTN = ('    <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" '

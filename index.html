@@ -595,8 +595,25 @@
   .hub-ul li{position:relative; padding-left:11px; font-size:11.5px; line-height:1.6; color:var(--ink-soft); letter-spacing:-.2px}
   .hub-ul li::before{content:""; position:absolute; left:0; top:8px; width:4px; height:4px; border-radius:50%; background:var(--pink)}
   .hub-foot{margin-top:16px; padding-top:12px; border-top:1px solid var(--line); font-size:11px; line-height:1.65; color:var(--muted-2); letter-spacing:-.15px}
+  /* 영상 주간 한도 초기화 — 증시·유가 아래 전체 너비 한 칸 */
+  .hub-wide{grid-column:1 / -1}
+  .hub-label small{font-weight:700; color:var(--muted-2); letter-spacing:-.2px; margin-left:5px}
+  .hub-reset{display:flex; flex-wrap:wrap; gap:10px 12px; margin-top:9px}
+  .hub-reset-i{flex:1 1 190px; display:flex; align-items:center; gap:9px; min-width:0;
+    padding:10px 13px; border-radius:14px; background:#fff; border:1px solid var(--line-strong)}
+  .hub-reset-k{font-size:11.5px; font-weight:800; color:var(--muted); letter-spacing:-.2px; white-space:nowrap}
+  .hub-reset-v{font-size:15px; font-weight:700; color:var(--ink-soft); letter-spacing:-.4px;
+    font-variant-numeric:tabular-nums; white-space:nowrap}
+  .hub-reset-v b{font-size:17px; font-weight:800; color:var(--ink); letter-spacing:-.5px}
+  .hub-reset-d{margin-left:auto; font-size:11px; font-weight:800; padding:3px 8px; border-radius:999px;
+    background:#FFF3E2; border:1px solid #F0DFC6; color:#96632E; white-space:nowrap; font-variant-numeric:tabular-nums}
+  .hub-reset-d.today{background:#FBEAE6; border-color:#F3D2CA; color:#B0442F}
+  .hub-reset-d.past{background:#F4EFE8; border-color:var(--line-strong); color:var(--muted)}
   @media (max-width:720px){
     .hub-big{font-size:19px}
+    .hub-reset-v{font-size:14.5px}
+    .hub-reset-v b{font-size:16px}
+    .hub-reset-i{flex:1 1 100%}
   }
 
   @media (max-width:860px){
@@ -1174,10 +1191,14 @@
     </div>
     <!-- TRACKER-PANEL:START -->
 <div class="card hub-card">
-<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 담당별 요약 · 노션 동기화 11/28 08:30</span></div>
+<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 11/28 08:30</span></div>
 <div class="hub-grid">
 <div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/25 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/25 S&P500 7,182.78로 낙폭을 줄였지만 하이일드·변동성·추세 경계가 이어집니다. 11/26 추수감사절 휴장으로 11/27 판정은 건너뛰고 마지막 판정(11/25 기준)을 유지합니다.</p></div>
 <div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/27 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,813원 · 옥포농협클린 1,784원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
+<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 <small>노션 큐 그룹 · 11/28 12:02 기준</small></div><div class="hub-reset">
+<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-11</span></div>
+<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-30</span></div>
+</div></div>
 </div>
 <div class="hub-sub">🚧 미결 건 <span class="n">14건</span><em>피클 · 노랑 10 · 하마뮤즈 4</em></div>
 <ul class="hub-list">
@@ -1202,8 +1223,25 @@
 <div class="hub-box"><div class="hub-label">🦛 하마뮤즈</div><ul class="hub-ul"><li>AGE-R 2시간마다 우유·쿠키 · 15초 카톡 감지</li><li>휴대폰 조작 필요 경품 응모 진행 (11/18분 ~60건)</li><li>노랑이 넘긴 건(템빨·몽실몽실) 앱 전용 작업</li></ul></div>
 <div class="hub-box"><div class="hub-label">🎧 뮤즈</div><ul class="hub-ul"><li>10:00 AI 트렌드 브리핑 (365일 루틴)</li><li>5분마다 해피방 새 메시지 확인·답장</li><li>08:00 경품 확인·응모 · 일 09:09·15:09 판 확인</li></ul></div>
 </div>
-<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
+<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
 </div>
+<script>
+(function(){
+  function kstYMD(ms){ var d = new Date(ms + 9 * 3600000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; }
+  var now = kstYMD(Date.now());
+  var els = document.querySelectorAll('.hub-reset-d[data-reset]');
+  for (var i = 0; i < els.length; i++){
+    var el = els[i], t = Date.parse(el.getAttribute('data-reset'));
+    if (!t) continue;
+    var tg = kstYMD(t);
+    var left = Math.round((Date.UTC(tg[0], tg[1], tg[2]) - Date.UTC(now[0], now[1], now[2])) / 86400000);
+    el.textContent = left > 0 ? 'D-' + left : (left === 0 ? '오늘' : '지남');
+    el.classList.remove('today', 'past');
+    if (left === 0) el.classList.add('today');
+    else if (left < 0) el.classList.add('past');
+  }
+})();
+</script>
 <div class="card trk-card">
 <div class="trk-top"><p class="trk-stamp">트래커 기준 <b>2026-11-28(토) 09:00</b> · 노션 동기화 11/28 08:30 · 미결 건 11/27 11:37</p><button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button></div>
 <div class="trk-rule" aria-hidden="true"></div>
