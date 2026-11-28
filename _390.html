@@ -16,9 +16,19 @@
 <body>
   <div class="wrap">
     <div class="dev">
-      <p>390px · 패밀리 탭 (임시 확인용, 확인 후 삭제)</p>
-      <iframe src="index.html?r=390#family" title="390px 미리보기"></iframe>
+      <p>390px · 패밀리 탭 위쪽 (임시 확인용, 확인 후 삭제)</p>
+      <iframe src="index.html?r=390#family" title="390px 미리보기 1"></iframe>
+    </div>
+    <div class="dev">
+      <p>390px · 패밀리 탭 일정·메모 (스크롤)</p>
+      <iframe id="scrolled" src="index.html?r=390b#family" title="390px 미리보기 2"></iframe>
     </div>
   </div>
+<script>
+  var f = document.getElementById('scrolled');
+  f.addEventListener('load', function(){
+    try { f.contentWindow.scrollTo(0, 1180); } catch (e) {}
+  });
+</script>
 </body>
 </html>
