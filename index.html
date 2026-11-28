@@ -3466,10 +3466,12 @@
 
   /* ── 단톡방 실시간 연동 ─────────────────────────────────
      · 방 주인 비밀번호가 이 브라우저(localStorage)에 있을 때만 조용히 동작
-     · 접속(온라인) 판정 = ① 방 멤버 명단(/agents, enabled) ② 최근 30분 대화
-       — 예전에는 '최근 30분 대화'만 봐서, 방이 조용한 시간대엔 피클즈 4인이
-         전부 회색으로 죽어 보였다. 이제는 방에 입주해 있으면 컬러.
-     · 명단에 없는 캐릭터는 기본값(피클즈 4인 접속 중) 유지, 명단에서 꺼진(enabled=false) 멤버만 회색
+     · 접속(온라인) 판정 = ① 방 멤버 명단(/agents, enabled·lastUsedAt) ② 최근 30분 대화
+       — enabled(관리 스위치)는 '초대가 살아 있다'는 뜻일 뿐, 실제 접속이 아니다.
+         enabled=false → 무조건 오프라인. enabled=true 여도
+         lastUsedAt(마지막 실제 사용 시각)이 30분 이내이거나 최근 30분 안에 말했을 때만 온라인.
+     · 명단을 정상 수신(found>0)했으면 위 판정만 쓴다 — 기본값(AGC_DEFAULT)은 섞지 않는다.
+       명단을 못 읽었을 때만 예전처럼 피클즈 4인 기본값 + 최근 대화로 폴백.
      · 같은 명단·같은 판정을 비서현황 탭에 window.NaeunRoster.apply() 로 넘긴다
      · 토큰이 없거나 요청이 실패하면 기본값 그대로 (콘솔 오류 없이) — 비서현황은 오프라인 폴백 */
   (function () {
@@ -3518,6 +3520,21 @@
     }
 
     var roomId = null, busy = false, firstSync = true;
+    /* lastUsedAt(ISO 문자열 또는 null) → 밀리초 */
+    function lastUsedMs(v) {
+      if (v == null || v === '') return 0;
+      var t = (typeof v === 'number') ? v : Date.parse(v);
+      return isFinite(t) ? t : 0;
+    }
+    /* 실제 접속 판정 — enabled=false 는 무조건 오프라인,
+       enabled=true 라도 lastUsedAt 이 ACTIVE_MS 이내이거나 최근에 말했을 때만 온라인 */
+    function isOnlineAgent(a, recent, now) {
+      if (!a) return false;
+      if (a.enabled === false) return false;
+      var lu = lastUsedMs(a.lastUsedAt != null ? a.lastUsedAt : a.last_used_at);
+      if (lu && (now - lu) < ACTIVE_MS) return true;   // 서버 시계가 조금 앞서도 최근으로 본다
+      return !!recent;
+    }
     /* 접속 상태 반영 — 말풍선 점・아바타 바 컬러를 한 곳에서 같이 바꾼다 */
     function applyPresence(agents, messages) {
       var now = Date.now();
@@ -3537,7 +3554,8 @@
           var c = matchChar(a && a.name);
           if (!c) return;
           found++;
-          member[c.name] = !!member[c.name] || !!(a && a.enabled);
+          if (!member[c.name]) member[c.name] = [];
+          member[c.name].push(a);   // 같은 캐릭터가 여러 키로 잡혀도 하나라도 온라인이면 온라인
         });
       }
       CHARS.forEach(function (c) {
@@ -3546,8 +3564,13 @@
         if (c.live && now - c.live.at >= ACTIVE_MS) c.live = null;
         var recent = !!(c.live && now - c.live.at < ACTIVE_MS);
         var on;
-        if (found && member.hasOwnProperty(c.name)) on = member[c.name] || recent;
-        else on = !!AGC_DEFAULT[c.name] || recent;   // 명단에 없거나 못 읽었으면 기본값
+        if (found) {
+          /* 명단을 정상 수신했으면 실제 판정만 — 기본값(AGC_DEFAULT)은 섞지 않는다 */
+          on = false;
+          (member[c.name] || []).forEach(function (a) { if (isOnlineAgent(a, recent, now)) on = true; });
+        } else {
+          on = !!AGC_DEFAULT[c.name] || recent;   // 명단을 못 읽었을 때만 기본값 폴백
+        }
         window.o25SetChatStatus(c.name, on);
       });
       firstSync = false;
@@ -3566,13 +3589,21 @@
         var at = Date.parse(m.at) || 0;
         if (!at || now - at >= ACTIVE_MS) return;
         var k = norm(m.sender.name);
-        if (k) recentBy[k] = at;
+        if (!k) return;
+        recentBy[k] = at;
+        var mc = matchChar(m.sender.name);
+        if (mc) recentBy[norm(mc.name)] = at;   // 별칭 발신자도 캐릭터 이름으로 한 번 더
       });
-      var rows = [];
+      var rows = [], rowAt = {};
       agents.forEach(function (a) {
         var nm = String((a && a.name) || '').trim();
         if (!nm) return;
-        rows.push({ name: nm, role: String((a && a.role) || 'AI').trim(), online: !!(a && a.enabled) || !!recentBy[norm(nm)] });
+        var mc = matchChar(nm), key = norm(mc ? mc.name : nm);
+        var recent = !!recentBy[norm(nm)] || !!recentBy[key];
+        var on = isOnlineAgent(a, recent, now);
+        if (rowAt.hasOwnProperty(key)) { if (on) rows[rowAt[key]].online = true; return; }
+        rowAt[key] = rows.length;
+        rows.push({ name: nm, role: String((a && a.role) || 'AI').trim(), online: on });
       });
       if (rows.length) R.apply(rows);
     }
