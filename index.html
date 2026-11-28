@@ -100,7 +100,7 @@
 
   /* ── tabs ── */
   .tabs{
-    margin-top:16px; padding:8px; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px;
+    margin-top:16px; padding:8px; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px;
   }
   .tab{
     appearance:none; border:0; background:transparent; border-radius:16px; padding:11px 6px;
@@ -1302,7 +1302,6 @@
   <nav class="card tabs" role="tablist" aria-label="비서실 메뉴">
     <button class="tab" role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true" data-tab="map">오피스 맵</button>
     <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" aria-selected="false" tabindex="-1" data-tab="tracker">트래커</button>
-    <button class="tab" role="tab" id="tab-meeting" aria-controls="panel-meeting" aria-selected="false" tabindex="-1" data-tab="meeting">회의실</button>
     <button class="tab" role="tab" id="tab-work" aria-controls="panel-work" aria-selected="false" tabindex="-1" data-tab="work">작업실</button>
     <button class="tab" role="tab" id="tab-team" aria-controls="panel-team" aria-selected="false" tabindex="-1" data-tab="team">비서현황</button>
     <button class="tab" role="tab" id="tab-memo" aria-controls="panel-memo" aria-selected="false" tabindex="-1" data-tab="memo">메모</button>
@@ -1383,7 +1382,7 @@
       <div class="agc-frame-wrap" id="agcWrap" hidden>
         <iframe id="agcFrame" title="피클 단톡방" loading="lazy" referrerpolicy="no-referrer"></iframe>
       </div>
-      <p class="agc-map-hint" id="agcMapHint">방 주인 비밀번호는 <b>회의실</b> 탭에서 한 번만 저장해 두면 돼요. 화면이 비어 있으면 [새 창으로 열기]를 눌러 주세요.</p>
+      <p class="agc-map-hint" id="agcMapHint">방 주인 비밀번호는 <b>작업실</b> 탭에서 한 번만 저장해 두면 돼요. 화면이 비어 있으면 [새 창으로 열기]를 눌러 주세요.</p>
       <script>
       (function(){
         var URL_AGC = 'https://ai-group-chat.jinphoto20211.workers.dev/';
@@ -1408,50 +1407,6 @@
     </div>
 
     <div class="space-shell">
-      <!-- 대회의실 -->
-      <article class="space-panel card active" data-space-panel="meeting" aria-labelledby="sp-meeting-title">
-        <div class="sp-head">
-          <div class="sp-title">
-            <span class="sp-emoji" aria-hidden="true">🟠</span>
-            <div>
-              <h3 id="sp-meeting-title">대회의실</h3>
-              <p>피클즈 4인 · 정기 회의</p>
-            </div>
-          </div>
-          <span class="badge">회의 중</span>
-        </div>
-        <div class="sp-body">
-          <div class="people">
-            <span class="person"><span class="e">🥒</span>초록 <small>관제탑</small></span>
-            <span class="person"><span class="e">🐥</span>노랑 <small>노랑 폰</small></span>
-            <span class="person"><span class="e">🩷</span>진분홍 <small>진분홍 폰</small></span>
-            <span class="person"><span class="e">🌱</span>막내 <small>막내 폰</small></span>
-          </div>
-          <div class="agenda">
-            <div class="agenda-row">
-              <span class="agenda-ico" aria-hidden="true">🌲</span>
-              <div class="agenda-text"><b>고령군청 '눈 내리는 빛의 숲'</b><span>12/18 발표 확인 · 대기</span></div>
-              <span class="dday" data-date="2026-12-18">D-21</span>
-            </div>
-            <div class="agenda-row">
-              <span class="agenda-ico" aria-hidden="true">🧴</span>
-              <div class="agenda-text"><b>차앤박 앰플</b><span>11/28 21:55 구매 · 인증</span></div>
-              <span class="dday soon" data-date="2026-11-28">D-1</span>
-            </div>
-            <div class="agenda-row">
-              <span class="agenda-ico" aria-hidden="true">📘</span>
-              <div class="agenda-text"><b>11/29 펀드 시험</b><span>아침 응원 메시지 준비</span></div>
-              <span class="dday" data-date="2026-11-29">D-2</span>
-            </div>
-          </div>
-          <hr class="divider">
-          <p class="mini-note">오늘 08시 체험단 브리핑은 6개 플랫폼 카테고리별로 정리했고, 접수는 나은님이 고르신 건만 진행합니다. 발표 확인은 10시·18시에 한 번 더 돕니다.</p>
-          <div class="row">
-            <button class="btn btn-ghost btn-sm" type="button" data-goto="meeting">회의실 전체 보기 →</button>
-          </div>
-        </div>
-      </article>
-
       <!-- 지휘실 -->
       <article class="space-panel card" data-space-panel="command" aria-labelledby="sp-command-title" hidden>
         <div class="sp-head">
@@ -1524,7 +1479,7 @@
       </article>
     </div>
 
-    <!-- 접속 현황 · 오이 — 상단에서 내려 대회의실·단톡방 아래에 둔다 -->
+    <!-- 접속 현황 · 오이 — 상단에서 내려 단톡방 아래에 둔다 -->
     <div class="chips chips-bottom" id="statusChipsBottom">
       <span class="chip live" id="statusChip"><span class="dot" id="statusDot" aria-hidden="true"></span><span id="statusChipText">비서 13명 · 단톡방 연결 대기</span></span>
       <span class="chip" id="oiChip" title="막내의 분신 — 별도 인원이 아니라 텔레그램 중계 창구입니다">🥒 오이 · 막내 분신 · 텔레그램 중계</span>
@@ -1742,50 +1697,29 @@
     <!-- TRACKER-PANEL:END -->
   </section>
 
-  <!-- ═══ 회의실 ═══ -->
-  <section class="panel" id="panel-meeting" role="tabpanel" aria-labelledby="tab-meeting">
+  <!-- ═══ 작업실 ═══ -->
+  <section class="panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
     <div class="section-head">
       <div>
-        <h2>회의실</h2>
-        <p>오늘의 안건과 비서들의 정기 루틴을 한눈에 봅니다.</p>
+        <h2>작업실</h2>
+        <p>지금 돌고 있는 업무 보드입니다. 숫자는 11/27 기준 마지막 확인값이에요.</p>
       </div>
     </div>
 
-    <div class="card" style="padding:20px 22px">
-      <div class="eyebrow" style="margin-bottom:12px">오늘의 안건</div>
-      <div class="agenda">
-        <div class="agenda-row">
-          <span class="agenda-ico" aria-hidden="true">🌲</span>
-          <div class="agenda-text"><b>고령군청 '눈 내리는 빛의 숲' 발표 체크</b><span>12/18 · 발표 명단 확인 후 바로 보고</span></div>
-          <span class="dday" data-date="2026-12-18">D-21</span>
-        </div>
-        <div class="agenda-row">
-          <span class="agenda-ico" aria-hidden="true">🧴</span>
-          <div class="agenda-text"><b>차앤박 앰플 구매 · 인증</b><span>11/28 21:55 · 구매 후 인증까지</span></div>
-          <span class="dday soon" data-date="2026-11-28">D-1</span>
-        </div>
-        <div class="agenda-row">
-          <span class="agenda-ico" aria-hidden="true">📘</span>
-          <div class="agenda-text"><b>11/29 펀드 시험</b><span>아침에 응원 메시지 한 줄 보내기</span></div>
-          <span class="dday" data-date="2026-11-29">D-2</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card agc-card" style="padding:20px 22px; margin-top:14px">
+    <div class="card agc-card" id="agcSettingsCard" style="padding:20px 22px; margin-bottom:14px">
       <div class="agc-head">
         <div>
           <div class="eyebrow" style="margin-bottom:6px">AI 단톡방</div>
           <h3>피클 단톡방 <span class="agc-live">연결됨</span></h3>
-          <p>단톡방 화면은 <b>오피스 맵</b> 캐릭터들 바로 아래에 있어요. 비밀번호만 여기서 저장해 두면 어디서든 바로 열립니다.</p>
+          <p>단톡방 화면은 <b>오피스 맵</b> 캐릭터들 바로 아래에 있어요. 방 주인 비밀번호를 여기서 한 번만 저장해 두면 어디서든 <b>복사</b> 한 번으로 열립니다.</p>
         </div>
         <div class="agc-actions">
           <button class="btn btn-primary btn-sm" type="button" data-goto="map">오피스 맵에서 열기</button>
-          <a class="btn btn-ghost btn-sm" href="https://ai-group-chat.jinphoto20211.workers.dev/" target="_blank" rel="noopener noreferrer">새 창으로 열기 ↗</a>
+          <a class="btn btn-ghost btn-sm" href="https://ai-group-chat.jinphoto20211.workers.dev/" target="_blank" rel="noopener noreferrer">새 창으로 열기 &nearr;</a>
         </div>
       </div>
       <div class="agc-token">
-        <label for="agcToken">방 주인 비밀번호 — 이 기기에만 저장</label>
+        <label for="agcToken">방 주인 비밀번호 &mdash; 이 기기에만 저장</label>
         <input id="agcToken" type="password" autocomplete="off" placeholder="ADMIN_TOKEN">
         <button class="btn btn-ghost btn-sm" id="agcSave" type="button">저장</button>
         <button class="btn btn-ghost btn-sm" id="agcCopy" type="button">복사</button>
@@ -1807,7 +1741,7 @@
         var saved = read();
         if (saved) {
           inp.value = saved;
-          say('저장된 비밀번호가 있어요. [여기서 열기] 후 [복사] → 방 안 비밀번호 칸에 붙여넣으면 됩니다. (이 브라우저에만 저장)');
+          say('저장된 비밀번호가 있어요. [오피스 맵에서 열기] 후 [복사] → 방 안 비밀번호 칸에 붙여넣으면 됩니다. (이 브라우저에만 저장)');
         }
         if (bSave) bSave.addEventListener('click', function(){
           var v = inp.value.trim();
@@ -1835,38 +1769,6 @@
 
       })();
       </script>
-    </div>
-
-    <div class="card" style="padding:20px 22px; margin-top:14px">
-      <div class="eyebrow" style="margin-bottom:8px">최근 회의 로그 · 평일 정기 루틴</div>
-      <div class="log-list">
-        <div class="log-item"><span class="log-time">04:00</span><div class="log-line"><b>쇼핑몰 주문·쿠팡 초안 점검</b><span><span class="tag">진분홍</span>소모품 점검은 월·목, 한달사용리뷰는 오픈 확인 즉시 작성</span></div></div>
-        <div class="log-item"><span class="log-time">05:00</span><div class="log-line"><b>5대 몰 출석체크</b><span><span class="tag">진분홍</span>맘큐 · 락앤락몰 · 셰프애찬 · 칠성몰 · G마켓</span></div></div>
-        <div class="log-item"><span class="log-time">06:00</span><div class="log-line"><b>총적립액 취합 보고</b><span><span class="tag">진분홍</span>당일 합계와 누적 총적립액을 함께 정리</span></div></div>
-        <div class="log-item"><span class="log-time">07:00</span><div class="log-line"><b>모닝 브리핑</b><span><span class="tag">초록</span>최근 24시간 뉴스·날씨·일정, 막힌 플랫폼은 사유 먼저</span></div></div>
-        <div class="log-item"><span class="log-time">08:00</span><div class="log-line"><b>체험단 브리핑</b><span><span class="tag">초록</span>6개 플랫폼 카테고리별 5~6개 선별, 접수는 나은님 픽만</span></div></div>
-        <div class="log-item"><span class="log-time">11:00</span><div class="log-line"><b>공공설문 · 핫딜헌터 · 엠브레인</b><span><span class="tag">노랑</span>인스팅트가 노션에 올린 목록을 확인하고 한 번에 처리</span></div></div>
-        <div class="log-item"><span class="log-time">18:05</span><div class="log-line"><b>발표 확인 마감 점검</b><span><span class="tag">진분홍</span>미선정은 묻지 않고 정리, 변동 없으면 한 줄 회신</span></div></div>
-      </div>
-    </div>
-
-    <div class="card" style="padding:20px 22px; margin-top:14px">
-      <div class="eyebrow" style="margin-bottom:12px">나은님과의 약속</div>
-      <div class="agenda">
-        <div class="agenda-row"><span class="agenda-ico" aria-hidden="true">✅</span><div class="agenda-text"><b>접수는 고르신 것만</b><span>메인 추천만으로 임의 접수하지 않습니다.</span></div></div>
-        <div class="agenda-row"><span class="agenda-ico" aria-hidden="true">🔎</span><div class="agenda-text"><b>부분 확인을 전체 결론으로 말하지 않기</b><span>막힌 사유·빈칸·지연 가능성을 함께 보고합니다.</span></div></div>
-        <div class="agenda-row"><span class="agenda-ico" aria-hidden="true">🔐</span><div class="agenda-text"><b>외부로 나가는 연락·결제는 확인 후</b><span>나은님 이름으로 나가는 일은 먼저 여쭙습니다.</span></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ 작업실 ═══ -->
-  <section class="panel" id="panel-work" role="tabpanel" aria-labelledby="tab-work">
-    <div class="section-head">
-      <div>
-        <h2>작업실</h2>
-        <p>지금 돌고 있는 업무 보드입니다. 숫자는 11/27 기준 마지막 확인값이에요.</p>
-      </div>
     </div>
 
     <div class="card notion-card" style="padding:20px 22px; margin-bottom:14px">
@@ -2464,6 +2366,7 @@
     b.addEventListener('click', function(){ selectTab(b.getAttribute('data-goto')); });
   });
   var hash = (location.hash || '').replace('#','');
+  if (hash === 'meeting') hash = 'work';   // 없어진 회의실 탭으로 들어오는 옛 링크는 작업실로
   if (hash && $('#panel-' + hash)) selectTab(hash);
 
   /* ── 오피스 공간 ── */
@@ -2661,10 +2564,10 @@
     var DEF = {
       board:   { title:'화이트보드',
                  body: function(){ return '오늘의 판 — 08시 브리핑 6개 플랫폼 · 발표 확인 10시/18시 · 미결 14건 정리 중.'; },
-                 go:'회의실 열기', act: function(){ selectTab('meeting'); } },
+                 go:'작업실 열기', act: function(){ selectTab('work'); } },
       table:   { title:'회의 테이블',
                  body: function(){ return '오늘 안건 3건 — 차앤박 앰플 구매·인증(D-1) · 펀드 시험(D-2) · 고령군청 발표 확인(D-21). 08시 브리핑은 6개 플랫폼 카테고리로 정리했어요.'; },
-                 go:'회의실 열기', act: function(){ selectTab('meeting'); } },
+                 go:'작업실 열기', act: function(){ selectTab('work'); } },
       command: { title:'지휘실 책상',
                  body: function(){ return '모니터 한눈에 — 누적 응모 233 · 발표 대기 43 · 오늘 발표 9건 · 미결 14건. 지시 문구를 여기서 만들어 복사할 수 있어요.'; },
                  go:'지휘실에서 지시하기', act: function(){ openModal('', null); } },
