@@ -365,6 +365,13 @@
   .mp-list{margin:14px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
   .mp-list li{font-size:12.5px; color:var(--ink-soft); padding-left:14px; position:relative}
   .mp-list li::before{content:""; position:absolute; left:3px; top:8px; width:5px; height:5px; border-radius:50%; background:var(--line-strong)}
+  /* 캐릭터 클릭 팝업 — 단톡방에서 마지막으로 한 말 한 칸 */
+  .mp-chat{margin-top:14px; padding:13px 15px 12px; border-radius:16px; background:var(--card-soft); border:1px solid var(--line); display:flex; flex-direction:column; gap:5px}
+  .mp-chat-lbl{font-size:11.5px; font-weight:800; color:var(--muted); letter-spacing:-.1px}
+  .mp-chat-text{font-size:13.5px; line-height:1.62; color:var(--ink); word-break:break-word; white-space:pre-wrap}
+  .mp-chat-foot{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:1px}
+  .mp-chat-time{font-size:11.5px; font-weight:800; color:var(--pink-deep)}
+  .mp-chat-none{font-size:12.5px; color:var(--muted-2); line-height:1.5}
   .agent ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px}
   .agent li{font-size:11.5px; color:var(--muted); padding-left:13px; position:relative; line-height:1.5}
   .agent li::before{content:""; position:absolute; left:3px; top:7px; width:4px; height:4px; border-radius:50%; background:var(--line-strong)}
@@ -2779,8 +2786,51 @@
 
   var memberPanel = $('#memberPanel');
   var currentMember = null;
+  function escHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(ch){
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+  /* 말한 시각 — 오늘/어제면 그렇게, 그 전은 날짜+시각 (예: 오후 7:05) */
+  function chatWhen(ms){
+    if (!ms) return '';
+    var d = new Date(ms);
+    if (isNaN(d)) return '';
+    var now = new Date();
+    var h = d.getHours(), h12 = h % 12; if (!h12) h12 = 12;
+    var hm = (h < 12 ? '오전 ' : '오후 ') + h12 + ':' + pad(d.getMinutes());
+    function sameDay(a, b){ return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+    if (sameDay(d, now)) return '오늘 ' + hm;
+    var y = new Date(now.getTime()); y.setDate(y.getDate() - 1);
+    if (sameDay(d, y)) return '어제 ' + hm;
+    if (d.getFullYear() === now.getFullYear()) return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + hm;
+    return d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + hm;
+  }
+  /* 단톡방 연동(IIFE)이 캐릭터별 마지막 발언을 넘겨 주는 자리 */
+  function latestChatOf(name){
+    try { if (typeof window.o25LatestChat === 'function') return window.o25LatestChat(name); } catch (e) {}
+    return null;
+  }
+  function memberChatInner(name){
+    var ch = latestChatOf(name);
+    if (!ch || !ch.text){
+      return '<span class="mp-chat-lbl">💬 가장 최근 단톡방 대화</span>' +
+             '<p class="mp-chat-none">아직 단톡방 대화 기록이 없어요</p>';
+    }
+    var when = chatWhen(ch.at);
+    return '<span class="mp-chat-lbl">💬 가장 최근 단톡방 대화</span>' +
+           '<p class="mp-chat-text">' + escHtml(ch.text) + '</p>' +
+           (when ? '<div class="mp-chat-foot"><span class="mp-chat-time">' + escHtml(when) + ' 말함</span></div>' : '');
+  }
+  function paintMemberChat(){
+    if (!currentMember || memberPanel.hidden) return;
+    var box = memberPanel.querySelector('[data-mp-chat]');
+    if (!box) return;
+    box.innerHTML = memberChatInner(currentMember);
+  }
   function refreshMemberPanel(){
     if (!currentMember || memberPanel.hidden) return;
+    paintMemberChat();
     var btn = memberPanel.querySelector('[data-mp-status]');
     if (!btn) return;
     var s = rosterStatus(currentMember);
@@ -2820,6 +2870,7 @@
         '<button class="mp-status" type="button" data-mp-status data-s="' + st + '"><i aria-hidden="true"></i>' + STATUS_LABEL[st] + '</button>',
         '<span class="mp-hint">단톡방 접속 상태를 20초마다 다시 확인해 보여줍니다</span>',
       '</div>',
+      '<div class="mp-chat" data-mp-chat>' + memberChatInner(name) + '</div>',
       '<ul class="mp-list">' + m.duties.map(function(d){ return '<li>' + d + '</li>'; }).join('') + '</ul>',
       '<div class="row">',
         '<button class="btn btn-primary btn-sm" type="button" data-mp-ask>' + m.name + '에게 지시하기</button>',
@@ -2840,6 +2891,7 @@
     if (memberPanel.scrollIntoView) setTimeout(function(){ memberPanel.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 60);
   }
   window.openMember = openMember;
+  window.o25RepaintMemberChat = paintMemberChat;   // 단톡방 이력이 늦게 들어와도 열린 팝업을 다시 그린다
   $$('.walker').forEach(function(tag){
     tag.addEventListener('click', function(){ openMember(tag.getAttribute('data-member')); });
   });
@@ -3196,13 +3248,18 @@
   /* ── 실제 대화 한 줄 반영(단톡방·외부 창구용) ───────────── */
   function noteChat(c, text, atMs) {
     if (!c || !c.life) return false;
-    var s = String(text == null ? '' : text).replace(/\s+/g, ' ').trim();
-    if (!s) return false;
-    if (s.length > 26) s = s.slice(0, 25) + '…';
+    var full = String(text == null ? '' : text).replace(/\s+/g, ' ').trim();
+    if (!full) return false;
+    var s = full.length > 26 ? full.slice(0, 25) + '…' : full;   // 말풍선용 26자 축약
     var now = Date.now();
     var at = (atMs && !isNaN(atMs)) ? Math.min(atMs, now) : now;
     if (!c.live || at >= c.live.at) c.live = { text: s, at: at };
-    if (at > (c.latestChatAt || 0)) c.latestChatAt = at;
+    /* 가장 최근 발언 원문 — 캐릭터 클릭 팝업이 이 값을 그대로 보여 준다.
+       오래된 대화라도 자동 말풍선은 뜨지 않게, 말풍선은 위의 c.live·LIVE_MSG_MS 만 쓴다. */
+    if (at >= (c.latestChatAt || 0)) {
+      c.latestChatAt = at;
+      c.latestChatText = full.length > 400 ? full.slice(0, 399) + '…' : full;
+    }
     if (now - at < MOTION_WORK_MS) markWorking(c, at + MOTION_WORK_MS);
     return true;
   }
@@ -3210,7 +3267,7 @@
     var c = byName[name];
     if (!c) return false;
     var ok = noteChat(c, text, atIso ? Date.parse(atIso) : 0);
-    if (ok) { reactToChat(c); rotateBubbles(); }
+    if (ok) { reactToChat(c); rotateBubbles(); if (window.o25RepaintMemberChat) window.o25RepaintMemberChat(); }
     return ok;
   };
   setInterval(refreshMotions, 30000);
@@ -3379,6 +3436,11 @@
     if (!chatterOn && !hasLive(c)) return false;   // 수다모드 OFF — 실제 대화만
     return paintBub(c, pickText(c), ms, force);
   }
+  /* 말풍선에 담기 좋은 길이로만 잘라 보여 준다(팝업에는 원문 전체) */
+  function clipBub(t) {
+    var s = String(t == null ? '' : t).replace(/\s+/g, ' ').trim();
+    return s.length > 34 ? s.slice(0, 33) + '…' : s;
+  }
   function refreshBubbles() {
     shown.slice().forEach(function (n) {
       var c = byName[n];
@@ -3426,7 +3488,12 @@
     CHARS.forEach(function (o) { o.el.classList.remove('on'); });
     if (!SPRITES || !c.seatedReference) c.el.classList.add('on');
     hideBub(c);
-    showBub(c, 6400, true);
+    /* 클릭하면 그 캐릭터가 단톡방에서 마지막으로 한 말을 6.4초 먼저 보여 준다.
+       1분이 지난 대화는 자동 말풍선에는 안 뜨지만, 눌렀을 때만은 보여 준다.
+       기록이 없으면 기존처럼 자리·포즈에 맞는 일상 멘트. */
+    var lastLine = (!hasLive(c) && c.latestChatText) ? clipBub(c.latestChatText) : '';
+    if (lastLine) paintBub(c, lastLine, 6400, true);
+    else showBub(c, 6400, true);
     c.bub.classList.add('me');
     setTimeout(function () { c.bub.classList.remove('me'); }, 6400);
     setTimeout(function () { if (lastPicked === c) c.el.classList.remove('on'); }, 2600);
@@ -3475,6 +3542,9 @@
        (명단에 아예 없는 캐릭터는 최근 30분 안에 말했을 때만 온라인)
        명단을 못 읽었을 때만 예전처럼 피클즈 4인 기본값 + 최근 대화로 폴백.
      · 같은 명단·같은 판정을 비서현황 탭에 window.NaeunRoster.apply() 로 넘긴다
+     · 캐릭터 클릭 팝업을 위해 '가장 최근 단톡방 대화 원문 + 시각'도 모은다
+       — 30분 지난 대화까지 보관(walkHistory)하되 말풍선 자동 표시(LIVE_MSG_MS 1분)·
+         온라인 판정(ACTIVE_MS 30분)은 그대로. 팝업은 window.o25LatestChat(name) 으로 읽는다.
      · 토큰이 없거나 요청이 실패하면 기본값 그대로 (콘솔 오류 없이) — 비서현황은 오프라인 폴백 */
   (function () {
     var TOKEN_KEY = 'naeun:agc-token:v1';
@@ -3515,13 +3585,14 @@
       return fetch(API + path, { headers: { Authorization: 'Bearer ' + t }, cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
     }
-    function trimLine(t) {
-      var s = String(t == null ? '' : t).replace(/\s+/g, ' ').trim();
-      if (!s) return '';
-      return s.length > 26 ? s.slice(0, 25) + '…' : s;
-    }
+    /* 캐릭터 클릭 팝업(openMember)이 물어 가는 곳 — 그 캐릭터의 마지막 단톡방 발언 원문·시각 */
+    window.o25LatestChat = function (name) {
+      var c = byName[name] || matchChar(name);
+      if (!c || !c.latestChatText) return null;
+      return { text: c.latestChatText, at: c.latestChatAt || 0 };
+    };
 
-    var roomId = null, busy = false, firstSync = true;
+    var roomId = null, busy = false, firstSync = true, cacheSeeded = false;
     /* lastUsedAt(ISO 문자열 또는 null) → 밀리초 */
     function lastUsedMs(v) {
       if (v == null || v === '') return 0;
@@ -3545,7 +3616,7 @@
           if (!m || !m.sender || m.sender.role === 'system') return;
           var c = matchChar(m.sender.name);
           if (!c) return;
-          var at = Date.parse(m.at) || 0, text = trimLine(m.text);
+          var at = Date.parse(m.at) || 0, text = m.text;   // 원문을 넘긴다 — 26자 축약은 noteChat 안에서
           if (!at || !text) return;
           noteChat(c, text, at);
         });
@@ -3615,6 +3686,82 @@
       });
       if (rows.length) R.apply(rows);
     }
+    /* ── 지난 대화 이력 훑기 ─────────────────────────────────
+       /messages 는 since 이후를 '오래된 순'으로만 주므로(최근 N건 조회 없음),
+       방 처음부터 200건씩 끝까지 훑어 각 캐릭터의 마지막 발언을 채운다.
+       · 끝까지 닿았을 때만 noteChat 에 반영한다 — 중간까지만 읽은 값은 '최근'이 아니므로 버린다.
+       · 페이지를 여는 족족 처음부터 다시 읽지 않도록, 어디까지 읽었는지와 캐릭터별 마지막
+         발언을 이 브라우저(localStorage)에 적어 두고 다음에는 그 다음부터만 읽는다.
+       · 한 틱에 최대 8페이지(1600건)만 읽고, 끝에 닿지 못하면 다음 20초 틱에 이어 읽는다.
+       · 온라인 판정(ACTIVE_MS 30분)·자동 말풍선(LIVE_MSG_MS 1분)은 이 이력과 무관하게 그대로다. */
+    var HIST_PAGE = 200, HIST_PAGES_PER_TICK = 8;
+    var CHAT_CACHE_KEY = 'naeun-office:lastchat:v1';
+    var histCursor = 0, histDone = false, histPending = {};
+    /* 캐시에서 불러온 '아는 만큼의 마지막 발언'으로 먼저 채워 둔다 (이력이 늦게 와도 팝업이 바로 산다) */
+    function cacheSeed(id) {
+      var d = null;
+      try { d = JSON.parse(localStorage.getItem(CHAT_CACHE_KEY) || 'null'); } catch (e) { d = null; }
+      if (!d || String(d.room) !== String(id) || !d.chars) return;
+      histCursor = Number(d.cursor) || 0;
+      Object.keys(d.chars).forEach(function (n) {
+        var c = byName[n], p = d.chars[n];
+        if (c && p && p.text) noteChat(c, p.text, p.at || 0);
+      });
+      CHARS.forEach(function (c) { c.seenChatAt = Math.max(c.seenChatAt || 0, c.latestChatAt || 0); });
+    }
+    function cacheChars() {
+      var map = {};
+      CHARS.forEach(function (c) { if (c.latestChatText) map[c.name] = { at: c.latestChatAt || 0, text: c.latestChatText }; });
+      Object.keys(histPending).forEach(function (n) {
+        var p = histPending[n], q = map[n];
+        if (!q || p.at >= q.at) map[n] = { at: p.at, text: p.text };
+      });
+      return map;
+    }
+    function cacheSave(id) {
+      try { localStorage.setItem(CHAT_CACHE_KEY, JSON.stringify({ v: 1, room: String(id), cursor: histCursor, chars: cacheChars(), at: Date.now() })); } catch (e) {}
+    }
+    function walkHistory(base, id) {
+      if (histDone) return Promise.resolve('done');
+      var pages = 0;
+      function step() {
+        if (pages >= HIST_PAGES_PER_TICK) return Promise.resolve(false);
+        pages++;
+        var from = histCursor;
+        return getJSON(base + '/messages?limit=' + HIST_PAGE + '&since=' + from).then(function (d) {
+          var ms = (d && d.messages) || [];
+          ms.forEach(function (m) {
+            if (!m || !m.sender || m.sender.role === 'system') return;
+            var c = matchChar(m.sender.name);
+            if (!c) return;
+            var at = Date.parse(m.at) || 0;
+            var t = String(m.text == null ? '' : m.text).replace(/\s+/g, ' ').trim();
+            if (!at || !t) return;
+            var prev = histPending[c.name];
+            if (!prev || at >= prev.at) histPending[c.name] = { at: at, text: t };
+          });
+          var cur = Number(d && d.cursor) || 0;
+          if (cur > histCursor) histCursor = cur;   // 마지막 페이지에서도 커서를 끝까지 당긴다
+          if (d && d.hasMore && cur > from) return step();
+          return true;   // 끝에 닿음
+        });
+      }
+      return step().then(function (reached) {
+        if (!reached) { cacheSave(id); return 'more'; }   // 읽은 데까지 적어 두고 다음 틱에 이어서
+        histDone = true;
+        Object.keys(histPending).forEach(function (n) {
+          var c = byName[n], p = histPending[n];
+          if (!c || !p) return;
+          noteChat(c, p.text, p.at);
+          c.seenChatAt = Math.max(c.seenChatAt || 0, c.latestChatAt || 0);   // 지난 대화로 캐릭터가 깜빡이지 않게
+        });
+        histPending = {};
+        cacheSave(id);
+        if (typeof refreshBubbles === 'function') refreshBubbles();
+        if (window.o25RepaintMemberChat) window.o25RepaintMemberChat();
+        return 'done';
+      });
+    }
     function sync() {
       if (busy) return;
       if (!readToken()) return;   // 비밀번호가 없으면 조용히 오프라인 폴백 유지
@@ -3629,10 +3776,12 @@
       chain.then(function (id) {
         if (!id) return null;
         var base = '/api/admin/rooms/' + encodeURIComponent(id);
+        if (!cacheSeeded) { cacheSeed(id); cacheSeeded = true; }   // 지난번에 읽어 둔 마지막 발언부터
         var since = encodeURIComponent(new Date(Date.now() - ACTIVE_MS).toISOString());
         return Promise.all([
           getJSON(base + '/agents').catch(function () { return null; }),
-          getJSON(base + '/messages?limit=60&since=' + since).catch(function () { return null; })
+          getJSON(base + '/messages?limit=60&since=' + since).catch(function () { return null; }),
+          walkHistory(base, id).catch(function () { return null; })   // 지난 대화는 한 번만, 끝까지 닿을 때까지
         ]);
       }).then(function (res) {
         if (!res || (!res[0] && !res[1])) { if (window.NaeunRoster && window.NaeunRoster.fail) window.NaeunRoster.fail(); return; }
