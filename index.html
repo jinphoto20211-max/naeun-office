@@ -1094,7 +1094,7 @@
     <div class="section-head">
       <div>
         <h2>오피스 맵</h2>
-        <p>AI 비서 오피스에 열세 명의 비서가 둥지를 틀고 있어요. 캐릭터를 누르면 상태·지시 팝업이 열립니다. (막내 분신 오이는 텔레그램에서 중계)</p>
+        <p>AI 비서 오피스에 열세 명의 비서가 둥지를 틀고 있어요. 캐릭터를 누르면 그 비서의 최근 단톡방 대화가 머리 위 말풍선으로 떠요. (막내 분신 오이는 텔레그램에서 중계)</p>
       </div>
       <button class="cmd-btn" id="openCmdMap" type="button">💬 지휘실에서 지시하기</button>
     </div>
@@ -1129,7 +1129,7 @@
             <span class="o25-chatter-hint" id="o25ChatterHint">일상 대화 + 실제 대화 말풍선</span>
           </div>
       <div class="office-legend">
-        <span>2.5D 오피스 · 캐릭터를 누르면 상태·지시 팝업이 열립니다. 지도는 끌어서 이동, 두 손가락(또는 오른쪽 위 ⊞ ⊟ ⤢)으로 확대·축소할 수 있어요.</span>
+        <span>2.5D 오피스 · 캐릭터를 누르면 그 비서의 최근 단톡방 대화가 머리 위 말풍선으로 뜹니다. 지도는 끌어서 이동, 두 손가락(또는 오른쪽 위 ⊞ ⊟ ⤢)으로 확대·축소할 수 있어요.</span>
       </div>
     </div>
 
@@ -3151,8 +3151,8 @@
     el.setAttribute('data-member', c.name);
     el.setAttribute('role', 'button');
     el.setAttribute('tabindex', '0');
-    el.setAttribute('aria-label', c.name + ' 상세 보기');
-    el.setAttribute('title', c.name + ' 상세 보기');
+    el.setAttribute('aria-label', c.name + ' 최근 대화 보기');
+    el.setAttribute('title', c.name + ' 최근 대화 보기');
     if (SPRITES) {
       el.style.left = (c.x / BASE * 100).toFixed(3) + '%';
       el.style.top = ((c.y - hc) / BASE * 100).toFixed(3) + '%';
@@ -3499,11 +3499,6 @@
     if (!c || !c.life) return false;
     if (!chatterOn && !hasLive(c)) return false;   // 수다모드 OFF — 실제 대화만
     return paintBub(c, pickText(c), ms, force);
-  }
-  /* 말풍선에 담기 좋은 길이로만 잘라 보여 준다(팝업에는 원문 전체) */
-  function clipBub(t) {
-    var s = String(t == null ? '' : t).replace(/\s+/g, ' ').trim();
-    return s.length > 34 ? s.slice(0, 33) + '…' : s;
   }
   function refreshBubbles() {
     shown.slice().forEach(function (n) {
@@ -3970,7 +3965,7 @@
   view.addEventListener('pointerdown', function (e) {
     if (e.target.closest('.o25-bar') || e.target.closest('.o25-tool')) return;
     /* 캐릭터를 누를 때는 포인터를 붙잡지 않는다 — 붙잡으면 mouseup 이 view 로 가서
-       click 이 캐릭터에 도착하지 않아 상태·지시 팝업이 열리지 않는다. */
+       click 이 캐릭터에 도착하지 않아 최근 대화 말풍선이 뜨지 않는다. */
     if (!e.target.closest('.o25-chr')) view.setPointerCapture(e.pointerId);
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pointers.size === 1) { drag = { x: e.clientX, y: e.clientY }; moved = 0; view.classList.add('dragging'); }
