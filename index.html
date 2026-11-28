@@ -987,7 +987,15 @@
     transform:translateX(-50%) rotate(45deg); border-radius:2px;
   }
   .o25-bub.me{background:rgba(255,243,244,.99); border-color:#F6D9DC}
+  /* 캐릭터를 눌렀을 때 — 그 캐릭터의 최근 단톡방 대화를 여러 줄로 (잘리지 않게) */
+  .o25-bub.talk{white-space:normal; max-width:min(260px,68vw); min-width:126px; text-align:left;
+    font-weight:700; letter-spacing:-.2px; padding:.52em .72em .48em; line-height:1.42}
+  .o25-bub.talk .o25-bub-t{align-items:flex-start; justify-content:flex-start; text-align:left; gap:.4em}
+  .o25-bub.talk .o25-bub-t span{overflow-wrap:anywhere; word-break:keep-all}
+  .o25-bub.talk .o25-bub-dot{margin-top:.46em}
+  .o25-bub-time{display:block; margin-top:.3em; font-size:.86em; font-weight:700; letter-spacing:0; color:#A08B7C; text-align:right}
   @media (max-width:430px){
+    .o25-bub.talk{max-width:min(240px,74vw); font-size:clamp(9px,2.15cqw,10.5px); line-height:1.4; padding:.46em .62em .42em}
     .o25-bub{font-size:clamp(8px,1.9cqw,10px); padding:.32em .58em .34em; border-radius:11px}
     .o25-bub::after{width:7px; height:7px; bottom:-3.6px}
   }
@@ -3440,7 +3448,13 @@
     }
     if (ax < visL - 8 || ax > visR + 8 || ay > visB + 8) return null;   // 캐릭터가 화면 밖
     var t = ay - bh, b = ay;
-    if (t < visT + 2) return null;                                       // 말풍선 윗부분이 잘림
+    if (t < visT + 2) {
+      /* 짧은 자동 말풍선은 지금처럼 띄우지 않지만, 길어진 '최근 대화' 말풍선은
+         위쪽 여백에 맞춰 내려서 통째로 보이게 한다(화면 밖으로 잘리지 않게) */
+      if (!c.bub.classList.contains('talk')) return null;
+      if (bh + 4 > visB - visT) return null;                             // 화면보다 긴 말풍선은 넣을 자리가 없다
+      t = visT + 2; b = t + bh;
+    }
     var l = ax - bw / 2, r = ax + bw / 2;
     var minL = visL + 4, maxR = visR - 4;
     if (r - l > maxR - minL) { l = minL; r = maxR; }
@@ -3459,6 +3473,7 @@
     return false;
   }
   function paintBub(c, text, ms, force) {
+    c.bub.classList.remove('talk', 'me');   // 자동 말풍선은 한 줄 모양 그대로
     c.bub.innerHTML = '<b class="o25-bub-t">' + statusDot(c.name) + '<span>' + text + '</span></b>';
     var rect = placeBub(c);
     if (!rect) return false;
@@ -3513,6 +3528,8 @@
       var c = byName[n];
       if (c && c.visibleUntil && now > c.visibleUntil) hideBub(c);
     });
+    /* 눌러서 띄운 '최근 대화' 말풍선이 떠 있는 동안에는 새 자동 말풍선을 얹지 않는다 */
+    if (talkAlive()) return;
     if (shown.length >= maxBub) return;
     // 1) 단톡방에서 방금 실제로 주고받은 대화가 있는 캐릭터 먼저
     var liveOnes = CHARS.filter(function (c) { return hasLive(c) && shown.indexOf(c.name) < 0; });
@@ -3533,22 +3550,84 @@
 
   /* ── 클릭 반응 ─────────────────────────────────────────── */
   var lastPicked = null;
+  var talkBub = null;                 // 지금 떠 있는 '최근 대화' 말풍선 — 한 번에 하나만
+  var CLICK_BUB_MS = 8000;            // 눌러서 띄운 말풍선은 약 8초
+  var CLICK_TEXT_MAX = 150;           // 너무 긴 대화만 120~150자에서 자연스럽게 줄인다
+  function talkAlive() {
+    var c = talkBub && byName[talkBub];
+    return !!(c && c.visibleUntil > Date.now() && c.bub && c.bub.classList.contains('on') && c.bub.classList.contains('talk'));
+  }
+  function escBub(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (ch) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+    });
+  }
+  /* 말한 시각 — 오늘이면 `오후 6:29`, 어제면 `어제 오후 6:29`, 그 전은 날짜를 붙인다 */
+  function bubClock(ms) {
+    if (!ms) return '';
+    var d = new Date(ms);
+    if (isNaN(d.getTime())) return '';
+    var now = new Date();
+    var h = d.getHours(), h12 = h % 12; if (!h12) h12 = 12;
+    var m = d.getMinutes();
+    var hm = (h < 12 ? '오전 ' : '오후 ') + h12 + ':' + (m < 10 ? '0' + m : m);
+    function sameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+    if (sameDay(d, now)) return hm;
+    var y = new Date(now.getTime()); y.setDate(y.getDate() - 1);
+    if (sameDay(d, y)) return '어제 ' + hm;
+    if (d.getFullYear() === now.getFullYear()) return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + hm;
+    return d.getFullYear() + '년 ' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + hm;
+  }
+  /* 누른 캐릭터의 '가장 최근 단톡방 대화 원문 + 말한 시각'을 머리 위 말풍선에 띄운다.
+     · 34자로 자르지 않고 원문 그대로, 너무 길 때만 150자 안에서 단어 경계로 줄인다
+     · 단톡방 기록이 없으면 안내 문구
+     · 큰 팝업(openMember)은 열지 않는다 */
+  function clickTalk(c) {
+    var text = String(c.latestChatText || '').replace(/\s+/g, ' ').trim();
+    var when = text ? bubClock(c.latestChatAt) : '';
+    if (!text) {
+      text = '아직 단톡방 대화 기록이 없어요';
+    } else if (text.length > CLICK_TEXT_MAX) {
+      var cut = text.slice(0, CLICK_TEXT_MAX);
+      if (/\S/.test(text.charAt(CLICK_TEXT_MAX))) cut = cut.replace(/\s+\S*$/, '');   // 단어 중간에서 끊지 않게
+      text = cut.replace(/[\s,·]+$/, '') + '…';
+    }
+    c.bub.innerHTML = '<b class="o25-bub-t">' + statusDot(c.name) + '<span>' + escBub(text) + '</span></b>' +
+                      (when ? '<span class="o25-bub-time">' + escBub(when) + '</span>' : '');
+    c.bub.classList.add('talk', 'me');
+    c.visibleUntil = Date.now() + CLICK_BUB_MS;
+    var rect = placeBub(c);
+    if (rect) {
+      c.bubRect = rect;
+      if (shown.indexOf(c.name) < 0) shown.push(c.name);
+      c.bub.classList.add('on');
+    }
+    talkBub = c.name;
+    clearTimeout(c.talkTimer);
+    c.talkTimer = setTimeout(function () {
+      if (talkBub === c.name) talkBub = null;
+      c.bub.classList.remove('me', 'talk');
+      hideBub(c);
+      rotateBubbles();
+    }, CLICK_BUB_MS + 80);
+    return !!rect;
+  }
   function react(c) {
     CHARS.forEach(function (o) { o.el.classList.remove('on'); });
     if (!SPRITES || !c.seatedReference) c.el.classList.add('on');
+    /* 누르면 그 캐릭터의 최근 단톡방 대화만 머리 위 말풍선으로 — 다른 캐릭터 말풍선은 내린다 */
+    var prev = talkBub && byName[talkBub];
+    if (prev && prev !== c) {
+      clearTimeout(prev.talkTimer);
+      prev.bub.classList.remove('me', 'talk');
+      hideBub(prev);
+    }
     hideBub(c);
-    /* 클릭하면 그 캐릭터가 단톡방에서 마지막으로 한 말을 6.4초 먼저 보여 준다.
-       1분이 지난 대화는 자동 말풍선에는 안 뜨지만, 눌렀을 때만은 보여 준다.
-       기록이 없으면 기존처럼 자리·포즈에 맞는 일상 멘트. */
-    var lastLine = (!hasLive(c) && c.latestChatText) ? clipBub(c.latestChatText) : '';
-    if (lastLine) paintBub(c, lastLine, 6400, true);
-    else showBub(c, 6400, true);
-    c.bub.classList.add('me');
-    setTimeout(function () { c.bub.classList.remove('me'); }, 6400);
+    clickTalk(c);
     setTimeout(function () { if (lastPicked === c) c.el.classList.remove('on'); }, 2600);
     lastPicked = c;
     markWorking(c, Date.now() + 90000);   // 방금 불려서 응답 중 — 잠깐 일하는 모습
-    if (typeof window.openMember === 'function') window.openMember(c.name);
+    /* 큰 팝업(window.openMember)은 여기서 열지 않는다 — 말풍선으로만 보여 준다 */
     var chip = barEl.querySelector('[data-chip="' + c.name + '"]');
     if (chip) {
       Array.prototype.forEach.call(barEl.children, function (n) { n.classList.remove('on'); });
