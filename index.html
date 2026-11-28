@@ -372,6 +372,27 @@
   .mp-chat-foot{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:1px}
   .mp-chat-time{font-size:11.5px; font-weight:800; color:var(--pink-deep)}
   .mp-chat-none{font-size:12.5px; color:var(--muted-2); line-height:1.5}
+  /* 캐릭터 상세 팝업 — 보던 화면 위치 그대로 위에 뜨는 오버레이 (본문 스크롤 건드리지 않음) */
+  .mp-modal{position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center; padding:18px; overscroll-behavior:contain}
+  .mp-modal[hidden]{display:none}
+  .mp-modal-bg{position:absolute; inset:0; background:rgba(62,46,36,.42); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); animation:fade .22s ease both}
+  .mp-modal .member-panel{
+    position:relative; width:min(520px,100%); max-height:85vh; overflow-y:auto; -webkit-overflow-scrolling:touch;
+    margin:0; padding:20px 22px 18px; border-radius:24px; background:#FFFDFA; overscroll-behavior:contain;
+    box-shadow:var(--shadow-lg); animation:pop .3s cubic-bezier(.2,.9,.3,1.1) both;
+  }
+  .mp-modal .member-panel[hidden]{display:none}
+  .mp-modal .member-panel .mp-close{flex:0 0 auto}
+  @media (max-width:560px){
+    .mp-modal{align-items:flex-end; padding:0}
+    .mp-modal .member-panel{
+      width:100%; max-height:85vh; border-radius:24px 24px 0 0;
+      padding:18px 18px calc(16px + env(safe-area-inset-bottom, 0px));
+      box-shadow:0 -12px 40px rgba(90,62,40,.26);
+      animation:mpSheet .3s cubic-bezier(.2,.9,.3,1) both;
+    }
+  }
+  @keyframes mpSheet{from{opacity:0; transform:translateY(24px)} to{opacity:1; transform:none}}
   .agent ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:4px}
   .agent li{font-size:11.5px; color:var(--muted); padding-left:13px; position:relative; line-height:1.5}
   .agent li::before{content:""; position:absolute; left:3px; top:7px; width:4px; height:4px; border-radius:50%; background:var(--line-strong)}
@@ -1259,8 +1280,6 @@
         </div>
       </article>
     </div>
-
-    <article class="card member-panel" id="memberPanel" hidden aria-live="polite"></article>
   </section>
 
   <!-- ═══ 트래커 ═══ -->
@@ -2073,6 +2092,12 @@
   </div>
 </div>
 
+<!-- 캐릭터 상세 팝업 — 본문 흐름에서 빼 두고 화면 위에 띄운다(스크롤 이동 없음) -->
+<div class="mp-modal" id="memberModal" hidden>
+  <div class="mp-modal-bg" id="memberBg"></div>
+  <article class="card member-panel" id="memberPanel" role="dialog" aria-modal="true" aria-labelledby="mpTitle" aria-live="polite"></article>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -2785,7 +2810,25 @@
   };
 
   var memberPanel = $('#memberPanel');
+  var memberModal = $('#memberModal');
+  var memberBg = $('#memberBg');
+  var memberPrevOverflow = null;
   var currentMember = null;
+  /* 팝업은 화면 위에 띄우기만 한다 — scrollIntoView 금지: 눌러도 화면이 내려가지 않게 */
+  function memberOpen(){ return !!(memberModal && !memberModal.hidden); }
+  function openMemberModal(){
+    if (!memberOpen()) memberPrevOverflow = document.body.style.overflow || '';
+    if (memberPanel) memberPanel.scrollTop = 0;
+    memberModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMember(){
+    if (!memberOpen()) return;
+    memberModal.hidden = true;
+    currentMember = null;
+    document.body.style.overflow = memberPrevOverflow || '';
+    memberPrevOverflow = null;
+  }
   function escHtml(s){
     return String(s == null ? '' : s).replace(/[&<>"']/g, function(ch){
       return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
@@ -2823,13 +2866,13 @@
            (when ? '<div class="mp-chat-foot"><span class="mp-chat-time">' + escHtml(when) + ' 말함</span></div>' : '');
   }
   function paintMemberChat(){
-    if (!currentMember || memberPanel.hidden) return;
+    if (!currentMember || !memberOpen()) return;
     var box = memberPanel.querySelector('[data-mp-chat]');
     if (!box) return;
     box.innerHTML = memberChatInner(currentMember);
   }
   function refreshMemberPanel(){
-    if (!currentMember || memberPanel.hidden) return;
+    if (!currentMember || !memberOpen()) return;
     paintMemberChat();
     var btn = memberPanel.querySelector('[data-mp-status]');
     if (!btn) return;
@@ -2859,7 +2902,7 @@
         '<div class="sp-title">',
           '<span class="sp-emoji" aria-hidden="true">' + (m.img ? '<img src="' + m.img + '" alt="">' : (m.emoji || '')) + '</span>',
           '<div>',
-            '<div class="mp-name"><b>' + m.name + '</b><span class="handle">' + m.handle + '</span></div>',
+            '<div class="mp-name"><b id="mpTitle">' + m.name + '</b><span class="handle">' + m.handle + '</span></div>',
             '<p class="mp-role">' + m.role + '</p>',
           '</div>',
         '</div>',
@@ -2877,21 +2920,27 @@
         '<button class="btn btn-ghost btn-sm" type="button" data-mp-team>비서현황에서 보기</button>',
       '</div>'
     ].join('');
-    memberPanel.hidden = false;
-    memberPanel.querySelector('.mp-close').addEventListener('click', function(){ memberPanel.hidden = true; currentMember = null; });
+    openMemberModal();
+    memberPanel.querySelector('.mp-close').addEventListener('click', closeMember);
     memberPanel.querySelector('[data-mp-status]').addEventListener('click', function(){ explainStatus(m.name); });
-    memberPanel.querySelector('[data-mp-team]').addEventListener('click', function(){ flashMember(m.name); });
+    memberPanel.querySelector('[data-mp-team]').addEventListener('click', function(){ closeMember(); flashMember(m.name); });
     memberPanel.querySelector('[data-mp-ask]').addEventListener('click', function(){
+      closeMember();
       openModal('', '피클 메인 채팅');
       cmdText.value = m.name + '아, ';
       cmdText.focus();
       cmdText.setSelectionRange(cmdText.value.length, cmdText.value.length);
       refreshPreview();
     });
-    if (memberPanel.scrollIntoView) setTimeout(function(){ memberPanel.scrollIntoView({ behavior:'smooth', block:'nearest' }); }, 60);
   }
   window.openMember = openMember;
   window.o25RepaintMemberChat = paintMemberChat;   // 단톡방 이력이 늦게 들어와도 열린 팝업을 다시 그린다
+  /* ✕ · 백드롭(카드 바깥) · Escape 로 닫기 — 닫아도 보던 스크롤 위치 그대로 */
+  if (memberBg) memberBg.addEventListener('click', closeMember);
+  document.addEventListener('keydown', function(e){
+    if (e.key !== 'Escape') return;
+    if (memberOpen() && !modal.classList.contains('open')) closeMember();
+  });
   $$('.walker').forEach(function(tag){
     tag.addEventListener('click', function(){ openMember(tag.getAttribute('data-member')); });
   });
