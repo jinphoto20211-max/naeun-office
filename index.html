@@ -999,12 +999,12 @@
     .o25-bub{font-size:clamp(8px,1.9cqw,10px); padding:.32em .58em .34em; border-radius:11px}
     .o25-bub::after{width:7px; height:7px; bottom:-3.6px}
   }
-  /* 아바타 바 */
+  /* 아바타 바 — 영상 스테이지 바깥 아래에 두는 일반 흐름(flex) 줄. 영상을 가리지 않는다. */
   .o25-bar{
-    position:absolute; left:9px; right:9px; bottom:9px; z-index:8; display:flex; gap:5px;
-    overflow-x:auto; padding:5px 8px; border-radius:999px; background:rgba(255,250,243,.86);
-    -webkit-backdrop-filter:blur(7px); backdrop-filter:blur(7px);
-    box-shadow:0 7px 18px rgba(90,60,40,.16), inset 0 0 0 1px rgba(255,255,255,.7); scrollbar-width:none;
+    position:relative; margin:12px 0 0; display:flex; gap:5px;
+    overflow-x:auto; padding:6px 8px; border-radius:16px; background:#FFF9F2;
+    box-shadow:inset 0 0 0 1px var(--line-strong); scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
   }
   .o25-bar::-webkit-scrollbar{display:none}
   .o25-chip{
@@ -1031,7 +1031,7 @@
   }
   .o25-tool:active{transform:scale(.94)}
   @media (max-width:520px){
-    .o25-bar{left:6px; right:6px; bottom:6px; padding:4px 6px}
+    .o25-bar{padding:4px 6px; gap:4px; border-radius:14px}
     .o25-chip{font-size:9.5px; padding:2px 7px 2px 2px}
     .o25-chip img{width:18px; height:18px}
     .o25-tools{right:7px; top:7px; gap:5px}
@@ -1120,10 +1120,11 @@
             <button class="o25-tool" id="o25ZoomOut" type="button" aria-label="축소">−</button>
             <button class="o25-tool" id="o25Reset" type="button" aria-label="전체 보기">⤢</button>
           </div>
-          <div class="o25-bar" id="o25Bar" aria-label="비서 아바타"></div>
         </div>
       </div>
       <!-- OFFICE-STAGE:END -->
+      <!-- 하단 아바타 바 — 영상 스테이지 바깥(영상 아래·수다모드 토글 위)에 두어 오피스 화면을 가리지 않는다 -->
+      <div class="o25-bar" id="o25Bar" aria-label="비서 아바타"></div>
           <div class="o25-chatter-bar" aria-label="수다모드 설정">
             <button class="o25-chatter-toggle" id="o25ChatterToggle" type="button" aria-pressed="true" aria-label="수다모드 켜짐 — 누르면 끕니다(실제 대화 말풍선만)">수다모드 <b>ON</b></button>
             <span class="o25-chatter-hint" id="o25ChatterHint">일상 대화 + 실제 대화 말풍선</span>
