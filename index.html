@@ -1622,11 +1622,11 @@
     <div class="section-head">
       <div>
         <h2>비서현황</h2>
-        <p>피클즈 4인 + 해피방 7인, 열한 명의 비서 담당 영역입니다. 오이는 막내의 분신으로 텔레그램 중계를 맡아 별도 인원에 넣지 않았습니다.</p>
+        <p>피클 단톡방(<b>해피방</b>)에 입주한 비서 <b id="rosterTotal">11</b>명의 담당 영역입니다. 단톡방에서 새로 감지된 멤버는 카드가 저절로 생기고, 오이는 막내의 분신으로 텔레그램 중계를 맡아 별도 인원에 넣지 않았습니다.</p>
       </div>
     </div>
 
-    <p class="mini-note" style="margin:-4px 2px 12px">상태 배지를 누르면 온라인 → 대기 → 오프라인으로 바뀝니다. 나은님이 직접 눌러 보는 테스트용입니다.</p>
+    <p class="mini-note" style="margin:-4px 2px 12px" id="rosterFeed" aria-live="polite">상태 배지는 피클 단톡방 접속 상태를 20초마다 다시 확인해 그대로 보여줍니다. <span id="rosterFeedState">아직 단톡방에 연결되지 않아 모두 오프라인으로 표시합니다.</span></p>
     <div class="filters" role="group" aria-label="담당 영역 필터">
       <button class="filter" type="button" data-filter="all" aria-pressed="true">전체 11</button>
       <button class="filter" type="button" data-filter="control" aria-pressed="false">관제·브리핑</button>
@@ -2477,12 +2477,12 @@
 
   /* ── 필터 ── */
   var filters = $$('.filter');
-  var agents = $$('#agentGrid .agent');
+  function rosterCards(){ return $$('#agentGrid .agent'); }
   filters.forEach(function(f){
     f.addEventListener('click', function(){
       var key = f.getAttribute('data-filter');
       filters.forEach(function(x){ x.setAttribute('aria-pressed', x === f ? 'true' : 'false'); });
-      agents.forEach(function(a){
+      rosterCards().forEach(function(a){
         var areas = (a.getAttribute('data-areas') || '').split(' ');
         a.hidden = key !== 'all' && areas.indexOf(key) === -1;
       });
@@ -2540,46 +2540,180 @@
   }
   function paintStatuses(){
     $$('.nametag').forEach(function(t){ t.setAttribute('data-status', statusOf(t.getAttribute('data-member'))); });
-    $$('[data-status-btn]').forEach(function(b){
-      var s = statusOf(b.getAttribute('data-status-btn'));
-      b.className = 'status ' + s;
-      b.setAttribute('data-s', s);
-      b.textContent = STATUS_LABEL[s];
-    });
-    var counts = { online:0, idle:0, offline:0 };
-    var staffCounts = { online:0, idle:0, offline:0 };
-    MEMBERS.forEach(function(m){
-      counts[statusOf(m.name)]++;
-      if (!m.support) staffCounts[statusOf(m.name)]++;
-    });
-    var staff = MEMBERS.filter(function(m){ return !m.support; });
-    var text = $('#statusChipText');
-    if (text) {
-      var parts = ['비서 ' + staff.length + '명'];
-      if (staffCounts.online) parts.push('온라인 ' + staffCounts.online);
-      if (staffCounts.idle) parts.push('대기 ' + staffCounts.idle);
-      if (staffCounts.offline) parts.push('오프라인 ' + staffCounts.offline);
-      text.textContent = parts.join(' · ');
-    }
+    paintRosterStatuses();
     var oiChip = $('#oiChip');
     if (oiChip) {
       var oi = findMember('오이');
       oiChip.textContent = '🥒 오이 · 막내 분신 · 텔레그램 중계' + (oi ? ' (' + STATUS_LABEL[statusOf('오이')] + ')' : '');
     }
+  }
+
+  /* ── 단톡방 실시간 접속 상태 연동 (비서현황) ─────────────
+     · 판정은 오피스 맵과 같습니다 — 방 멤버 명단(/agents)에 살아 있으면 온라인, 최근 30분 대화도 온라인
+     · 토큰이 없거나 응답이 없으면 카드·인원은 그대로 두고 배지만 '오프라인'으로 폴백
+     · 단톡방에서 새로 감지된 멤버는 이름·역할만 받아 카드를 만들어 넣습니다 (개인정보·키 없음)
+     · 20초 폴링과 화면 복귀 시점에 오피스 맵 쪽에서 window.NaeunRoster.apply() 로 밀어 넣습니다 */
+  var ROS = { ready: false, at: 0, members: {}, added: 0 };
+  function rosNorm(s){ return String(s == null ? '' : s).replace(/[\s@()\[\]·._,|\\/-]/g, '').toLowerCase(); }
+  var ROS_ALIAS = {
+    '노랑이':'노랑','피클서브':'노랑','피클서브2':'노랑','노랑피클':'노랑','서브피클':'노랑',
+    '메인':'초록','메인피클':'초록','초록이':'초록',
+    '연분홍':'막내','막내피클':'막내','연분홍이':'막내',
+    '진분홍이':'진분홍','분홍이':'진분홍',
+    '하마':'하마뮤즈','하마보스':'하마뮤즈','뮤즈이':'뮤즈',
+    '키링이':'키링','부이봇':'부이','큐브':'큐','인스팅트ai':'인스팅트'
+  };
+  function findRosterCard(raw){
+    var k = rosNorm(raw), i, t;
+    if (!k) return null;
+    for (i = 0; i < MEMBERS.length; i++) if (rosNorm(MEMBERS[i].name) === k) return MEMBERS[i];
+    t = ROS_ALIAS[k] ? findMember(ROS_ALIAS[k]) : null;
+    return t || null;
+  }
+  function rosterStatus(name){
+    if (!ROS.ready) return 'offline';
+    return ROS.members[name] ? 'online' : 'offline';
+  }
+  function paintRosterCount(){
+    var n = 0;
+    rosterCards().forEach(function(a){ if (a.getAttribute('data-member') !== '오이') n++; });
+    var total = $('#rosterTotal');
+    if (total) total.textContent = String(n);
+    var all = document.querySelector('.filter[data-filter="all"]');
+    if (all) all.textContent = '전체 ' + n;
+  }
+  function paintRosterStatuses(){
+    $$('#agentGrid [data-status-btn]').forEach(function(b){
+      var n = b.getAttribute('data-status-btn'), s = rosterStatus(n);
+      b.className = 'status ' + s;
+      b.setAttribute('data-s', s);
+      b.textContent = STATUS_LABEL[s];
+      b.setAttribute('aria-label', n + ' · 단톡방 ' + STATUS_LABEL[s]);
+    });
+    var staff = MEMBERS.filter(function(m){ return !m.support; });
+    var online = 0;
+    staff.forEach(function(m){ if (rosterStatus(m.name) === 'online') online++; });
+    var text = $('#statusChipText');
+    if (text) {
+      var parts = ['비서 ' + staff.length + '명'];
+      if (ROS.ready) {
+        parts.push('온라인 ' + online);
+        if (staff.length - online) parts.push('오프라인 ' + (staff.length - online));
+      } else {
+        parts.push('단톡방 연결 대기');
+      }
+      text.textContent = parts.join(' · ');
+    }
     var dot = $('#statusDot');
-    if (dot) dot.style.background = counts.online ? '#22c55e' : (counts.idle ? '#f59e0b' : '#9ca3af');
+    if (dot) dot.style.background = ROS.ready && online ? '#22c55e' : '#9ca3af';
     var chip = $('#statusChip');
-    if (chip) chip.classList.toggle('live', counts.online > 0);
+    if (chip) chip.classList.toggle('live', ROS.ready && online > 0);
+    var feed = $('#rosterFeedState');
+    if (feed) {
+      if (!ROS.ready) {
+        feed.textContent = '아직 단톡방에 연결되지 않아 모두 오프라인으로 표시합니다.';
+      } else {
+        var d = new Date(ROS.at);
+        var hh = ('0' + d.getHours()).slice(-2), mm = ('0' + d.getMinutes()).slice(-2);
+        feed.textContent = '단톡방 ' + hh + ':' + mm + ' 기준' + (ROS.added ? ' · 새 멤버 ' + ROS.added + '명 카드 추가' : '');
+      }
+    }
   }
-  function cycleStatus(name){
-    var order = ['online','idle','offline'];
-    var next = order[(order.indexOf(statusOf(name)) + 1) % order.length];
-    statusSaved[name] = next;
-    try { localStorage.setItem(STATUS_KEY, JSON.stringify(statusSaved)); } catch(e){}
-    paintStatuses();
+  function explainStatus(name){
+    if (!ROS.ready) { toast('단톡방에 연결되면 접속 상태가 저절로 채워져요'); return; }
+    toast(name + ' · 단톡방 ' + STATUS_LABEL[rosterStatus(name)] + ' (실시간 자동 반영)');
+  }
+  var ROS_BG = ['#EEF1F6','#FDF3D9','#E7F3EA','#FBE8E9','#EFE9FA','#E8F1FA','#FCEFE6'];
+  function rosHash(s){ var h = 0, i; for (i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0; return h; }
+  /* 단톡방에서 처음 보는 멤버 → 카드 자동 생성 (이름·역할만, 아바타는 기본 아이콘) */
+  function addRosterCard(rawName, role){
+    var name = String(rawName == null ? '' : rawName).trim();
+    var grid = $('#agentGrid');
+    if (!name || !grid || name.length > 24) return null;
+    var roleText = String(role == null ? '' : role).trim().slice(0, 30);
+    var card = document.createElement('article');
+    card.className = 'agent';
+    card.setAttribute('data-member', name);
+    card.setAttribute('data-areas', 'relay');
+    card.setAttribute('data-source', 'agc');
+    var top = document.createElement('div'); top.className = 'agent-top';
+    var av = document.createElement('div'); av.className = 'agent-av'; av.setAttribute('aria-hidden', 'true');
+    av.style.background = ROS_BG[Math.abs(rosHash(name)) % ROS_BG.length];
+    av.textContent = '🤖';
+    var wrap = document.createElement('div'); wrap.style.cssText = 'flex:1 1 auto; min-width:0';
+    var line = document.createElement('div'); line.className = 'agent-name';
+    var b = document.createElement('b'); b.textContent = name;
+    var hd = document.createElement('span'); hd.className = 'handle'; hd.textContent = roleText ? roleText + ' · 단톡방' : '단톡방';
+    line.appendChild(b); line.appendChild(hd);
+    var pr = document.createElement('p'); pr.className = 'agent-role'; pr.textContent = '피클 단톡방에 새로 입주한 멤버';
+    wrap.appendChild(line); wrap.appendChild(pr);
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'status offline';
+    btn.setAttribute('data-status-btn', name); btn.setAttribute('data-s', 'offline');
+    btn.setAttribute('aria-label', name + ' · 단톡방 오프라인');
+    btn.textContent = '오프라인';
+    btn.addEventListener('click', function(){ explainStatus(name); });
+    top.appendChild(av); top.appendChild(wrap); top.appendChild(btn);
+    var ul = document.createElement('ul');
+    ['피클 단톡방(happy 방) 멤버', roleText ? '역할: ' + roleText : '역할 확인 중'].forEach(function(t){
+      var li = document.createElement('li'); li.textContent = t; ul.appendChild(li);
+    });
+    var foot = document.createElement('div'); foot.className = 'agent-foot';
+    var tags = document.createElement('div'); tags.className = 'area-tags';
+    ['단톡방', '협업'].forEach(function(t){
+      var tg = document.createElement('span'); tg.className = 'area-tag'; tg.textContent = t; tags.appendChild(tg);
+    });
+    var ask = document.createElement('button'); ask.type = 'button'; ask.className = 'ask';
+    ask.setAttribute('data-ask', name); ask.textContent = '지시하기 →';
+    ask.addEventListener('click', function(){
+      openModal('', '피클 메인 채팅');
+      cmdText.value = name + '아, ';
+      cmdText.focus();
+      cmdText.setSelectionRange(cmdText.value.length, cmdText.value.length);
+      refreshPreview();
+    });
+    foot.appendChild(tags); foot.appendChild(ask);
+    card.appendChild(top); card.appendChild(ul); card.appendChild(foot);
+    var onFilter = document.querySelector('.filter[aria-pressed="true"]');
+    var fk = onFilter ? onFilter.getAttribute('data-filter') : 'all';
+    if (fk !== 'all' && fk !== 'relay') card.hidden = true;
+    grid.appendChild(card);
+    MEMBERS.push({
+      name: name, emoji: '🤖', handle: roleText || '단톡방', status: 'offline', added: true,
+      role: '피클 단톡방에 새로 입주한 멤버' + (roleText ? ' · ' + roleText : ''),
+      duties: ['피클 단톡방(happy 방) 멤버', roleText ? '역할: ' + roleText : '역할 확인 중']
+    });
+    return findMember(name);
+  }
+  /* 오피스 맵 쪽 폴링이 넘겨주는 명단으로 카드·배지·요약을 한 번에 맞춤 */
+  function rosterApply(rows){
+    if (!rows || !rows.length) return;
+    var seen = {}, added = 0;
+    rows.forEach(function(r){
+      var card = findRosterCard(r && r.name);
+      if (!card) { card = addRosterCard(r && r.name, r && r.role); if (card) added++; }
+      if (!card) return;
+      seen[card.name] = true;
+      ROS.members[card.name] = !!r.online;
+    });
+    MEMBERS.forEach(function(m){ if (!m.support && !seen[m.name]) ROS.members[m.name] = false; });
+    ROS.ready = true; ROS.at = Date.now(); ROS.added = added; ROS.err = false;
+    paintRosterCount();
+    paintRosterStatuses();
     refreshMemberPanel();
-    toast(name + ' · ' + STATUS_LABEL[next] + '로 바꿨어요 (테스트)');
   }
+  /* 명단을 못 받았을 때 — 아직 한 번도 못 받았으면 안내문으로 이유를 알려 준다 */
+  function rosterFail(){
+    if (ROS.ready) return;
+    ROS.err = true;
+    var feed = $('#rosterFeedState');
+    if (feed) feed.textContent = '단톡방에 연결하지 못했어요 — 비밀번호와 네트워크를 확인하면 다시 채워집니다.';
+  }
+  window.NaeunRoster = {
+    apply: rosterApply,
+    fail: rosterFail,
+    state: function(){ return { ready: ROS.ready, at: ROS.at, members: ROS.members, added: ROS.added, err: !!ROS.err }; }
+  };
 
   var memberPanel = $('#memberPanel');
   var currentMember = null;
@@ -2587,7 +2721,7 @@
     if (!currentMember || memberPanel.hidden) return;
     var btn = memberPanel.querySelector('[data-mp-status]');
     if (!btn) return;
-    var s = statusOf(currentMember);
+    var s = rosterStatus(currentMember);
     btn.setAttribute('data-s', s);
     btn.innerHTML = '<i aria-hidden="true"></i>' + STATUS_LABEL[s];
   }
@@ -2595,19 +2729,19 @@
     selectTab('team');
     filters.forEach(function(f){ f.setAttribute('aria-pressed', f.getAttribute('data-filter') === 'all' ? 'true' : 'false'); });
     var first = null;
-    agents.forEach(function(a){
+    rosterCards().forEach(function(a){
       a.hidden = false;
       a.classList.remove('flash');
       if (a.getAttribute('data-member') === name) { void a.offsetWidth; a.classList.add('flash'); if (!first) first = a; }
     });
     if (first && first.scrollIntoView) setTimeout(function(){ first.scrollIntoView({ behavior:'smooth', block:'center' }); }, 90);
-    setTimeout(function(){ agents.forEach(function(a){ a.classList.remove('flash'); }); }, 3400);
+    setTimeout(function(){ rosterCards().forEach(function(a){ a.classList.remove('flash'); }); }, 3400);
   }
   function openMember(name){
     var m = findMember(name);
     if (!m) return;
     currentMember = name;
-    var st = statusOf(name);
+    var st = rosterStatus(name);
     memberPanel.innerHTML = [
       '<div class="sp-head">',
         '<div class="sp-title">',
@@ -2622,7 +2756,7 @@
       '<div class="mp-status-row">',
         '<span class="lbl">상태</span>',
         '<button class="mp-status" type="button" data-mp-status data-s="' + st + '"><i aria-hidden="true"></i>' + STATUS_LABEL[st] + '</button>',
-        '<span class="mp-hint">누르면 온라인 → 대기 → 오프라인으로 바뀝니다 (테스트)</span>',
+        '<span class="mp-hint">단톡방 접속 상태를 20초마다 다시 확인해 보여줍니다</span>',
       '</div>',
       '<ul class="mp-list">' + m.duties.map(function(d){ return '<li>' + d + '</li>'; }).join('') + '</ul>',
       '<div class="row">',
@@ -2632,7 +2766,7 @@
     ].join('');
     memberPanel.hidden = false;
     memberPanel.querySelector('.mp-close').addEventListener('click', function(){ memberPanel.hidden = true; currentMember = null; });
-    memberPanel.querySelector('[data-mp-status]').addEventListener('click', function(){ cycleStatus(m.name); });
+    memberPanel.querySelector('[data-mp-status]').addEventListener('click', function(){ explainStatus(m.name); });
     memberPanel.querySelector('[data-mp-team]').addEventListener('click', function(){ flashMember(m.name); });
     memberPanel.querySelector('[data-mp-ask]').addEventListener('click', function(){
       openModal('', '피클 메인 채팅');
@@ -2648,9 +2782,10 @@
     tag.addEventListener('click', function(){ openMember(tag.getAttribute('data-member')); });
   });
   $$('[data-status-btn]').forEach(function(b){
-    b.addEventListener('click', function(){ cycleStatus(b.getAttribute('data-status-btn')); });
+    b.addEventListener('click', function(){ explainStatus(b.getAttribute('data-status-btn')); });
   });
   paintStatuses();
+  paintRosterCount();
 
   /* ── 메모 ── */
   var MEMO_KEY = 'naeun-office:memos:v1';
@@ -3217,14 +3352,14 @@
        — 예전에는 '최근 30분 대화'만 봐서, 방이 조용한 시간대엔 피클즈 4인이
          전부 회색으로 죽어 보였다. 이제는 방에 입주해 있으면 컬러.
      · 명단에 없는 캐릭터는 기본값(피클즈 4인 접속 중) 유지, 명단에서 꺼진(enabled=false) 멤버만 회색
-     · 토큰이 없거나 요청이 실패하면 기본값 그대로 (콘솔 오류 없이) */
+     · 같은 명단·같은 판정을 비서현황 탭에 window.NaeunRoster.apply() 로 넘긴다
+     · 토큰이 없거나 요청이 실패하면 기본값 그대로 (콘솔 오류 없이) — 비서현황은 오프라인 폴백 */
   (function () {
     var TOKEN_KEY = 'naeun:agc-token:v1';
     var API = 'https://ai-group-chat.jinphoto20211.workers.dev';
     var ACTIVE_MS = 30 * 60 * 1000;
-    var token = '';
-    try { token = localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { token = ''; }
-    if (!token) return;
+    function readToken(){ try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; } }
+    var token = readToken();   // 화면의 비밀번호 칸에서 새로 저장하면 다음 20초 틱에 바로 붙는다
 
     /* 발신자・멤버 이름 표기 흔들림 → 화면 캐릭터 */
     var ALIAS = {
@@ -3253,7 +3388,9 @@
       return null;
     }
     function getJSON(path) {
-      return fetch(API + path, { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' })
+      var t = readToken();
+      if (!t) return Promise.reject(new Error('no-token'));
+      return fetch(API + path, { headers: { Authorization: 'Bearer ' + t }, cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
     }
     function trimLine(t) {
@@ -3299,9 +3436,31 @@
       if (typeof refreshBubbles === 'function') refreshBubbles();
       refreshMotions();
       rotateBubbles();
+      publishRoster(agents, messages);
+    }
+    /* 비서현황 탭에도 같은 명단·같은 판정을 넘긴다 (새로 입주한 멤버는 카드가 생김) */
+    function publishRoster(agents, messages) {
+      var R = window.NaeunRoster;
+      if (!R || typeof R.apply !== 'function' || !agents || !agents.length) return;
+      var now = Date.now(), recentBy = {};
+      (messages || []).forEach(function (m) {
+        if (!m || !m.sender || m.sender.role === 'system') return;
+        var at = Date.parse(m.at) || 0;
+        if (!at || now - at >= ACTIVE_MS) return;
+        var k = norm(m.sender.name);
+        if (k) recentBy[k] = at;
+      });
+      var rows = [];
+      agents.forEach(function (a) {
+        var nm = String((a && a.name) || '').trim();
+        if (!nm) return;
+        rows.push({ name: nm, role: String((a && a.role) || 'AI').trim(), online: !!(a && a.enabled) || !!recentBy[norm(nm)] });
+      });
+      if (rows.length) R.apply(rows);
     }
     function sync() {
       if (busy) return;
+      if (!readToken()) return;   // 비밀번호가 없으면 조용히 오프라인 폴백 유지
       busy = true;
       var chain = roomId ? Promise.resolve(roomId) : getJSON('/api/admin/rooms').then(function (d) {
         var rooms = (d && d.rooms) || [], pick = null, i;
@@ -3319,7 +3478,7 @@
           getJSON(base + '/messages?limit=60&since=' + since).catch(function () { return null; })
         ]);
       }).then(function (res) {
-        if (!res) return;
+        if (!res) { if (window.NaeunRoster && window.NaeunRoster.fail) window.NaeunRoster.fail(); return; }
         applyPresence(res[0] && res[0].agents, res[1] && res[1].messages);
       }).catch(function () {}).then(function () { busy = false; });
     }
