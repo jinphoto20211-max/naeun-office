@@ -265,11 +265,23 @@ POINT_EXPIRING = [
 ]
 
 # ── 11. 복권·예치금 ─────────────────────────────────────────────────────
-LOTTO_ROUND = 1252
-LOTTO_RESULT = "전원 낙첨"
-LOTTO_NEXT = "다음 1253회 — 11/30(월) 발권 · 12/5(토) 추첨"
-PENSION_ROUNDS = "제344~348회"
-PENSION_NOTE = "5개 회차 보유 · 당첨 확인은 회차별로"
+# 표시 원칙: 예약·보유 회차 나열 대신 '구입번호 + 추첨일'만 보여 준다.
+# 로또는 발권이 끝나면 games 에 5게임 구입번호를 채우면 그대로 화면에 뜨다.
+LOTTO6 = {
+    "round": 1253,
+    "draw_date": "12/05(토)",
+    "draw_time": "20:45 추첨",
+    "issue": "11/30(월) 발권 시 구입번호 표시",
+    "games": [],            # 발권 후 ["01 03 07 15 22 31", ...] 5게임
+    "prev": "제1252회(11/28 토) 전원 낙첨",
+}
+PENSION = {
+    "round": 344,
+    "number": "395620",
+    "channels": "1~5조",
+    "draw_date": "12/03(목)",
+    "draw_time": "19:20 추첨",
+}
 DEPOSIT_TOTAL = "126,000"
 
 # ── 12. 당첨 후 미션 (예약 → 수령 → 후기 → 폼) ──────────────────────────
@@ -397,14 +409,25 @@ def boards_html():
     o.append('</div>')
 
     o.append('<div class="card lot-card">')
-    o.append('<div class="pnt-head"><h3>복권·예치금</h3><span>11/28(토) 추첨 반영</span></div>')
+    o.append('<div class="pnt-head"><h3>복권·예치금</h3><span>연금 %d회 · 로또 %d회 기준</span></div>'
+             % (PENSION["round"], LOTTO6["round"]))
     o.append('<div class="lot-grid">')
+    # 로또 6/45 — 추첨일 우선, 발권 뒤에는 구입번호 5게임
     o.append('<div class="lot-box"><div class="pnt-label">로또 6/45 · 제%d회</div>'
-             '<div class="lot-main">%s</div><div class="lot-sub">%s</div></div>'
-             % (LOTTO_ROUND, LOTTO_RESULT, LOTTO_NEXT))
-    o.append('<div class="lot-box"><div class="pnt-label">연금복권720+</div>'
-             '<div class="lot-main">%s <small>보유</small></div>'
-             '<div class="lot-sub">%s</div></div>' % (PENSION_ROUNDS, PENSION_NOTE))
+             '<div class="lot-when">%s <small>%s</small></div>'
+             % (LOTTO6["round"], LOTTO6["draw_date"], LOTTO6["draw_time"]))
+    if LOTTO6["games"]:
+        o.append('<div class="lot-nums">%s</div>'
+                 % "".join('<span>%s</span>' % g for g in LOTTO6["games"]))
+    else:
+        o.append('<div class="lot-sub">%s</div>' % LOTTO6["issue"])
+    o.append('<div class="lot-sub">%s</div></div>' % LOTTO6["prev"])
+    # 연금복권720+ — 최근 구입 회차 구입번호 + 추첨일
+    o.append('<div class="lot-box"><div class="pnt-label">연금복권720+ · 제%d회</div>'
+             '<div class="lot-main">%s <small>%s</small></div>'
+             '<div class="lot-when">%s <small>%s</small></div></div>'
+             % (PENSION["round"], PENSION["number"], PENSION["channels"],
+                PENSION["draw_date"], PENSION["draw_time"]))
     o.append('<div class="lot-box"><div class="pnt-label">공용 예치금</div>'
              '<div class="lot-main">%s<small>원</small></div>'
              '<div class="lot-sub">응모·구매 공용</div></div>' % DEPOSIT_TOTAL)
@@ -832,6 +855,21 @@ ORDER_CSS = """
   .hub-card-rest > .hub-sub:first-child{margin-top:0}
 """
 
+# 복권 카드 — 예약·보유 나열 대신 구입번호와 추첨일을 보여 준다
+LOT_CSS = """
+  /* ── 복권: 구입번호·추첨일 ── */
+  .lot-when{margin-top:5px; font-size:15.5px; font-weight:800; letter-spacing:-.4px;
+    color:var(--ink); font-variant-numeric:tabular-nums}
+  .lot-when small{font-size:11px; font-weight:700; color:var(--muted); margin-left:3px; letter-spacing:-.2px}
+  .lot-nums{display:flex; flex-direction:column; gap:2px; margin-top:6px}
+  .lot-nums span{font-size:11.5px; font-weight:800; letter-spacing:.4px;
+    color:var(--ink); font-variant-numeric:tabular-nums}
+  @media (max-width:720px){
+    .lot-when{font-size:14px}
+    .lot-nums span{font-size:11px}
+  }
+"""
+
 # 보드 모바일 보정 — 처음 만든 파일에도 따로 끼워 넣을 수 있게 별도 블록으로 둔다
 # (MOBILE_CSS 는 이미 삽입된 파일에는 다시 들어가지 않아서 새 규칙은 여기에 적는다)
 BOARD_MOBILE_CSS = """
@@ -907,6 +945,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", BOARD_MOBILE_CSS + "\n  @media (max-width:860px){", 1)
     if ".hub-card + .pnt-card{" not in html:
         html = html.replace("  @media (max-width:860px){", ORDER_CSS + "\n  @media (max-width:860px){", 1)
+    if ".lot-when{" not in html:
+        html = html.replace("  @media (max-width:860px){", LOT_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:

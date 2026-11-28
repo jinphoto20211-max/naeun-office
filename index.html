@@ -792,6 +792,19 @@
   .msn-card + .hub-card{margin-top:16px}
   .hub-card-rest > .hub-sub:first-child{margin-top:0}
 
+
+  /* ── 복권: 구입번호·추첨일 ── */
+  .lot-when{margin-top:5px; font-size:15.5px; font-weight:800; letter-spacing:-.4px;
+    color:var(--ink); font-variant-numeric:tabular-nums}
+  .lot-when small{font-size:11px; font-weight:700; color:var(--muted); margin-left:3px; letter-spacing:-.2px}
+  .lot-nums{display:flex; flex-direction:column; gap:2px; margin-top:6px}
+  .lot-nums span{font-size:11.5px; font-weight:800; letter-spacing:.4px;
+    color:var(--ink); font-variant-numeric:tabular-nums}
+  @media (max-width:720px){
+    .lot-when{font-size:14px}
+    .lot-nums span{font-size:11px}
+  }
+
   @media (max-width:860px){
     .kanban{grid-template-columns:1fr}
   }
@@ -1531,10 +1544,12 @@
 <div class="pnt-exp"><span class="pnt-exp-t">소멸 임박</span><span class="pnt-exp-i">CU 모바일상품권 <b>5,000원</b> <em>~12/25</em></span><span class="pnt-exp-i">금천G밸리상품권 <b>5,000원</b> <em>~12/24</em></span></div>
 </div>
 <div class="card lot-card">
-<div class="pnt-head"><h3>복권·예치금</h3><span>11/28(토) 추첨 반영</span></div>
+<div class="pnt-head"><h3>복권·예치금</h3><span>연금 344회 · 로또 1253회 기준</span></div>
 <div class="lot-grid">
-<div class="lot-box"><div class="pnt-label">로또 6/45 · 제1252회</div><div class="lot-main">전원 낙첨</div><div class="lot-sub">다음 1253회 — 11/30(월) 발권 · 12/5(토) 추첨</div></div>
-<div class="lot-box"><div class="pnt-label">연금복권720+</div><div class="lot-main">제344~348회 <small>보유</small></div><div class="lot-sub">5개 회차 보유 · 당첨 확인은 회차별로</div></div>
+<div class="lot-box"><div class="pnt-label">로또 6/45 · 제1253회</div><div class="lot-when">12/05(토) <small>20:45 추첨</small></div>
+<div class="lot-sub">11/30(월) 발권 시 구입번호 표시</div>
+<div class="lot-sub">제1252회(11/28 토) 전원 낙첨</div></div>
+<div class="lot-box"><div class="pnt-label">연금복권720+ · 제344회</div><div class="lot-main">395620 <small>1~5조</small></div><div class="lot-when">12/03(목) <small>19:20 추첨</small></div></div>
 <div class="lot-box"><div class="pnt-label">공용 예치금</div><div class="lot-main">126,000<small>원</small></div><div class="lot-sub">응모·구매 공용</div></div>
 </div></div>
 <div class="card msn-card">
