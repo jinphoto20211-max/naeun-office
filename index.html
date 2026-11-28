@@ -1298,7 +1298,8 @@
   .scrap-note{margin-top:7px; font-size:12px; color:var(--ink-soft); line-height:1.55; word-break:break-word}
   .scrap-summary{margin-top:7px; padding:9px 11px; border-radius:12px; background:#fff; border:1px dashed var(--line-strong); font-size:12px; color:var(--muted); line-height:1.55; word-break:break-word}
   .scrap-summary.filled{color:var(--ink-soft); border-style:solid}
-  .scrap-meta{margin-top:8px; font-size:11px; color:var(--muted-2)}
+  .scrap-meta{font-size:11px; color:var(--muted-2)}
+  .scrap-foot{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:9px}
   .scrap-empty{padding:6px 2px 2px; font-size:12.5px; color:var(--muted)}
   .o25-chip.off img{filter:grayscale(1) opacity(.55)}
   .o25-chip.off{background:#F7F4EF; color:#9C8B7E}
@@ -1832,11 +1833,11 @@
             '<div class="scrap-item-top">' +
               '<a class="scrap-link" href="' + esc(i.url) + '" target="_blank" rel="noopener noreferrer">' + esc(hostOf(i.url)) + '</a>' +
               '<button class="scrap-badge ' + (done ? 'done' : 'pending') + '" type="button" data-act="toggle" aria-pressed="' + (done ? 'true' : 'false') + '" title="누르면 정리 대기 ↔ 정리 완료">' + (done ? '정리 완료' : '정리 대기') + '</button>' +
-              '<button class="scrap-del" type="button" data-act="del" aria-label="이 링크 삭제">삭제</button>' +
             '</div>' +
             '<span class="scrap-url">' + esc(i.url) + '</span>' +
             note + cat + summary +
-            '<div class="scrap-meta">' + meta + '</div>' +
+            '<div class="scrap-foot"><span class="scrap-meta">' + meta + '</span>' +
+              '<button class="scrap-del" type="button" data-act="del" aria-label="이 링크 삭제">삭제</button></div>' +
           '</li>';
         }).join('');
       }
