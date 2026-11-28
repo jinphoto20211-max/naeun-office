@@ -184,10 +184,13 @@ HUB_MIGYEOL = [
 ]
 # ── 영상 주간 한도 초기화 (노션 「큐 그룹」 2026-11-28 17:59 KST 기준) ────
 # 큐: 2026-12-09(수) 20:22 / 별큐: 2026-12-28(월) 09:20 (Asia/Seoul)
+# 하트큐: 나은 님 지시(11/28 23:0x)로 3번째 줄에 추가 · 노션 「큐 그룹」에 날짜가 잡히기 전까지 '미확인'
+#   → iso 가 None 이면 날짜·시각 대신 '날짜 미확인' + '미확인' 배지로 그린다(D-day 계산 없음)
 VIDEO_RESET_SRC = "노션 큐 그룹 · 11/28 17:59 기준"
 VIDEO_RESETS = [
     ("큐", "12/09(수)", "20:22", "2026-12-09T20:22:00+09:00"),
     ("별큐", "12/28(월)", "09:20", "2026-12-28T09:20:00+09:00"),
+    ("하트큐", "", "", None),
 ]
 
 # ── 8. 오늘 한 줄 브리핑 (오피스 맵 위 얇은 바) ─────────────────────────
@@ -498,10 +501,16 @@ def hub_top_html():
     o.append('<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 '
              '<small>%s</small></div><div class="hub-reset">' % VIDEO_RESET_SRC)
     for name, date, tm, iso in VIDEO_RESETS:
-        o.append('<div class="hub-reset-i"><span class="hub-reset-k">%s</span>'
-                 '<span class="hub-reset-v">%s <b>%s</b></span>'
-                 '<span class="hub-reset-d" data-reset="%s">%s</span></div>'
-                 % (name, date, tm, iso, dday(iso)))
+        if iso:
+            o.append('<div class="hub-reset-i"><span class="hub-reset-k">%s</span>'
+                     '<span class="hub-reset-v">%s <b>%s</b></span>'
+                     '<span class="hub-reset-d" data-reset="%s">%s</span></div>'
+                     % (name, date, tm, iso, dday(iso)))
+        else:
+            # 날짜 미정(하트큐) — D-day 대신 '미확인' 배지
+            o.append('<div class="hub-reset-i nodate"><span class="hub-reset-k">%s</span>'
+                     '<span class="hub-reset-v nodate">날짜 미확인</span>'
+                     '<span class="hub-reset-d unknown">미확인</span></div>' % name)
     o.append('</div></div>')
     o.append('</div>')
     o.append('</div>')
@@ -931,6 +940,14 @@ BOARD_MOBILE_CSS = """
   }
 """
 
+# 영상 주간 한도 — 날짜 미정 줄(하트큐). HUB_CSS 는 이미 삽입된 파일에 다시 들어가지 않아 별도 가드로 넣는다
+RESET_CSS = """
+  /* 영상 주간 한도 초기화 — 날짜 미정 줄(하트큐)은 점선 테두리·차분한 회색 */
+  .hub-reset-i.nodate{background:#FBF9F5; border-style:dashed}
+  .hub-reset-v.nodate{color:var(--muted-2); font-weight:700; letter-spacing:-.2px}
+  .hub-reset-d.unknown{background:#F1EDE6; border:1px dashed var(--line-strong); color:var(--muted)}
+"""
+
 NAV_BTN = ('    <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" '
            'aria-selected="false" tabindex="-1" data-tab="tracker">트래커</button>\n')
 
@@ -993,6 +1010,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", SUM_CSS + "\n  @media (max-width:860px){", 1)
     if ".pnt-malls .pnt-mall{" not in html:
         html = html.replace("  @media (max-width:860px){", MALL_CSS + "\n  @media (max-width:860px){", 1)
+    if ".hub-reset-i.nodate{" not in html:
+        html = html.replace("  @media (max-width:860px){", RESET_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:
