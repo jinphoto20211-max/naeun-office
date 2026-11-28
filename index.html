@@ -988,14 +988,14 @@
   }
   .o25-bub.me{background:rgba(255,243,244,.99); border-color:#F6D9DC}
   /* 캐릭터를 눌렀을 때 — 그 캐릭터의 최근 단톡방 대화를 여러 줄로 (잘리지 않게) */
-  .o25-bub.talk{white-space:normal; max-width:min(260px,68vw); min-width:126px; text-align:left;
+  .o25-bub.talk{white-space:normal; width:max-content; max-width:min(260px,68vw); min-width:126px; text-align:left;
     font-weight:700; letter-spacing:-.2px; padding:.52em .72em .48em; line-height:1.42}
   .o25-bub.talk .o25-bub-t{align-items:flex-start; justify-content:flex-start; text-align:left; gap:.4em}
   .o25-bub.talk .o25-bub-t span{overflow-wrap:anywhere; word-break:keep-all}
   .o25-bub.talk .o25-bub-dot{margin-top:.46em}
   .o25-bub-time{display:block; margin-top:.3em; font-size:.86em; font-weight:700; letter-spacing:0; color:#A08B7C; text-align:right}
   @media (max-width:430px){
-    .o25-bub.talk{max-width:min(240px,74vw); font-size:clamp(9px,2.15cqw,10.5px); line-height:1.4; padding:.46em .62em .42em}
+    .o25-bub.talk{width:max-content; max-width:min(240px,74vw); font-size:clamp(9px,2.15cqw,10.5px); line-height:1.4; padding:.46em .62em .42em}
     .o25-bub{font-size:clamp(8px,1.9cqw,10px); padding:.32em .58em .34em; border-radius:11px}
     .o25-bub::after{width:7px; height:7px; bottom:-3.6px}
   }
@@ -3461,7 +3461,7 @@
     else if (l < minL) { r += minL - l; l = minL; }
     else if (r > maxR) { l -= r - maxR; r = maxR; }
     c.bub.style.left = (((l + r) / 2) / SW * 100).toFixed(3) + '%';
-    c.bub.style.top = (ay / SH * 100).toFixed(3) + '%';
+    c.bub.style.top = (b / SH * 100).toFixed(3) + '%';   // b = 위로 잘릴 때 내려 준 아래끝
     return { l: l, r: r, t: t, b: b };
   }
   function clashesWith(rect) {
