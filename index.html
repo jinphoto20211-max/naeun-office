@@ -786,6 +786,12 @@
     .msn-note{grid-column:2; text-align:left; white-space:normal}
   }
 
+
+  /* ── 카드 순서: 노션 허브 상단 요약 → 핵심 보드 → 미결 건 ── */
+  .hub-card + .pnt-card{margin-top:16px}
+  .msn-card + .hub-card{margin-top:16px}
+  .hub-card-rest > .hub-sub:first-child{margin-top:0}
+
   @media (max-width:860px){
     .kanban{grid-template-columns:1fr}
   }
@@ -1485,6 +1491,34 @@
       <button class="cmd-btn" type="button" data-goto="work">작업실에서 보기</button>
     </div>
     <!-- TRACKER-PANEL:START -->
+<div class="card hub-card">
+<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 11/28 21:21</span></div>
+<div class="hub-grid">
+<div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/28 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/27 조기 종료장에서 S&P500 약 7,297.49 · VIX 약 23.81로 반등했지만 하이일드·근원 물가의 악화 신호가 남아 있고, 시장 폭·일봉 추세·컨센서스 일부는 자료 충돌 또는 확인 불가지라 회복 확정은 이릅니다.</p></div>
+<div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/28 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,812원 · 옥포농협클린 1,795원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
+<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 <small>노션 큐 그룹 · 11/28 17:59 기준</small></div><div class="hub-reset">
+<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-11</span></div>
+<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-30</span></div>
+</div></div>
+</div>
+</div>
+<script>
+(function(){
+  function kstYMD(ms){ var d = new Date(ms + 9 * 3600000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; }
+  var now = kstYMD(Date.now());
+  var els = document.querySelectorAll('.hub-reset-d[data-reset]');
+  for (var i = 0; i < els.length; i++){
+    var el = els[i], t = Date.parse(el.getAttribute('data-reset'));
+    if (!t) continue;
+    var tg = kstYMD(t);
+    var left = Math.round((Date.UTC(tg[0], tg[1], tg[2]) - Date.UTC(now[0], now[1], now[2])) / 86400000);
+    el.textContent = left > 0 ? 'D-' + left : (left === 0 ? '오늘' : '지남');
+    el.classList.remove('today', 'past');
+    if (left === 0) el.classList.add('today');
+    else if (left < 0) el.classList.add('past');
+  }
+})();
+</script>
 <div class="card pnt-card">
 <div class="pnt-head"><h3>적립·포인트 한눈에</h3><span>5대 몰 출첵 · 포인트 · 누적 수익 · <b>2026-11-28(토) 21:30 기준</b></span></div>
 <div class="pnt-goal"><div class="pnt-goal-top"><span>포인트·수익 합계 <b>81,250</b> <small>(1P≈1원)</small></span><span class="pnt-goal-tag hit">목표 50,000 · 162%</span></div><div class="pnt-bar"><i style="width:100%"></i></div></div>
@@ -1512,16 +1546,7 @@
 <li class="msn-row"><span class="trk-pf survey msn-pf">설문</span><span class="msn-body"><span class="msn-t">[CU] 모바일상품권 5,000원</span><span class="msn-steps"><span class="msn-s done">등록</span><span class="msn-s next">사용</span></span></span><span class="msn-note">사용 기한 12/25까지</span></li>
 <li class="msn-row"><span class="trk-pf mom msn-pf">맘홀</span><span class="msn-body"><span class="msn-t">[라쉼] 아토리피드 장벽 크림</span><span class="msn-steps"><span class="msn-s done">예약</span><span class="msn-s done">수령</span><span class="msn-s done">후기</span><span class="msn-s done">폼</span></span></span><span class="msn-note">3채널 후기 + 폼 제출 완결</span></li>
 </ul></div>
-<div class="card hub-card">
-<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 11/28 21:21</span></div>
-<div class="hub-grid">
-<div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/28 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/27 조기 종료장에서 S&P500 약 7,297.49 · VIX 약 23.81로 반등했지만 하이일드·근원 물가의 악화 신호가 남아 있고, 시장 폭·일봉 추세·컨센서스 일부는 자료 충돌 또는 확인 불가지라 회복 확정은 이릅니다.</p></div>
-<div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/28 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,812원 · 옥포농협클린 1,795원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
-<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 <small>노션 큐 그룹 · 11/28 17:59 기준</small></div><div class="hub-reset">
-<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-11</span></div>
-<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-30</span></div>
-</div></div>
-</div>
+<div class="card hub-card hub-card-rest">
 <div class="hub-sub">🚧 미결 건 <span class="n">18건</span><em>피클 · 노랑 13 · 하마뮤즈 5</em></div>
 <ul class="hub-list">
 <li class="hub-row"><span class="hub-who">서울온 만족도</span><span class="hub-body"><b>서울특별시 서울온 만족도 조사</b><i>엠보팅 18문항 완료 → 제출 때 SMS 인증번호 필요</i><span class="trk-acts" data-owner="노랑" data-title="서울특별시 서울온 만족도 조사"><button class="trk-act go" type="button" data-act="go" aria-label="서울특별시 서울온 만족도 조사 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="서울특별시 서울온 만족도 조사 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="서울특별시 서울온 만족도 조사 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">~12/7</span></li>
@@ -1551,23 +1576,6 @@
 </div>
 <p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
 </div>
-<script>
-(function(){
-  function kstYMD(ms){ var d = new Date(ms + 9 * 3600000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; }
-  var now = kstYMD(Date.now());
-  var els = document.querySelectorAll('.hub-reset-d[data-reset]');
-  for (var i = 0; i < els.length; i++){
-    var el = els[i], t = Date.parse(el.getAttribute('data-reset'));
-    if (!t) continue;
-    var tg = kstYMD(t);
-    var left = Math.round((Date.UTC(tg[0], tg[1], tg[2]) - Date.UTC(now[0], now[1], now[2])) / 86400000);
-    el.textContent = left > 0 ? 'D-' + left : (left === 0 ? '오늘' : '지남');
-    el.classList.remove('today', 'past');
-    if (left === 0) el.classList.add('today');
-    else if (left < 0) el.classList.add('past');
-  }
-})();
-</script>
 <div class="card trk-card">
 <div class="trk-top"><p class="trk-stamp">트래커 기준 <b>2026-11-28(토) 21:30</b> · 노션 동기화 11/28 21:21 · 미결 건 11/28 11:26</p><button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button></div>
 <div class="trk-rule" aria-hidden="true"></div>

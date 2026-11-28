@@ -449,7 +449,8 @@ def tracker_data_js():
             % json.dumps(data, ensure_ascii=False, separators=(",", ":")))
 
 
-def hub_html():
+def hub_top_html():
+    """노션 허브 상단 요약 — 증시·유가·영상 주간 한도. 트래커 탭 맨 위."""
     o = ['<div class="card hub-card">']
     o.append('<div class="hub-top"><h3>노션 공용 허브 한눈에</h3>'
              '<span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 %s</span></div>' % NOTION_SYNC)
@@ -469,6 +470,14 @@ def hub_html():
                  % (name, date, tm, iso, dday(iso)))
     o.append('</div></div>')
     o.append('</div>')
+    o.append('</div>')
+    o.append(DDAY_JS)
+    return "\n".join(o)
+
+
+def hub_rest_html():
+    """노션 허브 나머지 — 미결 건 · 담당별 요약. 핵심 보드 아래."""
+    o = ['<div class="card hub-card hub-card-rest">']
 
     o.append('<div class="hub-sub">🚧 미결 건 <span class="n">%d건</span><em>피클 · 노랑 13 · 하마뮤즈 5</em></div>'
              % len(HUB_MIGYEOL))
@@ -490,18 +499,20 @@ def hub_html():
              '🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. '
              '상세 기록은 노션에서 확인합니다.</p>')
     o.append('</div>')
-    o.append(DDAY_JS)
     return "\n".join(o)
 
 
 def sections():
     out = []
 
-    # 적립·포인트 / 복권·예치금 / 당첨 후 미션 — 트래커 탭 맨 위 핵심 보드
+    # 노션 공용 허브 상단 요약(증시·유가·영상 한도) — 트래커 탭 맨 위
+    out.append(hub_top_html())
+
+    # 적립·포인트 / 복권·예치금 / 당첨 후 미션 — 핵심 보드
     out.append(boards_html())
 
-    # 노션 공용 허브 요약 (그 아래 1번 카드)
-    out.append(hub_html())
+    # 노션 공용 허브 나머지(미결 건·담당별) — 핵심 보드 아래
+    out.append(hub_rest_html())
 
     # 요약
     out.append('<div class="card trk-card">')
@@ -812,6 +823,15 @@ MOBILE_CSS = """
     .hub-reset-i{flex:1 1 100%}
 """
 
+# 카드 순서 변경(허브 상단 요약 맨 위 · 미결 건은 보드 아래)에 따른 여백 보정
+# 기존 CSS 블록은 이미 삽입된 파일에 다시 들어가지 않아 별도 가드로 넣는다
+ORDER_CSS = """
+  /* ── 카드 순서: 노션 허브 상단 요약 → 핵심 보드 → 미결 건 ── */
+  .hub-card + .pnt-card{margin-top:16px}
+  .msn-card + .hub-card{margin-top:16px}
+  .hub-card-rest > .hub-sub:first-child{margin-top:0}
+"""
+
 # 보드 모바일 보정 — 처음 만든 파일에도 따로 끼워 넣을 수 있게 별도 블록으로 둔다
 # (MOBILE_CSS 는 이미 삽입된 파일에는 다시 들어가지 않아서 새 규칙은 여기에 적는다)
 BOARD_MOBILE_CSS = """
@@ -886,6 +906,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", BOARD_CSS + "\n  @media (max-width:860px){", 1)
     if ".msn-row{grid-template-columns:46px" not in html:
         html = html.replace("  @media (max-width:860px){", BOARD_MOBILE_CSS + "\n  @media (max-width:860px){", 1)
+    if ".hub-card + .pnt-card{" not in html:
+        html = html.replace("  @media (max-width:860px){", ORDER_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:
