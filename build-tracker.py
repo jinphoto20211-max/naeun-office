@@ -944,8 +944,8 @@ BOARD_MOBILE_CSS = """
 RESET_CSS = """
   /* 영상 주간 한도 초기화 — 날짜 미정 줄(하트큐)은 점선 테두리·차분한 회색 */
   .hub-reset-i.nodate{background:#FBF9F5; border-style:dashed}
-  .hub-reset-v.nodate{color:var(--muted-2); font-weight:700; letter-spacing:-.2px}
-  .hub-reset-d.unknown{background:#F1EDE6; border:1px dashed var(--line-strong); color:var(--muted)}
+  .hub-reset-v.nodate{color:var(--muted); font-weight:700; letter-spacing:-.2px}
+  .hub-reset-d.unknown{background:#F1EDE6; border:1px dashed #D8C7B4; color:#7A6656}
 """
 
 NAV_BTN = ('    <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" '
