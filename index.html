@@ -100,7 +100,7 @@
 
   /* ── tabs ── */
   .tabs{
-    margin-top:16px; padding:8px; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px;
+    margin-top:16px; padding:8px; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px;
   }
   .tab{
     appearance:none; border:0; background:transparent; border-radius:16px; padding:11px 6px;
@@ -1269,6 +1269,105 @@
   .o25-chip.off::after{content:""; width:5px; height:5px; border-radius:50%; background:#C9BFB3}
   .agc-frame-wrap iframe{display:block; width:100%; height:100%; border:0}
   /* OFFICE25D-CSS:END */
+  /* ══════════ 패밀리 탭 ══════════ */
+  .fam-card{padding:20px 20px 18px}
+  .fam-card + .fam-card{margin-top:14px}
+  .fam-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:4px}
+  .fam-head h3{font-size:16px; font-weight:800; letter-spacing:-.4px}
+  .fam-head p{font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.55}
+  .fam-head p b{color:var(--ink-soft)}
+  .fam-legend{display:flex; flex-wrap:wrap; gap:6px}
+  .fam-legend span{font-size:10.5px; font-weight:800; padding:4px 8px; border-radius:999px; background:#F7F1E9; color:var(--muted)}
+  .fam-sub{display:flex; align-items:center; gap:7px; margin:16px 0 8px; font-size:12px; font-weight:800; color:var(--ink-soft)}
+  .fam-sub::before{content:""; width:4px; height:13px; border-radius:2px; background:linear-gradient(180deg,var(--pink),#E8C49A)}
+  .fam-sub small{font-weight:600; color:var(--muted); font-size:11px}
+  .fam-list{display:grid; gap:8px}
+  .fam-row{display:grid; grid-template-columns:minmax(0,1fr) auto auto; align-items:center; gap:10px; padding:11px 13px; border-radius:16px; background:var(--card-soft); border:1px solid var(--line); transition:background .2s, border-color .2s}
+  .fam-row.is-done{background:#F7F4EF; border-color:#EFE6D9}
+  .fam-name{min-width:0}
+  .fam-name b{display:block; font-size:13.5px; font-weight:800; letter-spacing:-.25px; color:var(--ink)}
+  .fam-name .fam-age{display:block; font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.5; font-variant-numeric:tabular-nums}
+  .fam-row.is-done .fam-name b{color:var(--ink-soft); font-weight:700}
+  .fam-badge{font-size:11.5px; font-weight:800; padding:5px 11px; border-radius:999px; white-space:nowrap; letter-spacing:-.2px; font-variant-numeric:tabular-nums; background:#F3EEE7; color:var(--muted)}
+  .fam-badge.blue{background:var(--blue-soft); color:var(--blue-deep)}
+  .fam-badge.green{background:var(--green-soft); color:var(--green-deep)}
+  .fam-badge.red{background:#FCE7E4; color:#C0534C}
+  .fam-badge.gray{background:#F1ECE5; color:#9A8B7E}
+  .fam-badge.done{background:#EFF5F0; color:#8FAE9B}
+  .fam-check{appearance:none; border:1px solid var(--line-strong); background:#fff; border-radius:12px; padding:7px 10px; font-size:11.5px; font-weight:800; color:var(--ink-soft); white-space:nowrap; transition:background .18s, border-color .18s, color .18s}
+  .fam-check:hover{background:#FFF8F1}
+  .fam-check[aria-pressed="true"]{background:var(--green-soft); border-color:#CFE3D6; color:var(--green-deep)}
+  .fam-note{margin-top:12px; font-size:11px; color:var(--muted); line-height:1.62}
+  .fam-note b{color:var(--ink-soft)}
+  .fam-note code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10.5px; background:#F5EFE6; border-radius:5px; padding:1px 4px}
+  .fam-tools{display:flex; gap:6px; flex-wrap:wrap}
+
+  /* 일정 폼 · 타임라인 */
+  .fam-form{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:14px 0 4px; padding:13px; border-radius:18px; background:#FFFBF6; border:1px dashed var(--line-strong)}
+  .fam-field{display:flex; flex-direction:column; gap:5px; min-width:0}
+  .fam-field.wide{grid-column:1 / -1}
+  .fam-field label{font-size:11px; font-weight:800; color:var(--ink-soft); letter-spacing:-.1px}
+  .fam-field input, .fam-field select{border:1px solid var(--line-strong); background:#fff; border-radius:12px; padding:9px 11px; font:inherit; font-size:12.5px; color:var(--ink); min-width:0; width:100%}
+  .fam-field input::placeholder{color:var(--muted-2)}
+  .fam-form-act{grid-column:1 / -1; display:flex; justify-content:flex-end; margin-top:2px}
+  .fam-filter{display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 2px}
+  .fam-filter button{appearance:none; border:1px solid var(--line); background:#fff; border-radius:999px; padding:6px 11px; font-size:11.5px; font-weight:800; color:var(--muted)}
+  .fam-filter button[aria-pressed="true"]{background:var(--pink-soft); border-color:#F3D6D9; color:#C2646F}
+  .fam-tl{display:grid; gap:8px; margin-top:10px}
+  .fam-ev{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:11px; align-items:flex-start; padding:11px 13px; border-radius:16px; background:#fff; border:1px solid var(--line)}
+  .fam-ev.is-done{background:#FAF7F2; border-color:#F0E8DC}
+  .fam-ev-date{text-align:center; min-width:46px; border-radius:12px; background:#FFF6EE; border:1px solid #F6E7D6; padding:6px 7px}
+  .fam-ev-date b{display:block; font-size:12.5px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+  .fam-ev-date span{display:block; font-size:10px; color:var(--muted); margin-top:1px}
+  .fam-ev.is-today .fam-ev-date{background:var(--pink-soft); border-color:#F3D6D9}
+  .fam-ev-body{min-width:0}
+  .fam-ev-top{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+  .fam-ev-top b{font-size:13px; font-weight:800; letter-spacing:-.2px; word-break:break-word}
+  .fam-ev.is-done .fam-ev-top b{color:var(--ink-soft)}
+  .fam-ev-top .fam-badge{font-size:10.5px; padding:3px 8px}
+  .fam-ev-memo{margin-top:4px; font-size:11.5px; color:var(--muted); line-height:1.55; white-space:pre-wrap; word-break:break-word}
+  .fam-tag{font-size:10px; font-weight:800; padding:3px 8px; border-radius:999px; background:#F3EEE7; color:var(--muted)}
+  .fam-tag.t-daycare{background:var(--blue-soft); color:var(--blue-deep)}
+  .fam-tag.t-med{background:var(--pink-soft); color:#C2646F}
+  .fam-tag.t-out{background:var(--green-soft); color:var(--green-deep)}
+  .fam-tag.t-ready{background:#FBF0DE; color:#B0813F}
+  .fam-ev-acts{display:flex; flex-direction:column; gap:5px}
+  .fam-mini{appearance:none; border:1px solid var(--line-strong); background:#fff; border-radius:10px; padding:5px 9px; font-size:10.5px; font-weight:800; color:var(--muted); white-space:nowrap}
+  .fam-mini:hover{background:#FFF8F1; color:var(--ink-soft)}
+  .fam-mini.on{background:var(--green-soft); border-color:#CFE3D6; color:var(--green-deep)}
+  .fam-more{justify-self:start; appearance:none; border:0; background:transparent; padding:8px 2px; font-size:11.5px; font-weight:800; color:var(--muted)}
+  .fam-more:hover{color:var(--ink-soft)}
+  .fam-empty{padding:22px 14px; text-align:center; font-size:12px; color:var(--muted); border-radius:16px; background:#FFFBF6; border:1px dashed var(--line-strong)}
+
+  /* 성장 · 준비 메모 */
+  .fam-points{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px}
+  .fam-point{padding:12px 13px; border-radius:16px; background:#FFFBF6; border:1px solid var(--line)}
+  .fam-point b{display:block; font-size:12.5px; font-weight:800; letter-spacing:-.2px}
+  .fam-point span{display:block; margin-top:3px; font-size:11px; color:var(--muted); line-height:1.55}
+  .fam-memo-form{display:flex; gap:8px; margin-top:16px}
+  .fam-memo-form input{flex:1 1 auto; min-width:0; border:1px solid var(--line-strong); border-radius:14px; padding:11px 13px; font:inherit; font-size:12.5px; color:var(--ink); background:#fff}
+  .fam-memo-form input::placeholder{color:var(--muted-2)}
+  .fam-memo-list{display:grid; gap:7px; margin-top:10px}
+  .fam-memo-item{display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:9px; align-items:center; padding:10px 12px; border-radius:14px; background:var(--card-soft); border:1px solid var(--line)}
+  .fam-memo-item p{font-size:12.5px; word-break:break-word; white-space:pre-wrap}
+  .fam-memo-item time{font-size:10.5px; color:var(--muted-2); font-variant-numeric:tabular-nums; white-space:nowrap}
+  .fam-del{appearance:none; border:0; background:transparent; color:var(--muted-2); font-size:11.5px; font-weight:800; padding:3px 2px}
+  .fam-del:hover{color:#C0534C}
+  @media (max-width:720px){
+    .fam-card{padding:16px 14px}
+    .fam-legend{display:none}
+    .fam-row{grid-template-columns:minmax(0,1fr) auto; row-gap:8px; padding:11px 12px}
+    .fam-row .fam-check{grid-column:1 / -1; justify-self:stretch; text-align:center}
+    .fam-form{grid-template-columns:1fr}
+    .fam-ev{grid-template-columns:auto minmax(0,1fr); row-gap:8px}
+    .fam-ev-acts{grid-column:1 / -1; flex-direction:row; justify-content:flex-end}
+    .fam-points{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:400px){
+    .fam-points{grid-template-columns:1fr}
+    .fam-memo-form{flex-wrap:wrap}
+    .fam-memo-form .btn{width:100%}
+  }
 </style>
 </head>
 <body>
@@ -1302,6 +1401,7 @@
   <nav class="card tabs" role="tablist" aria-label="비서실 메뉴">
     <button class="tab" role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true" data-tab="map">오피스 맵</button>
     <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" aria-selected="false" tabindex="-1" data-tab="tracker">트래커</button>
+    <button class="tab" role="tab" id="tab-family" aria-controls="panel-family" aria-selected="false" tabindex="-1" data-tab="family">패밀리</button>
     <button class="tab" role="tab" id="tab-work" aria-controls="panel-work" aria-selected="false" tabindex="-1" data-tab="work">작업실</button>
     <button class="tab" role="tab" id="tab-team" aria-controls="panel-team" aria-selected="false" tabindex="-1" data-tab="team">비서현황</button>
     <button class="tab" role="tab" id="tab-memo" aria-controls="panel-memo" aria-selected="false" tabindex="-1" data-tab="memo">메모</button>
@@ -1695,6 +1795,115 @@
 <script>window.TRACKER_DATA = {"updated":"2026-11-28(토) 21:30","brief":{"date":"2026-11-28","label":"11/28(토)","items":["22~24시 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증","내일(11/29) 펀드 시험 — 아침 응원 메시지 준비"],"weather":{"icon":"☀️","temp":"3~10°C","tip":"밤 맑음 · 내일 0~8°C"}},"handoff":[{"id":"chal","owner":"노랑","title":"차앤박 더마앤서 앰플 구매·인증","need":"구매·인증","mins":"5분","due":"2026-11-28","note":"올리브영 배송 구매 22~24시 · 당일 23:59 1·2차 인증","link":""},{"id":"arisu","owner":"노랑","title":"서울아리수 AI 숏폼 투표","need":"SMS","mins":"1분","due":"2026-11-29","note":"제출 때 02-120 SMS 인증번호","link":""},{"id":"cancer","owner":"노랑","title":"국가암정보센터 암예방 퀴즈","need":"블로그 댓글","mins":"3분","due":"2026-11-29","note":"다짐 댓글 + 인증샷 2장","link":""},{"id":"daejeon","owner":"노랑","title":"대전 중구 블로그 이웃추가 이벤트","need":"이웃추가","mins":"2분","due":"2026-11-29","note":"이웃추가·공감은 직접만 가능","link":""},{"id":"okcheon","owner":"노랑","title":"옥천군 퀴즈 이벤트","need":"블로그 댓글","mins":"1분","due":"2026-11-29","note":"정답 ④ 확인 · 댓글 입력창 미오픈","link":""},{"id":"kibo","owner":"노랑","title":"기술보증기금 카톡 채널 추가","need":"채널 추가","mins":"1분","due":"2026-11-29","note":"채널 추가 캡처 + 블로그 비밀댓글","link":""},{"id":"jobaba","owner":"하마뮤즈","title":"잡아바 일자리 퀴즈","need":"로그인","mins":"2분","due":"2026-11-29","note":"경기도일자리재단 통합회원 로그인","link":""},{"id":"mrt","owner":"노랑","title":"마이리얼트립 서호주 퍼스 2인","need":"실명인증","mins":"3분","due":"2026-11-30","note":"카카오 로그인 후 실명인증","link":"https://www.myrealtrip.com"},{"id":"gender","owner":"노랑","title":"성평등가족부 청소년 아르바이트 퀴즈","need":"캡차","mins":"1분","due":"2026-11-30","note":"자동입력방지 문자","link":""},{"id":"xi","owner":"노랑","title":"자이 별내자이 이그제큐티브","need":"유튜브 구독","mins":"1분","due":"2026-12-02","note":"자이TV 구독 + 닉네임 확인","link":""},{"id":"kita","owner":"노랑","title":"한국무역협회 수출 퀴즈","need":"SNS 공유","mins":"2분","due":"2026-12-03","note":"개인 SNS 공유 + 아이디 노출 캡처","link":""},{"id":"hira","owner":"노랑","title":"건강보험심사평가원 최애 콘텐츠","need":"이웃추가","mins":"2분","due":"2026-12-04","note":"이웃추가·댓글 입력 불가","link":""},{"id":"kalis","owner":"하마뮤즈","title":"국토안전관리원 일산 2건","need":"간편인증","mins":"3분","due":"2026-12-04","note":"간편인증 로그인 후 진행","link":""},{"id":"seoulon","owner":"노랑","title":"서울온 만족도 조사","need":"SMS","mins":"2분","due":"2026-12-07","note":"엠보팅 18문항 완료 · 제출 때 SMS","link":""},{"id":"nps","owner":"노랑","title":"국민연금공단 이어폰 만족도","need":"PASS 인증","mins":"2분","due":"2026-12-07","note":"응답자 이름란 PASS 전용","link":""},{"id":"embrain","owner":"노랑","title":"엠브레인 패널파워","need":"캡차","mins":"2분","due":"2026-11-26","note":"로그인 보안문자 · 11/26 회차 미접속","link":"https://www.embrain.com"},{"id":"tembb","owner":"하마뮤즈","title":"템빨 오버기어드 룰렛","need":"카톡 앱","mins":"1분","due":"","note":"카톡 앱 전용 · 이용권 1장","link":""},{"id":"kosis","owner":"하마뮤즈","title":"KOSIS 통계 퀴즈","need":"캡차","mins":"1분","due":"2026-11-27","note":"폰 크롬에 캡차만 남음","link":""},{"id":"mong","owner":"하마뮤즈","title":"몽실몽실 먼치킨 캘린더","need":"유튜브 로그인","mins":"2분","due":"2026-11-27","note":"유튜브 앱 로그인 오류","link":""}]};</script>
 </div>
     <!-- TRACKER-PANEL:END -->
+  </section>
+
+  <!-- ═══ 패밀리 ═══ -->
+  <section class="panel" id="panel-family" role="tabpanel" aria-labelledby="tab-family">
+    <div class="section-head">
+      <div>
+        <h2>패밀리</h2>
+        <p>우리 아이 건강검진·예방접종 D-day와 어린이집·가족 일정을 한 장에 모았어요. 직접 추가한 일정은 이 기기에만 저장됩니다.</p>
+      </div>
+      <span class="chip" id="famTodayChip">오늘 기준</span>
+    </div>
+
+    <!-- ① 건강검진 · 예방접종 -->
+    <div class="card fam-card">
+      <div class="fam-head">
+        <div>
+          <h3>🏥 영유아 건강검진 · 국가예방접종</h3>
+          <p>생후 <b id="famMonths">33</b>개월 · 국가 표준일정을 <b id="famBoardDate">오늘</b> 기준으로 다시 계산했어요.</p>
+        </div>
+        <div class="fam-legend" aria-hidden="true">
+          <span>파랑 가능 기간</span><span>빨강 마감 30일 이내</span><span>회색 예정</span><span>흐림 완료</span>
+        </div>
+      </div>
+
+      <div class="fam-sub">영유아 건강검진 <small>국가 지원 · 아이 수첩에 스티커</small></div>
+      <div class="fam-list" id="famCheckList"></div>
+
+      <div class="fam-sub">어린이 국가예방접종 <small>표준일정 기준</small></div>
+      <div class="fam-list" id="famVaccList"></div>
+
+      <p class="fam-note">D-day는 화면을 열 때마다 오늘 날짜로 자동 계산됩니다. <b>[미완료]</b>를 누르면 완료로 바뀌고, 완료 표시는 이 기기 브라우저에만 저장돼요. 실제 검진·접종 기록은 아이 수첩이나 예방접종도우미에서 한 번 더 확인해 주세요.</p>
+    </div>
+
+    <!-- ② 어린이집 · 가족 일정 타임라인 -->
+    <div class="card fam-card">
+      <div class="fam-head">
+        <div>
+          <h3>🗓️ 어린이집 · 가족 일정</h3>
+          <p>기본 일정과 나은님이 직접 추가한 일정을 날짜순으로 합쳐 보여 줘요.</p>
+        </div>
+        <div class="fam-tools">
+          <button class="btn btn-ghost btn-sm" type="button" id="famCopyBtn">📋 해피방에 알릴 문구</button>
+        </div>
+      </div>
+
+      <form class="fam-form" id="famForm" autocomplete="off">
+        <div class="fam-field">
+          <label for="famDate">날짜</label>
+          <input type="date" id="famDate" required>
+        </div>
+        <div class="fam-field">
+          <label for="famTag">분류</label>
+          <select id="famTag">
+            <option value="어린이집">어린이집</option>
+            <option value="병원·검진">병원·검진</option>
+            <option value="나들이">나들이</option>
+            <option value="준비물">준비물</option>
+          </select>
+        </div>
+        <div class="fam-field wide">
+          <label for="famTitle">일정 제목</label>
+          <input type="text" id="famTitle" maxlength="60" placeholder="예) 어린이집 겨울 준비물 챙기기" required>
+        </div>
+        <div class="fam-field wide">
+          <label for="famMemo">메모 (선택)</label>
+          <input type="text" id="famMemo" maxlength="120" placeholder="예) 여벌옷·수건 두 장씩">
+        </div>
+        <div class="fam-form-act">
+          <button class="btn btn-primary btn-sm" type="submit">+ 일정 추가</button>
+        </div>
+      </form>
+
+      <div class="fam-filter" id="famFilter" role="group" aria-label="분류별 보기">
+        <button type="button" data-filter="all" aria-pressed="true">전체</button>
+        <button type="button" data-filter="어린이집" aria-pressed="false">어린이집</button>
+        <button type="button" data-filter="병원·검진" aria-pressed="false">병원·검진</button>
+        <button type="button" data-filter="나들이" aria-pressed="false">나들이</button>
+        <button type="button" data-filter="준비물" aria-pressed="false">준비물</button>
+      </div>
+
+      <div class="fam-tl" id="famTimeline"></div>
+      <p class="fam-note">기본 일정은 <code>FAMILY_EVENTS</code> 상수에서 고치면 바로 반영되고, 직접 추가한 일정·완료 표시는 이 브라우저에만 저장됩니다(다른 기기와 공유되지 않아요).</p>
+    </div>
+
+    <!-- ③ 성장 · 준비 메모 -->
+    <div class="card fam-card">
+      <div class="fam-head">
+        <div>
+          <h3>🌱 지금 시기 체크 포인트</h3>
+          <p>한 번 확인해 두면 좋은 것들만 모았어요.</p>
+        </div>
+      </div>
+
+      <div class="fam-points">
+        <div class="fam-point"><b>👕 의류 100호</b><span>지금 잘 맞는 사이즈 · 다음은 110호</span></div>
+        <div class="fam-point"><b>🧷 기저귀 XL (특대형)</b><span>밤 기저귀는 한 단계 위로</span></div>
+        <div class="fam-point"><b>🤧 독감 · 감기 컨디션</b><span>등원 전 체온·콧물 체크</span></div>
+        <div class="fam-point"><b>🎒 어린이집 준비물</b><span>여벌옷 · 수건 주말에 채우기</span></div>
+        <div class="fam-point"><b>📏 최근 실측</b><span>93cm · 13kg (11/16 기준)</span></div>
+        <div class="fam-point"><b>🍚 식사 · 간식</b><span>새로 먹는 음식은 하루 하나씩</span></div>
+      </div>
+
+      <div class="fam-memo-form">
+        <label class="sr" for="famMemoInput">한 줄 육아 메모</label>
+        <input type="text" id="famMemoInput" maxlength="80" placeholder="한 줄 육아 메모 — 예) 물티슈 다 떨어감, 퇴근길에 사기">
+        <button class="btn btn-primary btn-sm" type="button" id="famMemoSave">저장</button>
+      </div>
+      <div class="fam-memo-list" id="famMemoList"></div>
+    </div>
   </section>
 
   <!-- ═══ 작업실 ═══ -->
@@ -4522,6 +4731,358 @@
   document.addEventListener('DOMContentLoaded', toTop);
   window.addEventListener('load', function () { toTop(); setTimeout(toTop, 80); });
   window.addEventListener('pageshow', function (e) { if (e.persisted) toTop(); });
+})();
+</script>
+<script>
+/* ══════════ 패밀리 탭 ══════════
+   · 검진·접종 D-day는 화면을 열 때마다 '오늘' 날짜로 다시 계산합니다.
+   · 날짜만 상수로 두고, 이름·생년월일 같은 개인 정보는 코드에 넣지 않습니다.
+   · 기본 일정은 아래 FAMILY_EVENTS 를 고치면 바로 반영됩니다. */
+(function(){
+  "use strict";
+  var $ = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+  var DAY = 86400000;
+  var WEEK = ['일','월','화','수','목','금','토'];
+
+  /* ── 기준 상수 ── */
+  var FAM_ANCHOR = { date: '2026-11-28', months: 33 };   // '생후 N개월' 표시용 기준점 (개인정보 아님)
+  var FAM_CHECKUPS = [
+    { id:'chk5',  name:'5차 일반 건강검진',     age:'생후 30~36개월', from:'2026-08-23', to:'2027-02-23' },
+    { id:'chk5d', name:'5차 구강검진 (2차)',   age:'생후 30~41개월', from:'2026-08-23', to:'2027-07-23' },
+    { id:'chk6',  name:'6차 일반 건강검진',     age:'생후 42~48개월', from:'2027-08-23', to:'2028-02-23' },
+    { id:'chk6d', name:'6차 구강검진 (3차)',   age:'생후 42~53개월', from:'2027-08-23', to:'2028-07-23' }
+  ];
+  var FAM_VACCINES = [
+    { id:'je',   name:'일본뇌염 (사백신 3차 / 생백신 2차)', age:'생후 24~35개월', from:'2026-02-23', to:'2027-02-23' },
+    { id:'flu',  name:'어린이 인플루엔자 (독감)',           age:'매년 가을·겨울 접종', seasonal:true },
+    { id:'dtap', name:'DTaP 5차 · 폴리오 4차 · MMR 2차',    age:'만 4~6세', from:'2028-02-23', to:'2030-02-23' }
+  ];
+  var FAMILY_EVENTS = [
+    { id:'base-1126', date:'2026-11-26', title:'소방대피훈련', tag:'어린이집', memo:'', done:true },
+    { id:'base-1127', date:'2026-11-27', title:'아쿠아리움 견학 (9:30 등원)', tag:'어린이집', memo:'', done:true },
+    { id:'base-1201', date:'2026-12-01', title:'12월 어린이집 일정표 수신 · 업데이트 예정', tag:'어린이집', memo:'일정표가 오면 이 탭 기본 일정(FAMILY_EVENTS)에 옮겨 적기', done:false }
+  ];
+  var K_CHECK = 'naeun.family.checks.v1';
+  var K_EVENTS = 'naeun.family.events.v1';
+  var K_EVDONE = 'naeun.family.evdone.v1';
+  var K_MEMO = 'naeun.family.memo.v1';
+
+  /* ── 도우미 ── */
+  function lsGet(key, fallback){
+    try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; } catch(e){ return fallback; }
+  }
+  function lsSet(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){} }
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function today(){ var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+  function toDate(s){ var p = String(s).split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function days(a, b){ return Math.round((b - a) / DAY); }
+  function mmdd(s){ var d = toDate(s); return (d.getMonth()+1) + '/' + pad(d.getDate()); }
+  function fullDate(s){ var d = toDate(s); return (d.getMonth()+1) + '/' + d.getDate() + '(' + WEEK[d.getDay()] + ')'; }
+  function famToast(msg){
+    if (typeof window.naeunToast === 'function'){ window.naeunToast(msg); return; }
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg; el.classList.add('show');
+    clearTimeout(famToast._t);
+    famToast._t = setTimeout(function(){ el.classList.remove('show'); }, 3000);
+  }
+  function fallbackCopy(text){
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+      var ok = document.execCommand('copy'); document.body.removeChild(ta); return ok;
+    } catch(e){ return false; }
+  }
+  function famCopy(text, label){
+    var done = function(ok){ famToast(ok ? (label || '복사했어요') : '복사가 막혔어요. 문구를 길게 눌러 직접 복사해 주세요'); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(fallbackCopy(text)); });
+    } else { done(fallbackCopy(text)); }
+  }
+  function monthsNow(){
+    var t = today(), a = toDate(FAM_ANCHOR.date);
+    return FAM_ANCHOR.months + (t.getFullYear() - a.getFullYear()) * 12 + (t.getMonth() - a.getMonth());
+  }
+
+  /* ── ① 검진·접종 보드 ── */
+  function stateOf(item, done){
+    var t = today();
+    if (done) return { cls:'done', text:'✓ 완료' };
+    if (item.seasonal){
+      var m = t.getMonth() + 1;
+      var season = (m >= 9 || m <= 2);
+      return { cls: season ? 'green' : 'gray', text: season ? '이번 시즌 권장' : '가을에 접종' };
+    }
+    var from = item.from ? toDate(item.from) : null;
+    var to = item.to ? toDate(item.to) : null;
+    if (from && t < from) return { cls:'gray', text:'예정 D-' + days(t, from) };
+    if (to && t > to) return { cls:'gray', text:'기간 지남' };
+    if (to){ var left = days(t, to); return { cls: left <= 30 ? 'red' : 'blue', text:'마감 D-' + left }; }
+    return { cls:'gray', text:'확인' };
+  }
+  function ageLine(item){
+    var parts = [item.age || ''];
+    if (item.from && item.to) parts.push(item.from + ' ~ ' + item.to);
+    else if (item.from) parts.push(item.from + ' 시작');
+    if (item.seasonal) parts.push('올 시즌 접종 여부 확인');
+    return parts.filter(Boolean).join(' · ');
+  }
+  function boardRow(item, done){
+    var st = stateOf(item, done);
+    var row = document.createElement('div');
+    row.className = 'fam-row' + (done ? ' is-done' : '');
+    var name = document.createElement('div'); name.className = 'fam-name';
+    var b = document.createElement('b'); b.textContent = item.name; name.appendChild(b);
+    var age = document.createElement('span'); age.className = 'fam-age'; age.textContent = ageLine(item); name.appendChild(age);
+    var badge = document.createElement('span'); badge.className = 'fam-badge ' + st.cls; badge.textContent = st.text;
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'fam-check';
+    btn.setAttribute('aria-pressed', done ? 'true' : 'false');
+    btn.textContent = done ? '✓ 완료' : '미완료';
+    btn.addEventListener('click', function(){
+      var map = lsGet(K_CHECK, {});
+      if (map[item.id]) delete map[item.id]; else map[item.id] = true;
+      lsSet(K_CHECK, map);
+      renderBoard();
+      famToast(map[item.id] ? item.name + ' — 완료로 표시했어요' : item.name + ' — 완료를 풀었어요');
+    });
+    row.appendChild(name); row.appendChild(badge); row.appendChild(btn);
+    return row;
+  }
+  function renderBoard(){
+    var host1 = $('#famCheckList'), host2 = $('#famVaccList');
+    if (!host1 || !host2) return;
+    var checks = lsGet(K_CHECK, {});
+    host1.textContent = ''; host2.textContent = '';
+    FAM_CHECKUPS.forEach(function(it){ host1.appendChild(boardRow(it, !!checks[it.id])); });
+    FAM_VACCINES.forEach(function(it){ host2.appendChild(boardRow(it, !!checks[it.id])); });
+    var mEl = $('#famMonths'); if (mEl) mEl.textContent = monthsNow();
+    var dEl = $('#famBoardDate'); if (dEl) dEl.textContent = fullDate(ymd(today()));
+    var chip = $('#famTodayChip'); if (chip) chip.textContent = mmdd(ymd(today())) + '(' + WEEK[today().getDay()] + ') 기준';
+  }
+
+  /* ── ② 타임라인 ── */
+  var famFilter = 'all', famShowDone = false;
+  function ymd(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+  function allEvents(){
+    var custom = lsGet(K_EVENTS, []);
+    if (!custom || typeof custom.length !== 'number') custom = [];
+    var out = [];
+    FAMILY_EVENTS.forEach(function(e){
+      out.push({ id:e.id, date:e.date, title:e.title, tag:e.tag, memo:e.memo || '', base:true, baseDone:!!e.done });
+    });
+    custom.forEach(function(e){
+      if (!e || !e.date || !e.title || !e.id) return;
+      out.push({ id:e.id, date:e.date, title:e.title, tag:e.tag || '준비물', memo:e.memo || '', base:false, baseDone:false });
+    });
+    var dones = lsGet(K_EVDONE, {});
+    out.forEach(function(e){
+      e.done = Object.prototype.hasOwnProperty.call(dones, e.id) ? !!dones[e.id] : e.baseDone;
+    });
+    return out;
+  }
+  function tagClass(tag){
+    if (tag === '어린이집') return 't-daycare';
+    if (tag === '병원·검진') return 't-med';
+    if (tag === '나들이') return 't-out';
+    return 't-ready';
+  }
+  function toggleDone(id){
+    var map = lsGet(K_EVDONE, {}), list = allEvents(), cur = false;
+    for (var i = 0; i < list.length; i++){ if (list[i].id === id){ cur = list[i].done; break; } }
+    map[id] = !cur;
+    lsSet(K_EVDONE, map);
+    renderTimeline();
+    famToast(map[id] ? '일정을 완료로 표시했어요' : '일정 완료를 풀었어요');
+  }
+  function deleteEvent(id){
+    var list = lsGet(K_EVENTS, []), next = [];
+    for (var i = 0; i < list.length; i++){ if (list[i] && list[i].id === id) continue; next.push(list[i]); }
+    lsSet(K_EVENTS, next);
+    var dones = lsGet(K_EVDONE, {}); delete dones[id]; lsSet(K_EVDONE, dones);
+    renderTimeline();
+    famToast('일정을 지웠어요');
+  }
+  function eventEl(e){
+    var t = today(), d = toDate(e.date), diff = days(t, d);
+    var art = document.createElement('article');
+    art.className = 'fam-ev' + (e.done ? ' is-done' : '') + (diff === 0 && !e.done ? ' is-today' : '');
+    var dateBox = document.createElement('div'); dateBox.className = 'fam-ev-date';
+    var db = document.createElement('b'); db.textContent = mmdd(e.date);
+    var ds = document.createElement('span'); ds.textContent = WEEK[d.getDay()];
+    dateBox.appendChild(db); dateBox.appendChild(ds);
+    var body = document.createElement('div'); body.className = 'fam-ev-body';
+    var top = document.createElement('div'); top.className = 'fam-ev-top';
+    var title = document.createElement('b'); title.textContent = e.title; top.appendChild(title);
+    var tag = document.createElement('span'); tag.className = 'fam-tag ' + tagClass(e.tag); tag.textContent = e.tag || '기타'; top.appendChild(tag);
+    var badge = document.createElement('span');
+    if (e.done){ badge.className = 'fam-badge done'; badge.textContent = '✓ 완료'; }
+    else if (diff < 0){ badge.className = 'fam-badge gray'; badge.textContent = '지남'; }
+    else if (diff === 0){ badge.className = 'fam-badge red'; badge.textContent = '오늘'; }
+    else if (diff <= 7){ badge.className = 'fam-badge red'; badge.textContent = 'D-' + diff; }
+    else { badge.className = 'fam-badge blue'; badge.textContent = 'D-' + diff; }
+    top.appendChild(badge);
+    body.appendChild(top);
+    if (e.memo){ var p = document.createElement('p'); p.className = 'fam-ev-memo'; p.textContent = e.memo; body.appendChild(p); }
+    var acts = document.createElement('div'); acts.className = 'fam-ev-acts';
+    var doneBtn = document.createElement('button');
+    doneBtn.type = 'button'; doneBtn.className = 'fam-mini' + (e.done ? ' on' : '');
+    doneBtn.setAttribute('aria-pressed', e.done ? 'true' : 'false');
+    doneBtn.textContent = e.done ? '완료 취소' : '완료';
+    doneBtn.addEventListener('click', function(){ toggleDone(e.id); });
+    acts.appendChild(doneBtn);
+    if (!e.base){
+      var delBtn = document.createElement('button');
+      delBtn.type = 'button'; delBtn.className = 'fam-mini'; delBtn.textContent = '삭제';
+      delBtn.addEventListener('click', function(){
+        if (window.confirm('이 일정을 지울까요?\n' + fullDate(e.date) + ' · ' + e.title)) deleteEvent(e.id);
+      });
+      acts.appendChild(delBtn);
+    }
+    art.appendChild(dateBox); art.appendChild(body); art.appendChild(acts);
+    return art;
+  }
+  function renderTimeline(){
+    var host = $('#famTimeline'); if (!host) return;
+    var list = allEvents().filter(function(e){ return famFilter === 'all' || e.tag === famFilter; });
+    list.sort(function(a, b){
+      if (a.date === b.date) return a.title < b.title ? -1 : (a.title > b.title ? 1 : 0);
+      return a.date < b.date ? -1 : 1;
+    });
+    var todo = list.filter(function(e){ return !e.done; });
+    var done = list.filter(function(e){ return e.done; });
+    host.textContent = '';
+    if (!list.length){
+      var empty = document.createElement('div'); empty.className = 'fam-empty';
+      empty.textContent = famFilter === 'all' ? '아직 일정이 없어요. 위에서 첫 일정을 추가해 보세요.' : '이 분류에 담긴 일정이 없어요.';
+      host.appendChild(empty);
+    }
+    todo.forEach(function(e){ host.appendChild(eventEl(e)); });
+    if (done.length){
+      var more = document.createElement('button');
+      more.type = 'button'; more.className = 'fam-more';
+      more.setAttribute('aria-expanded', famShowDone ? 'true' : 'false');
+      more.textContent = (famShowDone ? '▾ ' : '▸ ') + '완료한 일정 ' + done.length + '개 ' + (famShowDone ? '접기' : '보기');
+      more.addEventListener('click', function(){ famShowDone = !famShowDone; renderTimeline(); });
+      host.appendChild(more);
+      if (famShowDone) done.forEach(function(e){ host.appendChild(eventEl(e)); });
+    }
+  }
+
+  /* ── 해피방 알림 문구 ── */
+  function buildBrief(){
+    var t = today();
+    var lines = ['📅 패밀리 일정 (' + mmdd(ymd(t)) + '(' + WEEK[t.getDay()] + ') 기준)'];
+    var up = allEvents().filter(function(e){ return !e.done && toDate(e.date) >= t; })
+      .sort(function(a, b){ return a.date < b.date ? -1 : 1; }).slice(0, 6);
+    if (up.length){
+      up.forEach(function(e){ lines.push('· ' + mmdd(e.date) + '(' + WEEK[toDate(e.date).getDay()] + ') ' + e.title + ' [' + e.tag + ']'); });
+    } else {
+      lines.push('· 다가오는 일정 없음');
+    }
+    var checks = lsGet(K_CHECK, {});
+    var cTexts = [], vTexts = [];
+    FAM_CHECKUPS.concat(FAM_VACCINES).forEach(function(it){
+      var st = stateOf(it, !!checks[it.id]);
+      if (st.cls === 'done' || st.cls === 'gray') return;
+      (it.id.indexOf('je') === 0 || it.id === 'flu' || it.id === 'dtap' ? vTexts : cTexts)
+        .push(it.name.replace(/\s*\(.*?\)/, '') + ' ' + st.text);
+    });
+    if (cTexts.length) lines.push('', '🏥 ' + cTexts.join(' · '));
+    if (vTexts.length) lines.push('💉 ' + vTexts.join(' · '));
+    lines.push('', '이 일정들 챙겨줘.');
+    return lines.join('\n');
+  }
+
+  /* ── ③ 한 줄 육아 메모 ── */
+  function renderMemos(){
+    var host = $('#famMemoList'); if (!host) return;
+    var list = lsGet(K_MEMO, []);
+    if (!list || typeof list.length !== 'number') list = [];
+    host.textContent = '';
+    if (!list.length){
+      var empty = document.createElement('div'); empty.className = 'fam-empty';
+      empty.textContent = '한 줄 메모를 저장하면 여기에 날짜와 함께 쌓여요.';
+      host.appendChild(empty);
+      return;
+    }
+    list.slice().reverse().forEach(function(m){
+      var row = document.createElement('div'); row.className = 'fam-memo-item';
+      var p = document.createElement('p'); p.textContent = m.text; row.appendChild(p);
+      var tm = document.createElement('time');
+      tm.textContent = m.at ? mmdd(String(m.at).slice(0, 10)) : '';
+      row.appendChild(tm);
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'fam-del'; del.textContent = '삭제';
+      del.addEventListener('click', function(){
+        var next = lsGet(K_MEMO, []).filter(function(x){ return !x || x.id !== m.id; });
+        lsSet(K_MEMO, next); renderMemos(); famToast('메모를 지웠어요');
+      });
+      row.appendChild(del);
+      host.appendChild(row);
+    });
+  }
+
+  /* ── 연결 ── */
+  function initFamily(){
+    var panel = $('#panel-family'); if (!panel) return;
+    renderBoard(); renderTimeline(); renderMemos();
+
+    var dateEl = $('#famDate');
+    if (dateEl && !dateEl.value) dateEl.value = ymd(today());
+
+    var form = $('#famForm');
+    if (form) form.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var tagEl = $('#famTag'), titleEl = $('#famTitle'), memoEl = $('#famMemo');
+      var date = (dateEl && dateEl.value || '').trim();
+      var title = (titleEl && titleEl.value || '').trim();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)){ famToast('날짜를 골라 주세요'); if (dateEl) dateEl.focus(); return; }
+      if (!title){ famToast('일정 제목을 적어 주세요'); if (titleEl) titleEl.focus(); return; }
+      var list = lsGet(K_EVENTS, []);
+      if (!list || typeof list.length !== 'number') list = [];
+      list.push({ id:'c' + Date.now().toString(36), date:date, title:title, tag:(tagEl ? tagEl.value : '어린이집'), memo:(memoEl ? memoEl.value : '').trim(), at:new Date().toISOString() });
+      lsSet(K_EVENTS, list);
+      if (titleEl) titleEl.value = '';
+      if (memoEl) memoEl.value = '';
+      famShowDone = false;
+      renderTimeline();
+      famToast('일정을 추가했어요 · ' + fullDate(date));
+    });
+
+    $$('#famFilter button').forEach(function(b){
+      b.addEventListener('click', function(){
+        famFilter = b.getAttribute('data-filter') || 'all';
+        $$('#famFilter button').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+        renderTimeline();
+      });
+    });
+
+    var copyBtn = $('#famCopyBtn');
+    if (copyBtn) copyBtn.addEventListener('click', function(){ famCopy(buildBrief(), '복사했어요 · 해피방에 붙여넣어 주세요'); });
+
+    var memoInput = $('#famMemoInput'), memoSave = $('#famMemoSave');
+    function addMemo(){
+      var v = (memoInput && memoInput.value || '').trim();
+      if (!v){ famToast('메모할 내용을 한 줄 적어 주세요'); if (memoInput) memoInput.focus(); return; }
+      var list = lsGet(K_MEMO, []);
+      if (!list || typeof list.length !== 'number') list = [];
+      list.push({ id:'m' + Date.now().toString(36), text:v, at:new Date().toISOString() });
+      lsSet(K_MEMO, list);
+      if (memoInput) memoInput.value = '';
+      renderMemos(); famToast('메모를 저장했어요');
+    }
+    if (memoSave) memoSave.addEventListener('click', addMemo);
+    if (memoInput) memoInput.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); addMemo(); } });
+
+    var tabBtn = $('#tab-family');
+    if (tabBtn) tabBtn.addEventListener('click', function(){ renderBoard(); renderTimeline(); });
+    window.addEventListener('hashchange', function(){ if ((location.hash || '') === '#family'){ renderBoard(); renderTimeline(); } });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initFamily);
+  else initFamily();
 })();
 </script>
 </body>
