@@ -100,7 +100,7 @@
 
   /* ── tabs ── */
   .tabs{
-    margin-top:16px; padding:8px; display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px;
+    margin-top:16px; padding:8px; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px;
   }
   .tab{
     appearance:none; border:0; background:transparent; border-radius:16px; padding:11px 6px;
@@ -1264,6 +1264,42 @@
   .agc-hint{flex:1 1 100%; font-size:11px; color:var(--muted-2); line-height:1.5}
   .agc-frame-wrap{margin-top:12px; border-radius:16px; overflow:hidden; border:1px solid var(--line); background:#E9EEF3; height:min(62vh,560px)}
   .agc-map-hint{margin-top:8px; font-size:11.5px; color:var(--muted-2); line-height:1.55}
+  /* ── 스크랩 ── */
+  .scrap-add{padding:20px 22px}
+  .scrap-row{display:flex; gap:8px; flex-wrap:wrap}
+  .scrap-row input{flex:1 1 220px; min-width:0; padding:12px 14px; border-radius:14px; border:1px solid var(--line-strong); background:#fff; font-size:14px}
+  .scrap-more{margin-top:10px}
+  .scrap-more summary{cursor:pointer; font-size:12px; font-weight:800; color:var(--ink-soft); padding:2px 0}
+  .scrap-opts{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+  .scrap-opts input{flex:1 1 150px; min-width:0; padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:#FFFDF8; font-size:13px}
+  .scrap-notify{display:flex; align-items:flex-start; gap:7px; margin-top:12px; font-size:12px; color:var(--ink-soft); line-height:1.55}
+  .scrap-notify input{margin-top:2px; flex:0 0 auto}
+  .scrap-notify em{color:var(--muted-2); font-style:normal; font-weight:600}
+  .scrap-hint{margin-top:10px; font-size:12px; color:var(--muted); line-height:1.55}
+  .scrap-hint:empty{display:none}
+  .scrap-hint b{color:var(--ink)}
+  .scrap-hint .undo{border:0; background:transparent; color:var(--pink-deep); font-size:12px; font-weight:800; padding:0 2px; cursor:pointer; text-decoration:underline}
+  .scrap-list-card{padding:20px 22px; margin-top:14px}
+  .scrap-list-head{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px}
+  .scrap-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px}
+  .scrap-item{border:1px solid var(--line); border-radius:16px; padding:13px 14px; background:#FFFDF8}
+  .scrap-item.done{background:#F7FAF7; border-color:#DCEBDD}
+  .scrap-item-top{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+  .scrap-link{font-size:13.5px; font-weight:800; color:var(--ink); text-decoration:none; word-break:break-all; flex:1 1 160px; line-height:1.4}
+  .scrap-link:hover{text-decoration:underline}
+  .scrap-url{display:block; margin-top:3px; font-size:11.5px; color:var(--muted-2); word-break:break-all; line-height:1.45}
+  .scrap-badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:800; padding:5px 10px; border-radius:999px; border:1px solid var(--line-strong); background:#fff; color:var(--ink-soft); cursor:pointer; white-space:nowrap}
+  .scrap-badge::before{content:""; width:5px; height:5px; border-radius:50%; background:currentColor}
+  .scrap-badge.pending{background:#FFF6EA; border-color:#F0DCC3; color:#A9782F}
+  .scrap-badge.done{background:var(--green-soft); border-color:#CFE6D6; color:var(--green-deep)}
+  .scrap-del{border:0; background:transparent; color:var(--muted-2); font-size:11.5px; font-weight:800; cursor:pointer; padding:4px 2px}
+  .scrap-del:hover{color:var(--pink-deep)}
+  .scrap-cat{display:inline-block; margin-top:7px; font-size:10.5px; font-weight:800; color:#5D8CBB; background:#EFF5FB; border-radius:999px; padding:3px 9px}
+  .scrap-note{margin-top:7px; font-size:12px; color:var(--ink-soft); line-height:1.55; word-break:break-word}
+  .scrap-summary{margin-top:7px; padding:9px 11px; border-radius:12px; background:#fff; border:1px dashed var(--line-strong); font-size:12px; color:var(--muted); line-height:1.55; word-break:break-word}
+  .scrap-summary.filled{color:var(--ink-soft); border-style:solid}
+  .scrap-meta{margin-top:8px; font-size:11px; color:var(--muted-2)}
+  .scrap-empty{padding:6px 2px 2px; font-size:12.5px; color:var(--muted)}
   .o25-chip.off img{filter:grayscale(1) opacity(.55)}
   .o25-chip.off{background:#F7F4EF; color:#9C8B7E}
   .o25-chip.off::after{content:""; width:5px; height:5px; border-radius:50%; background:#C9BFB3}
@@ -1302,6 +1338,7 @@
   <nav class="card tabs" role="tablist" aria-label="비서실 메뉴">
     <button class="tab" role="tab" id="tab-map" aria-controls="panel-map" aria-selected="true" data-tab="map">오피스 맵</button>
     <button class="tab" role="tab" id="tab-tracker" aria-controls="panel-tracker" aria-selected="false" tabindex="-1" data-tab="tracker">트래커</button>
+    <button class="tab" role="tab" id="tab-scrap" aria-controls="panel-scrap" aria-selected="false" tabindex="-1" data-tab="scrap">스크랩</button>
     <button class="tab" role="tab" id="tab-work" aria-controls="panel-work" aria-selected="false" tabindex="-1" data-tab="work">작업실</button>
     <button class="tab" role="tab" id="tab-team" aria-controls="panel-team" aria-selected="false" tabindex="-1" data-tab="team">비서현황</button>
     <button class="tab" role="tab" id="tab-memo" aria-controls="panel-memo" aria-selected="false" tabindex="-1" data-tab="memo">메모</button>
@@ -1695,6 +1732,256 @@
 <script>window.TRACKER_DATA = {"updated":"2026-11-28(토) 21:30","brief":{"date":"2026-11-28","label":"11/28(토)","items":["22~24시 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증","내일(11/29) 펀드 시험 — 아침 응원 메시지 준비"],"weather":{"icon":"☀️","temp":"3~10°C","tip":"밤 맑음 · 내일 0~8°C"}},"handoff":[{"id":"chal","owner":"노랑","title":"차앤박 더마앤서 앰플 구매·인증","need":"구매·인증","mins":"5분","due":"2026-11-28","note":"올리브영 배송 구매 22~24시 · 당일 23:59 1·2차 인증","link":""},{"id":"arisu","owner":"노랑","title":"서울아리수 AI 숏폼 투표","need":"SMS","mins":"1분","due":"2026-11-29","note":"제출 때 02-120 SMS 인증번호","link":""},{"id":"cancer","owner":"노랑","title":"국가암정보센터 암예방 퀴즈","need":"블로그 댓글","mins":"3분","due":"2026-11-29","note":"다짐 댓글 + 인증샷 2장","link":""},{"id":"daejeon","owner":"노랑","title":"대전 중구 블로그 이웃추가 이벤트","need":"이웃추가","mins":"2분","due":"2026-11-29","note":"이웃추가·공감은 직접만 가능","link":""},{"id":"okcheon","owner":"노랑","title":"옥천군 퀴즈 이벤트","need":"블로그 댓글","mins":"1분","due":"2026-11-29","note":"정답 ④ 확인 · 댓글 입력창 미오픈","link":""},{"id":"kibo","owner":"노랑","title":"기술보증기금 카톡 채널 추가","need":"채널 추가","mins":"1분","due":"2026-11-29","note":"채널 추가 캡처 + 블로그 비밀댓글","link":""},{"id":"jobaba","owner":"하마뮤즈","title":"잡아바 일자리 퀴즈","need":"로그인","mins":"2분","due":"2026-11-29","note":"경기도일자리재단 통합회원 로그인","link":""},{"id":"mrt","owner":"노랑","title":"마이리얼트립 서호주 퍼스 2인","need":"실명인증","mins":"3분","due":"2026-11-30","note":"카카오 로그인 후 실명인증","link":"https://www.myrealtrip.com"},{"id":"gender","owner":"노랑","title":"성평등가족부 청소년 아르바이트 퀴즈","need":"캡차","mins":"1분","due":"2026-11-30","note":"자동입력방지 문자","link":""},{"id":"xi","owner":"노랑","title":"자이 별내자이 이그제큐티브","need":"유튜브 구독","mins":"1분","due":"2026-12-02","note":"자이TV 구독 + 닉네임 확인","link":""},{"id":"kita","owner":"노랑","title":"한국무역협회 수출 퀴즈","need":"SNS 공유","mins":"2분","due":"2026-12-03","note":"개인 SNS 공유 + 아이디 노출 캡처","link":""},{"id":"hira","owner":"노랑","title":"건강보험심사평가원 최애 콘텐츠","need":"이웃추가","mins":"2분","due":"2026-12-04","note":"이웃추가·댓글 입력 불가","link":""},{"id":"kalis","owner":"하마뮤즈","title":"국토안전관리원 일산 2건","need":"간편인증","mins":"3분","due":"2026-12-04","note":"간편인증 로그인 후 진행","link":""},{"id":"seoulon","owner":"노랑","title":"서울온 만족도 조사","need":"SMS","mins":"2분","due":"2026-12-07","note":"엠보팅 18문항 완료 · 제출 때 SMS","link":""},{"id":"nps","owner":"노랑","title":"국민연금공단 이어폰 만족도","need":"PASS 인증","mins":"2분","due":"2026-12-07","note":"응답자 이름란 PASS 전용","link":""},{"id":"embrain","owner":"노랑","title":"엠브레인 패널파워","need":"캡차","mins":"2분","due":"2026-11-26","note":"로그인 보안문자 · 11/26 회차 미접속","link":"https://www.embrain.com"},{"id":"tembb","owner":"하마뮤즈","title":"템빨 오버기어드 룰렛","need":"카톡 앱","mins":"1분","due":"","note":"카톡 앱 전용 · 이용권 1장","link":""},{"id":"kosis","owner":"하마뮤즈","title":"KOSIS 통계 퀴즈","need":"캡차","mins":"1분","due":"2026-11-27","note":"폰 크롬에 캡차만 남음","link":""},{"id":"mong","owner":"하마뮤즈","title":"몽실몽실 먼치킨 캘린더","need":"유튜브 로그인","mins":"2분","due":"2026-11-27","note":"유튜브 앱 로그인 오류","link":""}]};</script>
 </div>
     <!-- TRACKER-PANEL:END -->
+  </section>
+
+  <!-- ═══ 스크랩 ═══ -->
+  <section class="panel" id="panel-scrap" role="tabpanel" aria-labelledby="tab-scrap">
+    <div class="section-head">
+      <div>
+        <h2>스크랩</h2>
+        <p>링크만 붙여넣고 [저장]하면 차곡차곡 쌓입니다. 요약·분류·정리 메모는 나중에 담당 비서가 채울 자리로 비워 둡니다.</p>
+      </div>
+      <span class="badge blue" id="scrapCountBadge" aria-live="polite">정리 대기 0</span>
+    </div>
+
+    <div class="card scrap-add">
+      <div class="scrap-row">
+        <label class="sr" for="scrapUrl">링크</label>
+        <input id="scrapUrl" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https:// 링크를 붙여넣고 Enter">
+        <button class="btn btn-primary btn-sm" id="scrapSave" type="button">저장</button>
+      </div>
+      <details class="scrap-more">
+        <summary>메모·분류도 함께 적기 (선택)</summary>
+        <div class="scrap-opts">
+          <input id="scrapNote" type="text" autocomplete="off" placeholder="왜 저장했는지 한 줄 (선택)">
+          <input id="scrapCat" type="text" autocomplete="off" placeholder="분류 (선택 · 예: 육아, 요리)">
+        </div>
+      </details>
+      <label class="scrap-notify">
+        <input id="scrapNotify" type="checkbox" checked>
+        <span>저장할 때 해피방에 <b>[스크랩] 링크</b>도 알리기 <em>— 작업실에 방 주인 비밀번호가 저장돼 있을 때만 나가요</em></span>
+      </label>
+      <p class="scrap-hint" id="scrapHint" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="card scrap-list-card">
+      <div class="scrap-list-head">
+        <div class="eyebrow">저장한 링크</div>
+        <button class="btn btn-ghost btn-sm" id="scrapCopyPending" type="button">정리 대기 목록 복사</button>
+      </div>
+      <ul class="scrap-list" id="scrapList"></ul>
+      <p class="scrap-empty" id="scrapEmpty">아직 저장한 링크가 없어요. 위에 링크만 붙여넣고 [저장]을 눌러 보세요.</p>
+      <p class="mini-note">목록은 이 브라우저에만 저장돼요. 담당 비서가 정해지면 [정리 대기 목록 복사]로 그대로 넘기면 요약·분류를 채울 수 있어요. 저장 항목 구조 — url · note · category · status(pending·done) · summary</p>
+    </div>
+
+    <script>
+    (function(){
+      var KEY = 'naeun:scraps:v1';
+      var AGC_URL = 'https://ai-group-chat.jinphoto20211.workers.dev/api/admin/rooms/happy/messages';
+      var listEl = document.getElementById('scrapList');
+      if (!listEl) return;
+      var urlInput = document.getElementById('scrapUrl');
+      var noteInput = document.getElementById('scrapNote');
+      var catInput = document.getElementById('scrapCat');
+      var saveBtn = document.getElementById('scrapSave');
+      var notifyBox = document.getElementById('scrapNotify');
+      var hintEl = document.getElementById('scrapHint');
+      var emptyEl = document.getElementById('scrapEmpty');
+      var countEl = document.getElementById('scrapCountBadge');
+      var copyBtn = document.getElementById('scrapCopyPending');
+      var hintTimer = null, lastRemoved = null;
+
+      function load(){ try { var raw = localStorage.getItem(KEY); var a = raw ? JSON.parse(raw) : []; return Array.isArray(a) ? a : []; } catch(e){ return []; } }
+      function save(list){ try { localStorage.setItem(KEY, JSON.stringify(list)); } catch(e){} }
+      function uid(){ return 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+      function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]; }); }
+      function hostOf(u){ try { return new URL(u).hostname.replace(/^www\./, ''); } catch(e){ return u; } }
+      function fmt(iso){
+        if (!iso) return '';
+        var d = new Date(iso);
+        if (isNaN(d)) return '';
+        return (d.getMonth()+1) + '/' + d.getDate() + ' ' + (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+      }
+      function say(html){
+        hintEl.innerHTML = html;
+        if (hintTimer) clearTimeout(hintTimer);
+        hintTimer = setTimeout(function(){ hintEl.innerHTML = ''; }, 10000);
+      }
+      function agcToken(){ try { return localStorage.getItem('naeun:agc-token:v1') || ''; } catch(e){ return ''; } }
+      function normalizeUrl(v){
+        v = (v || '').trim();
+        if (!v) return '';
+        if (!/^[a-z][a-z0-9+.\-]*:\/\//i.test(v)) v = 'https://' + v;
+        try { new URL(v); return v; } catch(e){ return ''; }
+      }
+
+      function render(){
+        var list = load();
+        var pend = list.filter(function(i){ return i.status !== 'done'; }).length;
+        if (countEl) countEl.textContent = '정리 대기 ' + pend;
+        if (emptyEl) emptyEl.hidden = list.length > 0;
+        listEl.innerHTML = list.map(function(i){
+          var done = i.status === 'done';
+          var note = i.note ? '<div class="scrap-note">' + esc(i.note) + '</div>' : '';
+          var cat = i.category ? '<span class="scrap-cat">' + esc(i.category) + '</span>' : '';
+          var summary = i.summary
+            ? '<div class="scrap-summary filled">' + esc(i.summary) + '</div>'
+            : '<div class="scrap-summary">요약·정리 메모는 담당 비서가 채울 자리예요.</div>';
+          var meta = '저장 ' + fmt(i.addedAt) + (i.doneAt ? ' · 정리 완료 ' + fmt(i.doneAt) : '');
+          return '<li class="scrap-item' + (done ? ' done' : '') + '" data-id="' + esc(i.id) + '">' +
+            '<div class="scrap-item-top">' +
+              '<a class="scrap-link" href="' + esc(i.url) + '" target="_blank" rel="noopener noreferrer">' + esc(hostOf(i.url)) + '</a>' +
+              '<button class="scrap-badge ' + (done ? 'done' : 'pending') + '" type="button" data-act="toggle" aria-pressed="' + (done ? 'true' : 'false') + '" title="누르면 정리 대기 ↔ 정리 완료">' + (done ? '정리 완료' : '정리 대기') + '</button>' +
+              '<button class="scrap-del" type="button" data-act="del" aria-label="이 링크 삭제">삭제</button>' +
+            '</div>' +
+            '<span class="scrap-url">' + esc(i.url) + '</span>' +
+            note + cat + summary +
+            '<div class="scrap-meta">' + meta + '</div>' +
+          '</li>';
+        }).join('');
+      }
+
+      function notifyRoom(token, item){
+        var text = '[스크랩] ' + item.url + (item.note ? ' — ' + item.note : '');
+        return fetch(AGC_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ text: text })
+        }).then(function(r){ return r.ok ? { ok: true } : { ok: false, why: 'http-' + r.status }; })
+          .catch(function(){ return { ok: false, why: 'network' }; });
+      }
+
+      function doSave(){
+        var url = normalizeUrl(urlInput.value);
+        if (!url){
+          say('링크를 붙여넣어 주세요. 예: https://blog.naver.com/...');
+          urlInput.focus();
+          return;
+        }
+        var list = load();
+        var item = {
+          id: uid(), url: url,
+          note: (noteInput.value || '').trim(),
+          category: (catInput.value || '').trim(),
+          summary: '', status: 'pending',
+          addedAt: new Date().toISOString(), doneAt: ''
+        };
+        list.unshift(item);
+        save(list);
+        render();
+        urlInput.value = ''; noteInput.value = ''; catInput.value = '';
+        urlInput.focus();
+        if (!(notifyBox && notifyBox.checked)){ say('저장했어요.'); return; }
+        var token = agcToken();
+        if (!token){ say('저장했어요. 해피방 알림은 <b>작업실</b> 탭에 방 주인 비밀번호를 저장해 두면 함께 나가요.'); return; }
+        say('저장했어요. 해피방에 알리는 중…');
+        notifyRoom(token, item).then(function(res){
+          if (res.ok) say('저장했어요. 해피방에도 <b>[스크랩]</b> 알림을 보냈어요.');
+          else if (res.why === 'http-401' || res.why === 'http-403') say('저장했어요. 다만 해피방 알림은 실패했어요 — <b>작업실</b> 탭의 방 주인 비밀번호를 확인해 주세요.');
+          else say('저장했어요. 해피방 알림은 지금 연결되지 않아 나가지 못했어요.');
+        });
+      }
+
+      function pendingText(){
+        var list = load().filter(function(i){ return i.status !== 'done'; });
+        if (!list.length) return '';
+        var d = new Date();
+        var head = '[스크랩 정리 요청] ' + d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2) + ' 기준 · 대기 ' + list.length + '건';
+        var body = list.map(function(i, n){
+          return (n+1) + ') ' + i.url + (i.note ? '\n   메모: ' + i.note : '') + (i.category ? '\n   분류: ' + i.category : '');
+        }).join('\n');
+        return head + '\n' + body + '\n\n요청: 각 링크를 열어 3줄 이내 요약과 분류(카테고리)를 붙여 주세요.';
+      }
+
+      function copyText(text){
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return fallbackCopy(text); });
+        }
+        return Promise.resolve(fallbackCopy(text));
+      }
+      function fallbackCopy(text){
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.top='-1000px';
+          document.body.appendChild(ta); ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return ok;
+        } catch(e){ return false; }
+      }
+
+      listEl.addEventListener('click', function(e){
+        var btn = e.target.closest ? e.target.closest('[data-act]') : null;
+        if (!btn) return;
+        var li = btn.closest('.scrap-item');
+        var id = li ? li.getAttribute('data-id') : '';
+        if (!id) return;
+        var list = load();
+        var idx = -1;
+        for (var i = 0; i < list.length; i++){ if (list[i].id === id){ idx = i; break; } }
+        if (idx < 0) return;
+        if (btn.getAttribute('data-act') === 'toggle'){
+          var done = list[idx].status === 'done';
+          list[idx].status = done ? 'pending' : 'done';
+          list[idx].doneAt = done ? '' : new Date().toISOString();
+          save(list); render();
+          say(done ? '정리 대기로 돌렸어요.' : '<b>정리 완료</b>로 표시했어요.');
+        } else if (btn.getAttribute('data-act') === 'del'){
+          lastRemoved = { item: list[idx], index: idx };
+          list.splice(idx, 1);
+          save(list); render();
+          say('삭제했어요. <button class="undo" type="button" id="scrapUndo">되돌리기</button>');
+          var undo = document.getElementById('scrapUndo');
+          if (undo) undo.addEventListener('click', function(){
+            if (!lastRemoved) return;
+            var l = load();
+            l.splice(Math.min(lastRemoved.index, l.length), 0, lastRemoved.item);
+            save(l); render(); lastRemoved = null;
+            say('되살렸어요.');
+          });
+        }
+      });
+
+      if (saveBtn) saveBtn.addEventListener('click', doSave);
+      if (urlInput) urlInput.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' && !e.isComposing){ e.preventDefault(); doSave(); }
+      });
+      if (copyBtn) copyBtn.addEventListener('click', function(){
+        var text = pendingText();
+        if (!text){ say('정리 대기 중인 링크가 없어요.'); return; }
+        copyText(text).then(function(ok){
+          say(ok ? '정리 대기 목록을 복사했어요. 담당 비서에게 붙여넣으면 돼요.' : '복사가 막혔어요. 화면의 링크를 길게 눌러 복사해 주세요.');
+        });
+      });
+
+      render();
+
+      /* 담당 AI가 정해지면 이 훅으로 목록을 읽고 summary·category·status 를 채울 수 있어요. */
+      window.NAEUN_SCRAP = {
+        key: KEY,
+        list: function(){ return load(); },
+        add: function(url, note, category){
+          var u = normalizeUrl(url);
+          if (!u) return null;
+          var l = load();
+          var it = { id: uid(), url: u, note: note || '', category: category || '', summary: '', status: 'pending', addedAt: new Date().toISOString(), doneAt: '' };
+          l.unshift(it); save(l); render(); return it;
+        },
+        update: function(id, patch){
+          var l = load(), hit = null;
+          for (var i = 0; i < l.length; i++){ if (l[i].id === id){ hit = l[i]; break; } }
+          if (!hit) return null;
+          Object.keys(patch || {}).forEach(function(k){ hit[k] = patch[k]; });
+          save(l); render(); return hit;
+        },
+        remove: function(id){
+          var l = load().filter(function(i){ return i.id !== id; });
+          save(l); render(); return l;
+        },
+        pendingText: pendingText
+      };
+    })();
+    </script>
   </section>
 
   <!-- ═══ 작업실 ═══ -->
