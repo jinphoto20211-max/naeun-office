@@ -1,0 +1,81 @@
+{
+  "character": "HeartCue",
+  "status": "standalone preparation; not integrated into the 12-character layout and not invited",
+  "background_reference": "previews/office-background-4x3.png",
+  "selected_empty_lower_workstation_center_px": [
+    1570,
+    1280
+  ],
+  "coordinate_convention": "2368x1776 canvas; top-left origin; character center in pixels",
+  "format": "Transparent VP9 WebM; one character only; 12 fps; 3 seconds per loop",
+  "clips": [
+    {
+      "file": "assets/heartcue-motion/heartcue-sitting.webm",
+      "bytes": 13499,
+      "fps": 12,
+      "duration_seconds": 3.0,
+      "canvas": [
+        2368,
+        1776
+      ],
+      "alpha": "VP9 WebM, character only",
+      "seat_center_px": [
+        1570,
+        1280
+      ]
+    },
+    {
+      "file": "assets/heartcue-motion/heartcue-walking.webm",
+      "bytes": 23475,
+      "fps": 12,
+      "duration_seconds": 3.0,
+      "canvas": [
+        2368,
+        1776
+      ],
+      "alpha": "VP9 WebM, character only",
+      "seat_center_px": [
+        1570,
+        1280
+      ]
+    },
+    {
+      "file": "assets/heartcue-motion/heartcue-working.webm",
+      "bytes": 28799,
+      "fps": 12,
+      "duration_seconds": 3.0,
+      "canvas": [
+        2368,
+        1776
+      ],
+      "alpha": "VP9 WebM, character only",
+      "seat_center_px": [
+        1570,
+        1280
+      ]
+    },
+    {
+      "file": "assets/heartcue-motion/heartcue-daily.webm",
+      "bytes": 14388,
+      "fps": 12,
+      "duration_seconds": 3.0,
+      "canvas": [
+        2368,
+        1776
+      ],
+      "alpha": "VP9 WebM, character only",
+      "seat_center_px": [
+        1570,
+        1280
+      ]
+    }
+  ],
+  "source_pose_files": [
+    "heartcue-seated-final.png",
+    "heartcue-walk-a.png",
+    "heartcue-walk-b.png",
+    "heartcue-working.png",
+    "heartcue-working-typing.png",
+    "heartcue-wave.png"
+  ]
+}
