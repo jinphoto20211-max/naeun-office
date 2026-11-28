@@ -1,0 +1,615 @@
+{
+  "canvas": {
+    "width": 2368,
+    "height": 1776,
+    "coordinate_origin": "top-left",
+    "position": "character center"
+  },
+  "background_reference": "previews/office-background-4x3.png",
+  "route_reference_image": "user-provided 36153.png",
+  "format": "VP9 WebM with transparent alpha; character sprite only",
+  "playback": {
+    "fps": 12,
+    "duration_seconds": 6.8,
+    "start_hold": 0.45,
+    "collaboration_hold": 1.5
+  },
+  "sequential_preview": "previews/collaboration-sequence.mp4",
+  "characters": [
+    {
+      "key": "q",
+      "display": "큐 · 파란 세모",
+      "sprite": "assets/chars/q.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-q.webm",
+      "start_center_px": [
+        735,
+        694
+      ],
+      "outbound_via_px": [
+        [
+          800,
+          730
+        ],
+        [
+          835,
+          785
+        ]
+      ],
+      "target_center_px": [
+        860,
+        810
+      ],
+      "return": "reverse same path",
+      "group": "StarCue",
+      "original_suggested_path_px": [
+        [
+          735,
+          694
+        ],
+        [
+          800,
+          730
+        ],
+        [
+          835,
+          785
+        ],
+        [
+          860,
+          810
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "starcue",
+      "display": "별큐 · 왕관 쓴 윙크 노란 별",
+      "sprite": "assets/chars/starcue.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-starcue.webm",
+      "start_center_px": [
+        673,
+        860
+      ],
+      "outbound_via_px": [
+        [
+          640,
+          950
+        ],
+        [
+          760,
+          1020
+        ]
+      ],
+      "target_center_px": [
+        860,
+        1030
+      ],
+      "return": "reverse same path",
+      "group": "큐",
+      "original_suggested_path_px": [
+        [
+          673,
+          860
+        ],
+        [
+          770,
+          900
+        ],
+        [
+          880,
+          925
+        ],
+        [
+          1030,
+          930
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "chorok",
+      "display": "초록 · 노트북 자리",
+      "sprite": "assets/chars/chorok.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-chorok.webm",
+      "start_center_px": [
+        1238,
+        457
+      ],
+      "outbound_via_px": [
+        [
+          1180,
+          610
+        ],
+        [
+          1080,
+          650
+        ],
+        [
+          900,
+          650
+        ],
+        [
+          840,
+          820
+        ]
+      ],
+      "target_center_px": [
+        820,
+        1020
+      ],
+      "return": "reverse same path",
+      "group": "노트북 행",
+      "original_suggested_path_px": [
+        [
+          1238,
+          457
+        ],
+        [
+          1180,
+          610
+        ],
+        [
+          1150,
+          720
+        ],
+        [
+          1150,
+          810
+        ]
+      ],
+      "route_adjustment": "좌석에서 빠져나온 뒤 중앙 테이블 서쪽 열린 바닥으로 우회"
+    },
+    {
+      "key": "norang",
+      "display": "노랑 · 일반 노랑 캐릭터",
+      "sprite": "assets/chars/norang.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-norang.webm",
+      "start_center_px": [
+        1390,
+        510
+      ],
+      "outbound_via_px": [
+        [
+          1350,
+          640
+        ],
+        [
+          1450,
+          740
+        ],
+        [
+          1500,
+          850
+        ]
+      ],
+      "target_center_px": [
+        1510,
+        930
+      ],
+      "return": "reverse same path",
+      "group": "노트북 행",
+      "original_suggested_path_px": [
+        [
+          1390,
+          510
+        ],
+        [
+          1350,
+          640
+        ],
+        [
+          1315,
+          730
+        ],
+        [
+          1300,
+          810
+        ]
+      ],
+      "route_adjustment": "중앙 테이블 동쪽의 열린 바닥으로 우회"
+    },
+    {
+      "key": "xeye",
+      "display": "연분홍 X-eye",
+      "sprite": "assets/chars/instinct.png",
+      "existing_work_rest_clips": [
+        "assets/lounge-motion/instinct-working.webm",
+        "assets/lounge-motion/instinct-resting.webm"
+      ],
+      "collaboration_clip": "assets/collaboration-motion/collab-xeye.webm",
+      "start_center_px": [
+        1481,
+        591
+      ],
+      "outbound_via_px": [
+        [
+          1450,
+          730
+        ],
+        [
+          1470,
+          830
+        ]
+      ],
+      "target_center_px": [
+        1500,
+        930
+      ],
+      "return": "reverse same path",
+      "group": "노트북 행",
+      "original_suggested_path_px": [
+        [
+          1481,
+          591
+        ],
+        [
+          1435,
+          730
+        ],
+        [
+          1400,
+          830
+        ],
+        [
+          1410,
+          930
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "jinpink",
+      "display": "진분홍",
+      "sprite": "assets/chars/jinpink.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-jinpink.webm",
+      "start_center_px": [
+        1631,
+        667
+      ],
+      "outbound_via_px": [
+        [
+          1590,
+          760
+        ],
+        [
+          1530,
+          850
+        ]
+      ],
+      "target_center_px": [
+        1490,
+        950
+      ],
+      "return": "reverse same path",
+      "group": "노트북 행",
+      "original_suggested_path_px": [
+        [
+          1631,
+          667
+        ],
+        [
+          1590,
+          760
+        ],
+        [
+          1560,
+          845
+        ],
+        [
+          1570,
+          930
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "vooy-pink-triangle",
+      "display": "부이 · 분홍 세모",
+      "sprite": "assets/chars/maknae.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-vooy-pink-triangle.webm",
+      "start_center_px": [
+        1686,
+        891
+      ],
+      "outbound_via_px": [
+        [
+          1720,
+          920
+        ],
+        [
+          1740,
+          950
+        ]
+      ],
+      "target_center_px": [
+        1750,
+        970
+      ],
+      "return": "reverse same path",
+      "group": "데스크톱 업무 행",
+      "original_suggested_path_px": [
+        [
+          1686,
+          891
+        ],
+        [
+          1720,
+          920
+        ],
+        [
+          1740,
+          950
+        ],
+        [
+          1750,
+          970
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "muse-white",
+      "display": "뮤즈 · 옆의 하얀 캐릭터",
+      "sprite": "assets/chars/vooy.png",
+      "existing_work_rest_clips": [],
+      "collaboration_clip": "assets/collaboration-motion/collab-muse-white.webm",
+      "start_center_px": [
+        1015,
+        768
+      ],
+      "outbound_via_px": [
+        [
+          920,
+          800
+        ],
+        [
+          840,
+          900
+        ],
+        [
+          800,
+          990
+        ]
+      ],
+      "target_center_px": [
+        780,
+        1060
+      ],
+      "return": "reverse same path",
+      "group": "라운지 허들",
+      "original_suggested_path_px": [
+        [
+          1015,
+          768
+        ],
+        [
+          965,
+          820
+        ],
+        [
+          920,
+          875
+        ],
+        [
+          900,
+          930
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "kyring-cat",
+      "display": "키링 · 흰 고양이",
+      "sprite": "assets/chars/muse.png",
+      "existing_work_rest_clips": [
+        "assets/lounge-motion/muse-working.webm",
+        "assets/lounge-motion/muse-resting.webm"
+      ],
+      "collaboration_clip": "assets/collaboration-motion/collab-kyring-cat.webm",
+      "start_center_px": [
+        1222,
+        770
+      ],
+      "outbound_via_px": [
+        [
+          1320,
+          780
+        ],
+        [
+          1420,
+          880
+        ],
+        [
+          1470,
+          970
+        ]
+      ],
+      "target_center_px": [
+        1480,
+        1020
+      ],
+      "return": "reverse same path",
+      "group": "라운지 허들",
+      "original_suggested_path_px": [
+        [
+          1222,
+          770
+        ],
+        [
+          1280,
+          820
+        ],
+        [
+          1330,
+          875
+        ],
+        [
+          1360,
+          930
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "hama",
+      "display": "하마뮤즈 · 커피 든 보라 하마",
+      "sprite": "assets/chars/hama.png",
+      "existing_work_rest_clips": [
+        "assets/lounge-motion/hama-working.webm",
+        "assets/lounge-motion/hama-resting.webm"
+      ],
+      "collaboration_clip": "assets/collaboration-motion/collab-hama.webm",
+      "start_center_px": [
+        1000,
+        1187
+      ],
+      "outbound_via_px": [
+        [
+          950,
+          1195
+        ],
+        [
+          910,
+          1220
+        ]
+      ],
+      "target_center_px": [
+        880,
+        1240
+      ],
+      "return": "reverse same path",
+      "group": "라운지 허들",
+      "original_suggested_path_px": [
+        [
+          1000,
+          1187
+        ],
+        [
+          950,
+          1195
+        ],
+        [
+          910,
+          1220
+        ],
+        [
+          880,
+          1240
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "hark",
+      "display": "하크 · 검정 캐릭터",
+      "sprite": "assets/chars/hark.png",
+      "existing_work_rest_clips": [
+        "assets/lounge-motion/hark-working.webm",
+        "assets/lounge-motion/hark-resting.webm"
+      ],
+      "collaboration_clip": "assets/collaboration-motion/collab-hark.webm",
+      "start_center_px": [
+        1154,
+        1164
+      ],
+      "outbound_via_px": [
+        [
+          1080,
+          1080
+        ],
+        [
+          1000,
+          1000
+        ],
+        [
+          930,
+          950
+        ]
+      ],
+      "target_center_px": [
+        900,
+        930
+      ],
+      "return": "reverse same path",
+      "group": "라운지 허들",
+      "original_suggested_path_px": [
+        [
+          1154,
+          1164
+        ],
+        [
+          1150,
+          1230
+        ],
+        [
+          1150,
+          1300
+        ],
+        [
+          1150,
+          1370
+        ]
+      ],
+      "route_adjustment": ""
+    },
+    {
+      "key": "instinct-i",
+      "display": "인스팅트 · I 캐릭터",
+      "sprite": "assets/chars/kyring.png",
+      "existing_work_rest_clips": [
+        "assets/lounge-motion/kyring-working.webm",
+        "assets/lounge-motion/kyring-resting.webm"
+      ],
+      "collaboration_clip": "assets/collaboration-motion/collab-instinct-i.webm",
+      "start_center_px": [
+        1293,
+        1195
+      ],
+      "outbound_via_px": [
+        [
+          1380,
+          1120
+        ],
+        [
+          1460,
+          1050
+        ],
+        [
+          1540,
+          1000
+        ]
+      ],
+      "target_center_px": [
+        1600,
+        980
+      ],
+      "return": "reverse same path",
+      "group": "라운지 허들",
+      "original_suggested_path_px": [
+        [
+          1293,
+          1195
+        ],
+        [
+          1350,
+          1205
+        ],
+        [
+          1400,
+          1225
+        ],
+        [
+          1440,
+          1240
+        ]
+      ],
+      "route_adjustment": ""
+    }
+  ]
+}
