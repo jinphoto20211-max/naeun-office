@@ -805,6 +805,11 @@
     .lot-nums span{font-size:11px}
   }
 
+
+  /* ── 트래커: 요약 카드 → 핵심 보드 → 허브 나머지 → 상세 리스트 ── */
+  .trk-sum + .pnt-card{margin-top:16px}
+  .trk-detail > .trk-sec:first-child{margin-top:0}
+
   @media (max-width:860px){
     .kanban{grid-template-columns:1fr}
   }
@@ -1531,6 +1536,18 @@
   }
 })();
 </script>
+<div class="card trk-card trk-sum">
+<div class="trk-top"><p class="trk-stamp">트래커 기준 <b>2026-11-28(토) 21:30</b> · 노션 동기화 11/28 21:21 · 미결 건 11/28 11:26</p><button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button></div>
+<div class="trk-rule" aria-hidden="true"></div>
+<div class="trk-stats">
+<div class="trk-stat"><div class="trk-label">누적 응모</div><div class="trk-num">249</div><div class="trk-note">체험단 156 · 설문·응모 93 (11/12~11/28 기록)</div></div>
+<div class="trk-stat"><div class="trk-label">발표 대기</div><div class="trk-num">45</div><div class="trk-note">발표일 확정 45 · 결과 미확인 46 별도</div></div>
+<div class="trk-stat"><div class="trk-label">당첨 확정</div><div class="trk-num win">8</div><div class="trk-note">확정 결과 36건 중 8건 · 22.2%</div></div>
+<div class="trk-stat"><div class="trk-label">남은 큐</div><div class="trk-num">21</div><div class="trk-note">리뷰·후기 3 · 미결 18</div></div>
+</div>
+<div class="trk-banner"><div><span class="trk-banner-main">오늘 발표 없음</span><small>11/28(토) — 발표일이 확정된 체험단이 없습니다 · 다음 발표 11/30 5건 · 5대 몰 출첵 누적 10,070원/P · 로또 1252회 전원 낙첨</small></div><span class="trk-arw" aria-hidden="true">→</span></div>
+<div class="trk-week"><span>이번 주 11/23~11/29 남은 발표 0건</span><span>다음 주 11/30~12/06 발표 41건</span><span>발표일 지남·미확인 46건</span></div>
+</div>
 <div class="card pnt-card">
 <div class="pnt-head"><h3>적립·포인트 한눈에</h3><span>5대 몰 출첵 · 포인트 · 누적 수익 · <b>2026-11-28(토) 21:30 기준</b></span></div>
 <div class="pnt-goal"><div class="pnt-goal-top"><span>포인트·수익 합계 <b>81,250</b> <small>(1P≈1원)</small></span><span class="pnt-goal-tag hit">목표 50,000 · 162%</span></div><div class="pnt-bar"><i style="width:100%"></i></div></div>
@@ -1590,17 +1607,7 @@
 </div>
 <p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
 </div>
-<div class="card trk-card">
-<div class="trk-top"><p class="trk-stamp">트래커 기준 <b>2026-11-28(토) 21:30</b> · 노션 동기화 11/28 21:21 · 미결 건 11/28 11:26</p><button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button></div>
-<div class="trk-rule" aria-hidden="true"></div>
-<div class="trk-stats">
-<div class="trk-stat"><div class="trk-label">누적 응모</div><div class="trk-num">249</div><div class="trk-note">체험단 156 · 설문·응모 93 (11/12~11/28 기록)</div></div>
-<div class="trk-stat"><div class="trk-label">발표 대기</div><div class="trk-num">45</div><div class="trk-note">발표일 확정 45 · 결과 미확인 46 별도</div></div>
-<div class="trk-stat"><div class="trk-label">당첨 확정</div><div class="trk-num win">8</div><div class="trk-note">확정 결과 36건 중 8건 · 22.2%</div></div>
-<div class="trk-stat"><div class="trk-label">남은 큐</div><div class="trk-num">21</div><div class="trk-note">리뷰·후기 3 · 미결 18</div></div>
-</div>
-<div class="trk-banner"><div><span class="trk-banner-main">오늘 발표 없음</span><small>11/28(토) — 발표일이 확정된 체험단이 없습니다 · 다음 발표 11/30 5건 · 5대 몰 출첵 누적 10,070원/P · 로또 1252회 전원 낙첨</small></div><span class="trk-arw" aria-hidden="true">→</span></div>
-<div class="trk-week"><span>이번 주 11/23~11/29 남은 발표 0건</span><span>다음 주 11/30~12/06 발표 41건</span><span>발표일 지남·미확인 46건</span></div>
+<div class="card trk-card trk-detail">
 <div class="trk-sec"><div class="trk-sec-head"><h3>당첨 확정</h3><span class="cnt">8건</span></div><ul class="trk-list">
 <li class="trk-row"><span class="trk-pf survey">설문</span><span class="trk-body"><span class="trk-t">[서울신문광고대상] 소이프스튜디오 하이드라 선 세럼</span><span class="trk-m">11/28 08:17 문자 당첨 안내 · 수령지 입력 폼 11/28 제출 완료(마감 12/02 18:00)</span></span><span class="trk-d done">제출 완료</span></li>
 <li class="trk-row"><span class="trk-pf mom">맘홀</span><span class="trk-body"><span class="trk-t">[라쉼] 아토리피드 배리어 장벽 크림</span><span class="trk-m">11/23 발표 · 11/25 수령 · 카페·블로그·인스타 3채널 후기 + 구글폼 제출 완료(11/28)</span></span><span class="trk-d done">완결</span></li>

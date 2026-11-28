@@ -528,17 +528,11 @@ def hub_rest_html():
 def sections():
     out = []
 
-    # 노션 공용 허브 상단 요약(증시·유가·영상 한도) — 트래커 탭 맨 위
+    # 1) 노션 공용 허브 상단 요약(증시·유가·영상 한도) — 트래커 탭 맨 위
     out.append(hub_top_html())
 
-    # 적립·포인트 / 복권·예치금 / 당첨 후 미션 — 핵심 보드
-    out.append(boards_html())
-
-    # 노션 공용 허브 나머지(미결 건·담당별) — 핵심 보드 아래
-    out.append(hub_rest_html())
-
-    # 요약
-    out.append('<div class="card trk-card">')
+    # 2) 트래커 요약 카드 상단부 — 스탬프·4칸 숫자·오늘 배너·주간 알약
+    out.append('<div class="card trk-card trk-sum">')
     out.append('<div class="trk-top"><p class="trk-stamp">트래커 기준 <b>%s</b> · '
                '노션 동기화 %s · 미결 건 %s</p>'
                '<button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다">'
@@ -578,6 +572,16 @@ def sections():
     out.append('<div class="trk-week"><span>이번 주 11/23~11/29 남은 발표 %d건</span>'
                '<span>다음 주 11/30~12/06 발표 %d건</span>'
                '<span>발표일 지남·미확인 %d건</span></div>' % (this_week, next_week, unknown_total))
+    out.append('</div>')
+
+    # 3) 적립·포인트 / 복권·예치금 / 당첨 후 미션 — 핵심 보드
+    out.append(boards_html())
+
+    # 4) 노션 공용 허브 나머지(미결 건·담당별 요약)
+    out.append(hub_rest_html())
+
+    # 5) 트래커 상세 리스트 — 당첨 확정부터
+    out.append('<div class="card trk-card trk-detail">')
 
     # 당첨 확정
     out.append('<div class="trk-sec"><div class="trk-sec-head"><h3>당첨 확정</h3>'
@@ -870,6 +874,13 @@ LOT_CSS = """
   }
 """
 
+# 트래커 요약 카드(상단)와 상세 리스트 카드 분리에 따른 여백 보정
+SUM_CSS = """
+  /* ── 트래커: 요약 카드 → 핵심 보드 → 허브 나머지 → 상세 리스트 ── */
+  .trk-sum + .pnt-card{margin-top:16px}
+  .trk-detail > .trk-sec:first-child{margin-top:0}
+"""
+
 # 보드 모바일 보정 — 처음 만든 파일에도 따로 끼워 넣을 수 있게 별도 블록으로 둔다
 # (MOBILE_CSS 는 이미 삽입된 파일에는 다시 들어가지 않아서 새 규칙은 여기에 적는다)
 BOARD_MOBILE_CSS = """
@@ -947,6 +958,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", ORDER_CSS + "\n  @media (max-width:860px){", 1)
     if ".lot-when{" not in html:
         html = html.replace("  @media (max-width:860px){", LOT_CSS + "\n  @media (max-width:860px){", 1)
+    if ".trk-sum + .pnt-card{" not in html:
+        html = html.replace("  @media (max-width:860px){", SUM_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:
