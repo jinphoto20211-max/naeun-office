@@ -539,13 +539,11 @@
   /* ── 오늘 생활·하진이 한 줄 브리핑 (오피스 맵 위) ── */
   .today-brief{display:flex; align-items:center; gap:8px; margin:0 0 12px; padding:9px 14px;
     border-radius:14px; background:#FFFBF5; border:1px solid var(--line); box-shadow:var(--shadow-sm);
-    font-size:12px; letter-spacing:-.2px; overflow:hidden}
-  .tb-date{flex:0 0 auto; font-size:11px; font-weight:800; color:#FFF9F2; background:#4B3A31;
-    border-radius:999px; padding:3px 8px; font-variant-numeric:tabular-nums}
-  .tb-text{min-width:0; flex:1 1 auto; font-weight:700; color:var(--ink); white-space:nowrap;
-    overflow:hidden; text-overflow:ellipsis}
-  .tb-text b{font-weight:800; color:#B0442F}
-  .tb-src{flex:0 0 auto; font-size:9.5px; font-weight:700; color:var(--muted-2); text-decoration:none}
+    letter-spacing:-.2px}
+  .tb-lines{min-width:0; display:flex; flex-direction:column; gap:2px}
+  .tb-line{margin:0; font-size:12px; font-weight:600; color:var(--ink-soft); line-height:1.5}
+  .tb-line.w{font-weight:700; color:var(--ink)}
+  .tb-src{margin-left:6px; font-size:9px; font-weight:700; color:var(--muted-2); text-decoration:none; white-space:nowrap}
   .tb-src:hover{text-decoration:underline}
 
   /* ── 지금 내 손이 필요한 핵심 3건 ── */
@@ -797,8 +795,8 @@
     .header-actions{display:grid; grid-template-columns:auto minmax(0,1fr); gap:6px; width:100%}
     .header-actions .btn-refresh{padding:9px 12px; justify-self:end}
     .chips-bottom .cmd-btn{width:auto; flex:1 1 160px}
-    .chips .today-brief{flex:1 1 100%; padding:8px 12px; font-size:11.5px}
-    .tb-text{white-space:normal; line-height:1.55}
+    .chips .today-brief{flex:1 1 100%; padding:8px 12px}
+    .tb-line{font-size:11.5px; line-height:1.55}
     .hand-card{padding:16px}
     .hand-row{grid-template-columns:1fr; gap:6px}
     .hand-btns{justify-content:flex-start}
@@ -1227,9 +1225,7 @@
     <div class="chips">
       <span class="chip clock-chip" id="clockChip" aria-live="off">오늘</span>
       <div class="today-brief" id="todayBriefBar" role="status" aria-live="polite">
-        <span class="tb-date" id="todayBriefDate">오늘</span>
-        <span class="tb-text" id="todayBriefText">오늘 챙길 일을 불러오는 중이에요</span>
-        <a class="tb-src" href="https://developer.apple.com/weatherkit/data-source-attribution/" target="_blank" rel="noopener noreferrer" title="날씨 출처 · Apple Weather">&#xF8FF; Weather</a>
+        <div class="tb-lines" id="todayBriefText"><p class="tb-line">오늘 챙길 일을 불러오는 중이에요</p></div>
       </div>
     </div>
   </header>
@@ -1666,7 +1662,7 @@
 <li class="trk-row"><span class="trk-pf hold">미결</span><span class="trk-body"><span class="trk-t">하마뮤즈 5건</span><span class="trk-m">국토안전관리원 일산 2건 · 템빨 룰렛 · 몽실몽실 캘린더 · KOSIS · 잡아바</span><span class="trk-acts" data-owner="하마뮤즈" data-title="하마뮤즈 5건"><button class="trk-act go" type="button" data-act="go" aria-label="하마뮤즈 5건 진행 지시">진행</button><button class="trk-act pass" type="button" data-act="pass" aria-label="하마뮤즈 5건 패스">패스</button><button class="trk-act rm" type="button" data-act="remind" aria-label="하마뮤즈 5건 리마인드">리마인드</button><span class="trk-act-state" aria-live="polite"></span></span></span><span class="trk-d wait">5건</span></li>
 </ul></div>
 <p class="trk-foot">집계 기준 — 누적 응모는 기록이 남은 11/12~11/28 접수분(체험단은 카톡 선물하기 포함, 설문·응모는 일자별 완료 집계)입니다. 당첨률은 노션 발표 명단에 결과가 확정된 건(당첨 8 + 미당첨·미선정 28) 기준이고, 미결 건은 노션 🚧 미결 건의 항목 수입니다. 수치는 노션 두 현황판과 <code>current-status.md</code> 기록만으로 계산했습니다.</p>
-<script>window.TRACKER_DATA = {"updated":"2026-11-28(토) 21:30","brief":{"date":"2026-11-28","label":"11/28(토)","weather":"대구 이슬비 3~10°C → 밤 맑음 · 내일 맑음 0~8°C","todo":"22~24시 챌린저스 앰플 구매 → 23:59 인증 · 내일 펀드 시험"},"handoff":[{"id":"chal","owner":"노랑","title":"차앤박 더마앤서 앰플 구매·인증","need":"구매·인증","mins":"5분","due":"2026-11-28","note":"올리브영 배송 구매 22~24시 · 당일 23:59 1·2차 인증","link":""},{"id":"arisu","owner":"노랑","title":"서울아리수 AI 숏폼 투표","need":"SMS","mins":"1분","due":"2026-11-29","note":"제출 때 02-120 SMS 인증번호","link":""},{"id":"cancer","owner":"노랑","title":"국가암정보센터 암예방 퀴즈","need":"블로그 댓글","mins":"3분","due":"2026-11-29","note":"다짐 댓글 + 인증샷 2장","link":""},{"id":"daejeon","owner":"노랑","title":"대전 중구 블로그 이웃추가 이벤트","need":"이웃추가","mins":"2분","due":"2026-11-29","note":"이웃추가·공감은 직접만 가능","link":""},{"id":"okcheon","owner":"노랑","title":"옥천군 퀴즈 이벤트","need":"블로그 댓글","mins":"1분","due":"2026-11-29","note":"정답 ④ 확인 · 댓글 입력창 미오픈","link":""},{"id":"kibo","owner":"노랑","title":"기술보증기금 카톡 채널 추가","need":"채널 추가","mins":"1분","due":"2026-11-29","note":"채널 추가 캡처 + 블로그 비밀댓글","link":""},{"id":"jobaba","owner":"하마뮤즈","title":"잡아바 일자리 퀴즈","need":"로그인","mins":"2분","due":"2026-11-29","note":"경기도일자리재단 통합회원 로그인","link":""},{"id":"mrt","owner":"노랑","title":"마이리얼트립 서호주 퍼스 2인","need":"실명인증","mins":"3분","due":"2026-11-30","note":"카카오 로그인 후 실명인증","link":"https://www.myrealtrip.com"},{"id":"gender","owner":"노랑","title":"성평등가족부 청소년 아르바이트 퀴즈","need":"캡차","mins":"1분","due":"2026-11-30","note":"자동입력방지 문자","link":""},{"id":"xi","owner":"노랑","title":"자이 별내자이 이그제큐티브","need":"유튜브 구독","mins":"1분","due":"2026-12-02","note":"자이TV 구독 + 닉네임 확인","link":""},{"id":"kita","owner":"노랑","title":"한국무역협회 수출 퀴즈","need":"SNS 공유","mins":"2분","due":"2026-12-03","note":"개인 SNS 공유 + 아이디 노출 캡처","link":""},{"id":"hira","owner":"노랑","title":"건강보험심사평가원 최애 콘텐츠","need":"이웃추가","mins":"2분","due":"2026-12-04","note":"이웃추가·댓글 입력 불가","link":""},{"id":"kalis","owner":"하마뮤즈","title":"국토안전관리원 일산 2건","need":"간편인증","mins":"3분","due":"2026-12-04","note":"간편인증 로그인 후 진행","link":""},{"id":"seoulon","owner":"노랑","title":"서울온 만족도 조사","need":"SMS","mins":"2분","due":"2026-12-07","note":"엠보팅 18문항 완료 · 제출 때 SMS","link":""},{"id":"nps","owner":"노랑","title":"국민연금공단 이어폰 만족도","need":"PASS 인증","mins":"2분","due":"2026-12-07","note":"응답자 이름란 PASS 전용","link":""},{"id":"embrain","owner":"노랑","title":"엠브레인 패널파워","need":"캡차","mins":"2분","due":"2026-11-26","note":"로그인 보안문자 · 11/26 회차 미접속","link":"https://www.embrain.com"},{"id":"tembb","owner":"하마뮤즈","title":"템빨 오버기어드 룰렛","need":"카톡 앱","mins":"1분","due":"","note":"카톡 앱 전용 · 이용권 1장","link":""},{"id":"kosis","owner":"하마뮤즈","title":"KOSIS 통계 퀴즈","need":"캡차","mins":"1분","due":"2026-11-27","note":"폰 크롬에 캡차만 남음","link":""},{"id":"mong","owner":"하마뮤즈","title":"몽실몽실 먼치킨 캘린더","need":"유튜브 로그인","mins":"2분","due":"2026-11-27","note":"유튜브 앱 로그인 오류","link":""}]};</script>
+<script>window.TRACKER_DATA = {"updated":"2026-11-28(토) 21:30","brief":{"date":"2026-11-28","label":"11/28(토)","weather":"대구 이슬비 3~10°C → 밤 맑음 · 내일 맑음 0~8°C","items":["22~24시 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증","내일(11/29) 펀드 시험 — 아침 응원 메시지 준비"]},"handoff":[{"id":"chal","owner":"노랑","title":"차앤박 더마앤서 앰플 구매·인증","need":"구매·인증","mins":"5분","due":"2026-11-28","note":"올리브영 배송 구매 22~24시 · 당일 23:59 1·2차 인증","link":""},{"id":"arisu","owner":"노랑","title":"서울아리수 AI 숏폼 투표","need":"SMS","mins":"1분","due":"2026-11-29","note":"제출 때 02-120 SMS 인증번호","link":""},{"id":"cancer","owner":"노랑","title":"국가암정보센터 암예방 퀴즈","need":"블로그 댓글","mins":"3분","due":"2026-11-29","note":"다짐 댓글 + 인증샷 2장","link":""},{"id":"daejeon","owner":"노랑","title":"대전 중구 블로그 이웃추가 이벤트","need":"이웃추가","mins":"2분","due":"2026-11-29","note":"이웃추가·공감은 직접만 가능","link":""},{"id":"okcheon","owner":"노랑","title":"옥천군 퀴즈 이벤트","need":"블로그 댓글","mins":"1분","due":"2026-11-29","note":"정답 ④ 확인 · 댓글 입력창 미오픈","link":""},{"id":"kibo","owner":"노랑","title":"기술보증기금 카톡 채널 추가","need":"채널 추가","mins":"1분","due":"2026-11-29","note":"채널 추가 캡처 + 블로그 비밀댓글","link":""},{"id":"jobaba","owner":"하마뮤즈","title":"잡아바 일자리 퀴즈","need":"로그인","mins":"2분","due":"2026-11-29","note":"경기도일자리재단 통합회원 로그인","link":""},{"id":"mrt","owner":"노랑","title":"마이리얼트립 서호주 퍼스 2인","need":"실명인증","mins":"3분","due":"2026-11-30","note":"카카오 로그인 후 실명인증","link":"https://www.myrealtrip.com"},{"id":"gender","owner":"노랑","title":"성평등가족부 청소년 아르바이트 퀴즈","need":"캡차","mins":"1분","due":"2026-11-30","note":"자동입력방지 문자","link":""},{"id":"xi","owner":"노랑","title":"자이 별내자이 이그제큐티브","need":"유튜브 구독","mins":"1분","due":"2026-12-02","note":"자이TV 구독 + 닉네임 확인","link":""},{"id":"kita","owner":"노랑","title":"한국무역협회 수출 퀴즈","need":"SNS 공유","mins":"2분","due":"2026-12-03","note":"개인 SNS 공유 + 아이디 노출 캡처","link":""},{"id":"hira","owner":"노랑","title":"건강보험심사평가원 최애 콘텐츠","need":"이웃추가","mins":"2분","due":"2026-12-04","note":"이웃추가·댓글 입력 불가","link":""},{"id":"kalis","owner":"하마뮤즈","title":"국토안전관리원 일산 2건","need":"간편인증","mins":"3분","due":"2026-12-04","note":"간편인증 로그인 후 진행","link":""},{"id":"seoulon","owner":"노랑","title":"서울온 만족도 조사","need":"SMS","mins":"2분","due":"2026-12-07","note":"엠보팅 18문항 완료 · 제출 때 SMS","link":""},{"id":"nps","owner":"노랑","title":"국민연금공단 이어폰 만족도","need":"PASS 인증","mins":"2분","due":"2026-12-07","note":"응답자 이름란 PASS 전용","link":""},{"id":"embrain","owner":"노랑","title":"엠브레인 패널파워","need":"캡차","mins":"2분","due":"2026-11-26","note":"로그인 보안문자 · 11/26 회차 미접속","link":"https://www.embrain.com"},{"id":"tembb","owner":"하마뮤즈","title":"템빨 오버기어드 룰렛","need":"카톡 앱","mins":"1분","due":"","note":"카톡 앱 전용 · 이용권 1장","link":""},{"id":"kosis","owner":"하마뮤즈","title":"KOSIS 통계 퀴즈","need":"캡차","mins":"1분","due":"2026-11-27","note":"폰 크롬에 캡차만 남음","link":""},{"id":"mong","owner":"하마뮤즈","title":"몽실몽실 먼치킨 캘린더","need":"유튜브 로그인","mins":"2분","due":"2026-11-27","note":"유튜브 앱 로그인 오류","link":""}]};</script>
 </div>
     <!-- TRACKER-PANEL:END -->
   </section>
@@ -3346,15 +3342,18 @@
     }
 
     /* ── 오늘 생활·하진이 한 줄 브리핑 ── */
-    var briefDate = $('#todayBriefDate'), briefText = $('#todayBriefText');
-    if (TD && TD.brief) {
-      if (briefDate) briefDate.textContent = TD.brief.label || '오늘';
-      if (briefText) {
-        briefText.innerHTML = '☀️ ' + esc(TD.brief.weather) + ' <span style="color:var(--line-strong)">·</span> ' + esc(TD.brief.todo);
-        briefText.title = TD.brief.weather + ' · ' + TD.brief.todo;
-      }
-    } else if (briefText) {
-      briefText.textContent = '브리핑 데이터를 못 읽었어요 — 트래커 탭에서 새로고침해 주세요';
+    var briefBox = $('#todayBriefText');
+    if (TD && TD.brief && briefBox) {
+      var b = TD.brief;
+      var lines = b.items && b.items.length ? b.items : (b.todo ? [b.todo] : []);
+      var html = '<p class="tb-line w">☀️ ' + esc(b.weather) +
+        ' <a class="tb-src" href="https://developer.apple.com/weatherkit/data-source-attribution/' +
+        '" target="_blank" rel="noopener noreferrer" title="날씨 출처">Apple Weather</a></p>';
+      lines.forEach(function(t){ html += '<p class="tb-line">· ' + esc(t) + '</p>'; });
+      briefBox.innerHTML = html;
+      briefBox.title = b.weather + ' · ' + lines.join(' · ');
+    } else if (briefBox) {
+      briefBox.innerHTML = '<p class="tb-line">브리핑 데이터를 못 읽었어요 — 트래커 탭에서 새로고침해 주세요</p>';
     }
 
     /* ── 트래커 카드 양방향 실행 버튼 ── */

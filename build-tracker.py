@@ -196,7 +196,10 @@ VIDEO_RESETS = [
 BRIEF_DATE = "2026-11-28"
 BRIEF_LABEL = "11/28(토)"
 BRIEF_WEATHER = "대구 이슬비 3~10°C → 밤 맑음 · 내일 맑음 0~8°C"
-BRIEF_TODO = "22~24시 챌린저스 앰플 구매 → 23:59 인증 · 내일 펀드 시험"
+BRIEF_LINES = [
+    "22~24시 챌린저스 차앤박 앰플 구매 → 23:59 1·2차 인증",
+    "내일(11/29) 펀드 시험 — 아침 응원 메시지 준비",
+]
 
 # ── 9. 지금 내 손이 필요한 건 (SMS·간편인증·캡차·로그인 …) ───────────────
 # (id, 담당, 항목, 인증 종류, 예상 소요, 마감일(ISO), 메모, 링크)
@@ -426,7 +429,7 @@ def tracker_data_js():
             "date": BRIEF_DATE,
             "label": BRIEF_LABEL,
             "weather": BRIEF_WEATHER,
-            "todo": BRIEF_TODO,
+            "items": BRIEF_LINES,
         },
         "handoff": [
             {"id": i, "owner": w, "title": t, "need": n, "mins": m,
