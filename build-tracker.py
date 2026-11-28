@@ -193,6 +193,15 @@ VIDEO_RESETS = [
     ("하트큐", "", "", None),
 ]
 
+# ── 비서 한도 초기화 (11/29 나은 님 지시 · 비서현황 탭 맨 위) ─────────────
+# (이름, 주기, 요일(0=일 … 6=토 · daily는 None), 시각 HH:MM, 규칙 안내, JS 전 기본 문구)
+# 날짜·D-day는 화면(JS)에서 지금 시각 기준으로 다시 계산한다 — 매일/매주 자동 롤링.
+RESET_RULES = [
+    ("피클즈", "daily", None, "04:00", "매일", "매일 <b>04:00</b>"),
+    ("뮤즈", "weekly", 6, "21:00", "매주 갱신", "매주 토 <b>21:00</b>"),
+    ("하마뮤즈", "weekly", 0, "07:00", "매주 갱신", "매주 일 <b>07:00</b>"),
+]
+
 # ── 8. 오늘 한 줄 브리핑 (오피스 맵 위 얇은 바) ─────────────────────────
 # 날씨 출처: Apple WeatherKit · 대구 달서구 2026-11-28 22:28 조회
 #   (11/28 이슬비 3~10°C·강수 58% → 밤 맑음 / 11/29 맑음 0~8°C·강수 0%)
@@ -487,18 +496,53 @@ def tracker_data_js():
 
 
 def hub_top_html():
-    """노션 허브 상단 요약 — 증시·유가·영상 주간 한도. 트래커 탭 맨 위."""
+    """노션 허브 상단 요약 — 증시·유가. 트래커 탭 맨 위.
+
+    🎬 영상 주간 한도 초기화 카드는 11/29 나은 님 지시로 트래커에서 빼서
+    비서현황 탭 맨 위(roster_reset_html)로 옮겼다.
+    """
     o = ['<div class="card hub-card">']
     o.append('<div class="hub-top"><h3>노션 공용 허브 한눈에</h3>'
-             '<span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 %s</span></div>' % NOTION_SYNC)
+             '<span>미결 건 · 증시 · 유가 · 담당별 요약 · 노션 동기화 %s</span></div>' % NOTION_SYNC)
     o.append('<div class="hub-grid">')
     o.append('<div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/28 기준</div>'
              '<div class="hub-big">%s</div><p class="hub-p">%s</p></div>' % (HUB["market_title"], HUB["market_body"]))
     o.append('<div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/28 08:30</div>'
              '<div class="hub-big">%s <small>%s</small></div><p class="hub-p">%s</p></div>'
              % (HUB["fuel_big"], HUB["fuel_small"], HUB["fuel_body"]))
-    # 영상 주간 한도 초기화 — 증시·유가 바로 아래 전체 너비 1칸
-    o.append('<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 '
+    o.append('</div>')
+    o.append('</div>')
+    return "\n".join(o)
+
+
+def roster_reset_html():
+    """비서현황 탭 맨 위 — ⏱️ 비서 한도 초기화(신규) + 🎬 영상 주간 한도 초기화(트래커에서 이동).
+
+    ① 피클즈 매일 04:00 · 뮤즈 매주 토 21:00 · 하마뮤즈 매주 일 07:00 — 요일·시각은 고정, 날짜와
+       D-day는 화면에서 지금 시각 기준으로 계산해 지난 시각은 다음 회차로 자동으로 넘어간다.
+    ② 영상 카드는 기존 마크업·D-day 계산(DDAY_JS)을 그대로 쓰고 자리만 옮겼다.
+    """
+    o = ['<div class="roster-resets">']
+
+    # ① 비서 한도 초기화
+    o.append('<div class="card hub-card"><div class="hub-box hub-wide">'
+             '<div class="hub-label">⏱️ 비서 한도 초기화 '
+             '<small>한도가 다시 차오르는 시각 · 화면을 열 때마다 새로 계산</small></div>')
+    o.append('<div class="hub-reset">')
+    for name, cycle, dow, hhmm, note, fallback in RESET_RULES:
+        attrs = 'data-cycle="%s" data-at="%s"' % (cycle, hhmm)
+        if cycle == "weekly":
+            attrs += ' data-dow="%d"' % dow
+        o.append('<div class="hub-reset-i" %s>'
+                 '<span class="hub-reset-k">%s<small>%s</small></span>'
+                 '<span class="hub-reset-v" data-when>%s</span>'
+                 '<span class="hub-reset-d" data-dday>계산 중</span></div>'
+                 % (attrs, name, note, fallback))
+    o.append('</div></div></div>')
+
+    # ② 영상 주간 한도 초기화 (트래커 탭에서 이동 · 내용은 그대로)
+    o.append('<div class="card hub-card"><div class="hub-box hub-wide">'
+             '<div class="hub-label">🎬 영상 주간 한도 초기화 '
              '<small>%s</small></div><div class="hub-reset">' % VIDEO_RESET_SRC)
     for name, date, tm, iso in VIDEO_RESETS:
         if iso:
@@ -511,10 +555,11 @@ def hub_top_html():
             o.append('<div class="hub-reset-i nodate"><span class="hub-reset-k">%s</span>'
                      '<span class="hub-reset-v nodate">날짜 미확인</span>'
                      '<span class="hub-reset-d unknown">미확인</span></div>' % name)
-    o.append('</div></div>')
-    o.append('</div>')
+    o.append('</div></div></div>')
+
     o.append('</div>')
     o.append(DDAY_JS)
+    o.append(ROSTER_RESET_JS)
     return "\n".join(o)
 
 
@@ -539,7 +584,7 @@ def hub_rest_html():
                  % (name, "".join("<li>%s</li>" % l for l in lines)))
     o.append('</div>')
     o.append('<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · '
-             '🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. '
+             '담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. '
              '상세 기록은 노션에서 확인합니다.</p>')
     o.append('</div>')
     return "\n".join(o)
@@ -853,6 +898,61 @@ DDAY_JS = """<script>
 })();
 </script>"""
 
+# ⏱️ 비서 한도 초기화 — 피클즈 매일 04:00 / 뮤즈 매주 토 21:00 / 하마뮤즈 매주 일 07:00.
+# 규칙(주기·요일·시각)은 고정이고, 날짜·D-day는 화면을 열 때 지금 시각 기준으로 계산한다.
+# 지난 시각은 다음 회차로 자동으로 넘어간다 (예: 일 07:00이 지나면 다음 주 일 07:00).
+ROSTER_RESET_JS = """<script>
+(function(){
+  var DOW = ['일','월','화','수','목','금','토'];
+  function kst(ms){ return new Date(ms + 9 * 3600000); }
+  function parts(ms){ var d = kst(ms); return {y:d.getUTCFullYear(), m:d.getUTCMonth(), d:d.getUTCDate(),
+    h:d.getUTCHours(), mi:d.getUTCMinutes(), dow:d.getUTCDay()}; }
+  function at(p, h, mi){ return Date.UTC(p.y, p.m, p.d, h, mi) - 9 * 3600000; }
+  function pad2(n){ return (n < 10 ? '0' : '') + n; }
+  function nextTime(cycle, dow, hhmm, nowMs){
+    var p = parts(nowMs), h = parseInt(hhmm.slice(0,2), 10), mi = parseInt(hhmm.slice(3), 10);
+    var t = at(p, h, mi);
+    if (cycle === 'daily') return t > nowMs ? t : t + 86400000;
+    for (var i = 0; i < 8; i++){
+      if (parts(t).dow === dow && t > nowMs) return t;
+      t += 86400000;
+    }
+    return t;
+  }
+  var nowMs = Date.now(), np = parts(nowMs);
+  var els = document.querySelectorAll('.hub-reset-i[data-cycle]');
+  for (var i = 0; i < els.length; i++){
+    var el = els[i], cycle = el.getAttribute('data-cycle'), hhmm = el.getAttribute('data-at');
+    var dow = parseInt(el.getAttribute('data-dow') || '0', 10);
+    var t = nextTime(cycle, dow, hhmm, nowMs), tp = parts(t);
+    var left = Math.round((Date.UTC(tp.y, tp.m, tp.d) - Date.UTC(np.y, np.m, np.d)) / 86400000);
+    var when = el.querySelector('[data-when]'), badge = el.querySelector('[data-dday]');
+    if (when){
+      var day = left === 0 ? '오늘' : (left === 1 ? '내일' : (tp.m + 1) + '/' + pad2(tp.d) + '(' + DOW[tp.dow] + ')');
+      when.innerHTML = day + ' <b>' + pad2(tp.h) + ':' + pad2(tp.mi) + '</b>';
+    }
+    if (badge){
+      badge.textContent = left === 0 ? 'D-Day' : 'D-' + left;
+      badge.className = 'hub-reset-d' + (left === 0 ? ' today' : '');
+    }
+  }
+})();
+</script>"""
+
+# 비서현황 탭 맨 위 두 카드 — 카드끼리 붙지 않게 간격만 잡는다
+ROSTER_CSS = """
+  /* ── 비서현황 맨 위: ⏱️ 비서 한도 초기화 · 🎬 영상 주간 한도 초기화 ── */
+  .roster-resets{margin:0 0 16px}
+  .roster-resets .hub-card{padding:18px}
+  .roster-resets .hub-card + .hub-card{margin-top:12px}
+  .roster-resets .hub-box{padding:14px 16px}
+  .hub-reset-k small{margin-left:5px; font-size:10px; font-weight:700; color:var(--muted-2); letter-spacing:-.2px}
+  @media (max-width:720px){
+    .roster-resets .hub-card{padding:14px}
+    .roster-resets .hub-box{padding:12px}
+  }
+"""
+
 MOBILE_CSS = """
     .trk-card{padding:18px 16px 20px}
     .trk-num{font-size:36px; letter-spacing:-1.6px}
@@ -1015,6 +1115,8 @@ def build(path):
         html = html.replace("  @media (max-width:860px){", MALL_CSS + "\n  @media (max-width:860px){", 1)
     if ".hub-reset-i.nodate{" not in html:
         html = html.replace("  @media (max-width:860px){", RESET_CSS + "\n  @media (max-width:860px){", 1)
+    if ".roster-resets{" not in html:
+        html = html.replace("  @media (max-width:860px){", ROSTER_CSS + "\n  @media (max-width:860px){", 1)
     if ".trk-num{font-size:36px" not in html:
         anchor = "    .tl-time{flex:0 0 62px; font-size:11px}\n  }\n"
         if anchor not in html:
@@ -1044,6 +1146,15 @@ def build(path):
         if anchor not in html:
             raise SystemExit("panel anchor not found")
         html = html.replace(anchor, (PANEL_TMPL % body) + anchor, 1)
+
+    # 4-1) 비서현황 맨 위 두 카드 (⏱️ 비서 한도 초기화 · 🎬 영상 주간 한도 초기화)
+    if "<!-- ROSTER-RESET:START -->" in html:
+        pre, rest = html.split("<!-- ROSTER-RESET:START -->", 1)
+        _, post = rest.split("<!-- ROSTER-RESET:END -->", 1)
+        html = (pre + "<!-- ROSTER-RESET:START -->\n" + roster_reset_html()
+                + "\n    <!-- ROSTER-RESET:END -->" + post)
+    else:
+        raise SystemExit("roster reset markers not found")
 
     # 5) JS
     if "var trkRefresh" not in html:

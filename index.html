@@ -843,6 +843,18 @@
     .hub-reset-i{flex:1 1 100%}
   }
 
+
+  /* ── 비서현황 맨 위: ⏱️ 비서 한도 초기화 · 🎬 영상 주간 한도 초기화 ── */
+  .roster-resets{margin:0 0 16px}
+  .roster-resets .hub-card{padding:18px}
+  .roster-resets .hub-card + .hub-card{margin-top:12px}
+  .roster-resets .hub-box{padding:14px 16px}
+  .hub-reset-k small{margin-left:5px; font-size:10px; font-weight:700; color:var(--muted-2); letter-spacing:-.2px}
+  @media (max-width:720px){
+    .roster-resets .hub-card{padding:14px}
+    .roster-resets .hub-box{padding:12px}
+  }
+
   @media (max-width:860px){
     .kanban{grid-template-columns:1fr}
   }
@@ -1596,34 +1608,12 @@
     </div>
     <!-- TRACKER-PANEL:START -->
 <div class="card hub-card">
-<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 영상 한도 · 담당별 요약 · 노션 동기화 11/28 21:21</span></div>
+<div class="hub-top"><h3>노션 공용 허브 한눈에</h3><span>미결 건 · 증시 · 유가 · 담당별 요약 · 노션 동기화 11/28 21:21</span></div>
 <div class="hub-grid">
 <div class="hub-box"><div class="hub-label">📊 증시 장세 판정 · 11/28 기준</div><div class="hub-big">탈출 3단계 · 회복 0단계</div><p class="hub-p">미국 11/27 조기 종료장에서 S&P500 약 7,297.49 · VIX 약 23.81로 반등했지만 하이일드·근원 물가의 악화 신호가 남아 있고, 시장 폭·일봉 추세·컨센서스 일부는 자료 충돌 또는 확인 불가지라 회복 확정은 이릅니다.</p></div>
 <div class="hub-box"><div class="hub-label">⛽ 오피넷 유가 비교 · 11/28 08:30</div><div class="hub-big">1,775원 <small>최저 · 논공농협</small></div><p class="hub-p">대구 평균 1,812원 · 옥포농협클린 1,795원 · 화원농협 1,790원 · 대곡알뜰 1,775원(달서 참고)</p></div>
-<div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 <small>노션 큐 그룹 · 11/28 17:59 기준</small></div><div class="hub-reset">
-<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-10</span></div>
-<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-29</span></div>
-<div class="hub-reset-i nodate"><span class="hub-reset-k">하트큐</span><span class="hub-reset-v nodate">날짜 미확인</span><span class="hub-reset-d unknown">미확인</span></div>
-</div></div>
 </div>
 </div>
-<script>
-(function(){
-  function kstYMD(ms){ var d = new Date(ms + 9 * 3600000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; }
-  var now = kstYMD(Date.now());
-  var els = document.querySelectorAll('.hub-reset-d[data-reset]');
-  for (var i = 0; i < els.length; i++){
-    var el = els[i], t = Date.parse(el.getAttribute('data-reset'));
-    if (!t) continue;
-    var tg = kstYMD(t);
-    var left = Math.round((Date.UTC(tg[0], tg[1], tg[2]) - Date.UTC(now[0], now[1], now[2])) / 86400000);
-    el.textContent = left > 0 ? 'D-' + left : (left === 0 ? '오늘' : '지남');
-    el.classList.remove('today', 'past');
-    if (left === 0) el.classList.add('today');
-    else if (left < 0) el.classList.add('past');
-  }
-})();
-</script>
 <div class="card trk-card trk-sum">
 <div class="trk-top"><p class="trk-stamp">트래커 기준 <b>2026-11-28(토) 21:30</b> · 노션 동기화 11/28 21:21 · 미결 건 11/28 11:26</p><button class="trk-refresh" type="button" id="trkRefresh" title="페이지를 다시 불러옵니다"><span aria-hidden="true">↻</span> 새로고침</button></div>
 <div class="trk-rule" aria-hidden="true"></div>
@@ -1693,7 +1683,7 @@
 <div class="hub-box"><div class="hub-label">🦛 하마뮤즈</div><ul class="hub-ul"><li>AGE-R 2시간마다 우유·쿠키 · 15초 카톡 감지</li><li>휴대폰 조작 필요 경품 응모 진행 (11/18분 ~60건)</li><li>노랑이 넘긴 건(템빨·몽실몽실) 앱 전용 작업</li></ul></div>
 <div class="hub-box"><div class="hub-label">🎧 뮤즈</div><ul class="hub-ul"><li>10:00 AI 트렌드 브리핑 (365일 루틴)</li><li>5분마다 해피방 새 메시지 확인·답장</li><li>08:00 경품 확인·응모 · 일 09:09·15:09 판 확인</li></ul></div>
 </div>
-<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 🎬 영상 주간 한도 초기화 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
+<p class="hub-foot">노션 공용 허브의 🚧 미결 건 · 📊 증시 장세 판정 · ⛽ 오피넷 유가 비교 · 담당별 챙기는 일 페이지에서 옮겨 적은 요약입니다. 상세 기록은 노션에서 확인합니다.</p>
 </div>
 <div class="card trk-card trk-detail">
 <div class="trk-sec"><div class="trk-sec-head"><h3>당첨 확정</h3><span class="cnt">8건</span></div><ul class="trk-list">
@@ -2051,6 +2041,76 @@
         <p>피클 단톡방(<b>해피방</b>)에 입주한 비서 <b id="rosterTotal">13</b>명의 담당 영역입니다. 단톡방에서 새로 감지된 멤버는 카드가 저절로 생기고, 오이는 막내의 분신으로 텔레그램 중계를 맡아 별도 인원에 넣지 않았습니다.</p>
       </div>
     </div>
+
+    <!-- ROSTER-RESET:START -->
+<div class="roster-resets">
+<div class="card hub-card"><div class="hub-box hub-wide"><div class="hub-label">⏱️ 비서 한도 초기화 <small>한도가 다시 차오르는 시각 · 화면을 열 때마다 새로 계산</small></div>
+<div class="hub-reset">
+<div class="hub-reset-i" data-cycle="daily" data-at="04:00"><span class="hub-reset-k">피클즈<small>매일</small></span><span class="hub-reset-v" data-when>매일 <b>04:00</b></span><span class="hub-reset-d" data-dday>계산 중</span></div>
+<div class="hub-reset-i" data-cycle="weekly" data-at="21:00" data-dow="6"><span class="hub-reset-k">뮤즈<small>매주 갱신</small></span><span class="hub-reset-v" data-when>매주 토 <b>21:00</b></span><span class="hub-reset-d" data-dday>계산 중</span></div>
+<div class="hub-reset-i" data-cycle="weekly" data-at="07:00" data-dow="0"><span class="hub-reset-k">하마뮤즈<small>매주 갱신</small></span><span class="hub-reset-v" data-when>매주 일 <b>07:00</b></span><span class="hub-reset-d" data-dday>계산 중</span></div>
+</div></div></div>
+<div class="card hub-card"><div class="hub-box hub-wide"><div class="hub-label">🎬 영상 주간 한도 초기화 <small>노션 큐 그룹 · 11/28 17:59 기준</small></div><div class="hub-reset">
+<div class="hub-reset-i"><span class="hub-reset-k">큐</span><span class="hub-reset-v">12/09(수) <b>20:22</b></span><span class="hub-reset-d" data-reset="2026-12-09T20:22:00+09:00">D-10</span></div>
+<div class="hub-reset-i"><span class="hub-reset-k">별큐</span><span class="hub-reset-v">12/28(월) <b>09:20</b></span><span class="hub-reset-d" data-reset="2026-12-28T09:20:00+09:00">D-29</span></div>
+<div class="hub-reset-i nodate"><span class="hub-reset-k">하트큐</span><span class="hub-reset-v nodate">날짜 미확인</span><span class="hub-reset-d unknown">미확인</span></div>
+</div></div></div>
+</div>
+<script>
+(function(){
+  function kstYMD(ms){ var d = new Date(ms + 9 * 3600000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; }
+  var now = kstYMD(Date.now());
+  var els = document.querySelectorAll('.hub-reset-d[data-reset]');
+  for (var i = 0; i < els.length; i++){
+    var el = els[i], t = Date.parse(el.getAttribute('data-reset'));
+    if (!t) continue;
+    var tg = kstYMD(t);
+    var left = Math.round((Date.UTC(tg[0], tg[1], tg[2]) - Date.UTC(now[0], now[1], now[2])) / 86400000);
+    el.textContent = left > 0 ? 'D-' + left : (left === 0 ? '오늘' : '지남');
+    el.classList.remove('today', 'past');
+    if (left === 0) el.classList.add('today');
+    else if (left < 0) el.classList.add('past');
+  }
+})();
+</script>
+<script>
+(function(){
+  var DOW = ['일','월','화','수','목','금','토'];
+  function kst(ms){ return new Date(ms + 9 * 3600000); }
+  function parts(ms){ var d = kst(ms); return {y:d.getUTCFullYear(), m:d.getUTCMonth(), d:d.getUTCDate(),
+    h:d.getUTCHours(), mi:d.getUTCMinutes(), dow:d.getUTCDay()}; }
+  function at(p, h, mi){ return Date.UTC(p.y, p.m, p.d, h, mi) - 9 * 3600000; }
+  function pad2(n){ return (n < 10 ? '0' : '') + n; }
+  function nextTime(cycle, dow, hhmm, nowMs){
+    var p = parts(nowMs), h = parseInt(hhmm.slice(0,2), 10), mi = parseInt(hhmm.slice(3), 10);
+    var t = at(p, h, mi);
+    if (cycle === 'daily') return t > nowMs ? t : t + 86400000;
+    for (var i = 0; i < 8; i++){
+      if (parts(t).dow === dow && t > nowMs) return t;
+      t += 86400000;
+    }
+    return t;
+  }
+  var nowMs = Date.now(), np = parts(nowMs);
+  var els = document.querySelectorAll('.hub-reset-i[data-cycle]');
+  for (var i = 0; i < els.length; i++){
+    var el = els[i], cycle = el.getAttribute('data-cycle'), hhmm = el.getAttribute('data-at');
+    var dow = parseInt(el.getAttribute('data-dow') || '0', 10);
+    var t = nextTime(cycle, dow, hhmm, nowMs), tp = parts(t);
+    var left = Math.round((Date.UTC(tp.y, tp.m, tp.d) - Date.UTC(np.y, np.m, np.d)) / 86400000);
+    var when = el.querySelector('[data-when]'), badge = el.querySelector('[data-dday]');
+    if (when){
+      var day = left === 0 ? '오늘' : (left === 1 ? '내일' : (tp.m + 1) + '/' + pad2(tp.d) + '(' + DOW[tp.dow] + ')');
+      when.innerHTML = day + ' <b>' + pad2(tp.h) + ':' + pad2(tp.mi) + '</b>';
+    }
+    if (badge){
+      badge.textContent = left === 0 ? 'D-Day' : 'D-' + left;
+      badge.className = 'hub-reset-d' + (left === 0 ? ' today' : '');
+    }
+  }
+})();
+</script>
+    <!-- ROSTER-RESET:END -->
 
     <p class="mini-note" style="margin:-4px 2px 12px" id="rosterFeed" aria-live="polite">상태 배지는 피클 단톡방 접속 상태를 20초마다 다시 확인해 그대로 보여줍니다. <span id="rosterFeedState">아직 단톡방에 연결되지 않아 모두 오프라인으로 표시합니다.</span></p>
     <div class="filters" role="group" aria-label="담당 영역 필터">

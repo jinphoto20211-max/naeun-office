@@ -15,6 +15,7 @@
     `localStorage: naeun-office:handoff:v1` 에만 저장되고 [되돌리기]가 됩니다.
   - 맨 아래(대회의실·단톡방 아래): 비서 접속 현황·오이 상태 줄과 「💬 지휘실에서 지시하기」 버튼
   - 트래커: 적립·포인트 / 복권·예치금 / 미션 보드 + 체험단·설문·응모·상품권 집계와 노션 공용 허브 요약
+  - 비서현황: 맨 위 ⏱️ 비서 한도 초기화 → 🎬 영상 주간 한도 초기화 카드 → 13명 카드 목록
   - 패밀리: 맨 위 **핵심 D-day 카드**(오늘 기준 자동 계산) → **어린이집·가족 일정 타임라인**(비서가 관리하는 조회 전용 · 분류 필터 · 완료 접기) → **지금 시기 체크 포인트 + 한 줄 육아 메모** → 맨 아래 **영유아 건강검진·예방접종 내역**(질병관리청 예방접종도우미 실측 기록)
     - 핵심 D-day는 `FAM_DDAYS`, 검진 항목은 `FAM_CHECKUPS`, 완료 접종은 `FAM_DONE_VACCINES`, 남은 차수는 `FAM_NEXT_VACCINES`, 일정은 `FAMILY_EVENTS` 상수에서 고칩니다. 날짜가 바뀌면 D-day는 화면을 열 때 다시 계산됩니다.
     - 일정은 화면에서 추가·수정하지 않습니다(나은님이 말씀하면 비서가 `FAMILY_EVENTS`에 반영). 검진·독감 접종 완료 표시와 한 줄 육아 메모만 브라우저에 저장됩니다: `naeun.family.checks.v1` · `naeun.family.memo.v1`
@@ -32,6 +33,9 @@
       `BRIEF_WEATHER_TIP`(오른쪽 날씨 칸) · `HANDOFF` 를 고치고 다시 실행하세요.
       (Apple Weather 출처 표기는 글자로 붙입니다 — `&#xF8FF;` 는 안드로이드에서 깨져 쓰지 않습니다.)
   - 실행은 `python3 build-tracker.py` (마커 사이만 교체, 나머지 화면은 건드리지 않음)
+    - 마커는 두 곳: `TRACKER-PANEL`(트래커 탭 본문) · `ROSTER-RESET`(비서현황 탭 맨 위 두 카드)
+    - 비서현황 맨 위 카드는 `roster_reset_html()` 이 만듭니다 — ⏱️ **비서 한도 초기화**(`RESET_RULES`: 피클즈 매일 04:00 · 뮤즈 매주 토 21:00 · 하마뮤즈 매주 일 07:00, 날짜·D-day는 화면 JS가 자동 계산·자동 롤링) 와 🎬 **영상 주간 한도 초기화**(`VIDEO_RESETS`, 트래커 탭에서 이동).
+    - ⏱️ 카드를 고칠 때는 `index.html`이 아니라 `build-tracker.py`의 `RESET_RULES` 를 고치고 다시 실행하세요.
 - `build-walkers.py`, `build-clay.py`, `build-people.py` — 이전 2D/3D 실험용 생성기(지금 화면에는 미사용)
 - `assets/office-bg-v3.mp4` — 지금 쓰는 오피스 배경 영상 (1280×720·38초·H.264 High yuv420p·faststart·약 2.2MB)
 - `assets/office-bg-v3-poster.jpg` — 그 영상의 첫 프레임(로딩 중 빈 화면 방지)
